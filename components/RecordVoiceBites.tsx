@@ -19,10 +19,12 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
 
   const recordingPermission = useRef(false);
   const canAskPermissionAgain = useRef(true);
-
-  useEffect(() => {
-    (async () => {})();
-  }, []);
+  
+  useEffect(()=>{
+    return ()=>{
+      recordingRef.current=null
+    }
+  })
 
   const startRecording = async () => {
     try {
@@ -44,7 +46,6 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
 
   const stopRecording = async () => {
     try {
-      console.log('stop recording');
       await recordingRef.current?.stopAndUnloadAsync();
 
       await Audio.setAudioModeAsync({
@@ -61,8 +62,6 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const restartRecording = () => {
     setAudioFile(null);
   };
-
-  console.log(audioFile);
 
   return (
     <BottomSheetModal

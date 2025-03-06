@@ -15,14 +15,15 @@ const CircularProgress = ({ onRecordingEnd, onStartRecording }: Props) => {
   const progressBarRef = useRef<AnimatedCircularProgress | null>(null);
   const currentTimeRef = useRef(0);
   const startRecordingRef = useRef(false);
-  const handleRecording =  () => {
+  const handleRecording = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (!startRecordingRef.current) {
       startRecordingRef.current = true;
+      await onStartRecording();
       progressBarRef.current?.animate(100, 30000, Easing.quad);
-       onStartRecording();
     } else {
-       onRecordingEnd();
+      onRecordingEnd();
+      startRecordingRef.current = false;
     }
   };
   return (
@@ -34,8 +35,8 @@ const CircularProgress = ({ onRecordingEnd, onStartRecording }: Props) => {
       rotation={360}
       backgroundColor='#3d5875'
       onAnimationComplete={() => {
-        if (currentTimeRef.current > 0) {
-          // onRecordingEnd();
+        if (currentTimeRef.current > 0 && startRecordingRef.current) {
+          onRecordingEnd();
         }
       }}
       ref={(ref) => (progressBarRef.current = ref)}

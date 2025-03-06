@@ -7,7 +7,6 @@ import { Backend } from '@/config';
 import { Audio } from 'expo-av';
 import { Sound } from 'expo-av/build/Audio';
 
-
 interface Props {
   avatar: { default: boolean; src: string };
   username: string;
@@ -17,18 +16,39 @@ interface Props {
 const VoiceBites = ({ avatar, username, fileName }: Props) => {
   const [sound, setSound] = useState<Sound>();
   const [isPlaying, setIsPlaying] = useState(false);
+
   const avatarImageSrc = avatar.default
     ? `${Backend.baseURL}/default/avatars/${avatar.src}`
     : `${Backend.baseURL}/uploads/avatars/${avatar.src}`;
 
   const audioSource = `${Backend.public}/posts/${fileName}`;
 
-
   useEffect(() => {
-    
+    (async () => {
+      const { sound } = await Audio.Sound.createAsync({ uri: audioSource });
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          setIsPlaying(false);
+          sound.stopAsync();
+        }
+      });
+      setSound(sound);
+    })();
+
+    return () => {
+      sound?.unloadAsync();
+    };
   }, []);
 
-  const onPlay = () => {
+  const onPlay = async () => {
+    if (!isPlaying) {
+      await sound?.playAsync();
+      setIsPlaying(true);
+    } else {
+      await sound?.stopAsync();
+      setIsPlaying(false);
+      sound?.setPositionAsync(0);
+    }
   };
 
   return (

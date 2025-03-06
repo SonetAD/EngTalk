@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
@@ -20,6 +20,12 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
   useEffect(() => {
     (async () => {
       const { sound } = await Audio.Sound.createAsync({ uri: audioSrc });
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          setIsPlaying(false);
+          sound.stopAsync();
+        }
+      });
       setSound(sound);
     })();
 
@@ -28,36 +34,50 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
     };
   }, []);
 
-  const onPlay = () => {
-    sound?.playAsync();
+  const onPlay = async () => {
+    if (!isPlaying) {
+      await sound?.playAsync();
+      setIsPlaying(true);
+    } else {
+      await sound?.stopAsync();
+      setIsPlaying(false);
+      sound?.setPositionAsync(0);
+    }
   };
 
   const handleCancel = () => {
+    if (isPlaying) {
+      sound?.stopAsync();
+    }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCancel();
   };
 
   const handlePost = () => {
+    if (isPlaying) {
+      sound?.stopAsync();
+    }
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
   return (
     <BottomSheetView style={styles.container}>
       <Text style={styles.title}>Your Voice, Your Story</Text>
 
-      <TouchableOpacity onPress={onPlay}>
+      <Pressable onPress={onPlay}>
         <Ionicons
           name={isPlaying ? 'pause-circle-outline' : 'play-circle-outline'}
           size={40}
           color={Color.secondary.default}
         />
-      </TouchableOpacity>
+      </Pressable>
       <BottomSheetView style={styles.btnGroup}>
-        <TouchableOpacity onPress={handleCancel}>
+        <Pressable onPress={handleCancel}>
           <Text style={styles.cancelBtn}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handlePost}>
+        </Pressable>
+        <Pressable onPress={handlePost}>
           <Text style={styles.postBtn}>Post</Text>
-        </TouchableOpacity>
+        </Pressable>
       </BottomSheetView>
     </BottomSheetView>
   );
