@@ -45,20 +45,24 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
     }
   };
 
-  const handleCancel = () => {
-    if (isPlaying) {
-      sound?.stopAsync();
-    }
+  const handleCancel = async() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (isPlaying) {
+      await sound?.stopAsync();
+      setIsPlaying(false);
+    }
     onCancel();
   };
 
-  const handlePost = () => {
-    if (isPlaying) {
-      sound?.stopAsync();
-    }
-
+  const handlePost = async() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (isPlaying) {
+      await sound?.stopAsync();
+      setIsPlaying(false);
+    }
+    onPost();
   };
   return (
     <BottomSheetView style={styles.container}>

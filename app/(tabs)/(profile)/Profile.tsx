@@ -1,32 +1,32 @@
 import { StyleSheet, Text, View } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import fetchUserPost from '@/libs/api/fetchUserPost';
 import { FlashList } from '@shopify/flash-list';
 import ProfileInfo from '@/components/ProfileInfo';
 import VoiceBites from '@/components/VoiceBitesCard';
 import NoPostAvailable from '@/components/NoPostAvalable';
+import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
 
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
   const { userName, avatar } = user.userInfo;
-  const [postList, setPostList] = useState([]);
+  const userBites = useSelector((state: any) => state.voiceBite.userBites);
+  const { posts } = userBites;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      if (userName) {
-        const getPosts = await fetchUserPost(userName);
-        setPostList(getPosts);
-      }
-    })();
+    if (userName) {
+      dispatch(voiceBiteThunk(userName));
+    }
   }, [userName]);
 
   return (
     <FullScreenView>
       <FlashList
-        ListHeaderComponent={() => <ProfileInfo posts={postList.length} />}
-        data={postList}
+        ListHeaderComponent={() => <ProfileInfo posts={posts.length} />}
+        data={posts}
         renderItem={({ item }: any) => (
           <VoiceBites
             username={userName}

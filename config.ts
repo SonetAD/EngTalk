@@ -18,6 +18,12 @@ export const Backend = {
   get userPost() {
     return `${this.baseURL}/post/userpost`;
   },
+  get allPost() {
+    return `${this.baseURL}/post/allpost`;
+  },
+  get uploadPost() {
+    return `${this.baseURL}/post/upload`;
+  },
 
   get instaCall() {
     return `${this.baseURL}/instaCall`;

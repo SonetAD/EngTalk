@@ -10,6 +10,9 @@ import CircularProgress from './CircularProgress';
 import VoiceBitePreview from './VoiceBitePreview';
 import { Color, Font } from '@/constants/constants';
 import { Audio } from 'expo-av';
+import { useDispatch, useSelector } from 'react-redux';
+import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
+import uploadBite from '@/libs/api/uploadBite';
 
 const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const snapPoints = ['30%'];
@@ -17,14 +20,19 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const recordingRef = useRef<Audio.Recording | null>(null);
 
+  const { user } = useSelector((state: any) => state.auth);
+  const { userName } = user.userInfo;
+  const { token } = user;
+  const dispatch = useDispatch();
+
   const recordingPermission = useRef(false);
   const canAskPermissionAgain = useRef(true);
-  
-  useEffect(()=>{
-    return ()=>{
-      recordingRef.current=null
-    }
-  })
+
+  useEffect(() => {
+    return () => {
+      recordingRef.current = null;
+    };
+  });
 
   const startRecording = async () => {
     try {
@@ -63,6 +71,17 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
     setAudioFile(null);
   };
 
+  const postVoiceBite = async () => {
+    try {
+      console.log('posting');
+      await uploadBite({ userName, token, file: audioFile });
+      console.log('done');
+      dispatch(voiceBiteThunk(userName));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <BottomSheetModal
       ref={ref}
@@ -88,7 +107,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
           <VoiceBitePreview
             audioSrc={audioFile}
             onCancel={restartRecording}
-            onPost={() => {}}
+            onPost={postVoiceBite}
           />
         )}
       </BottomSheetView>
