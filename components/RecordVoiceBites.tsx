@@ -7,77 +7,62 @@ import {
 } from '@gorhom/bottom-sheet';
 import CircularProgress from './CircularProgress';
 
-import {
-  useAudioRecorder,
-  requestRecordingPermissionsAsync,
-  getRecordingPermissionsAsync,
-  RecordingPresets,
-  PLAYBACK_STATUS_UPDATE,
-} from 'expo-audio';
 import VoiceBitePreview from './VoiceBitePreview';
 import { Color, Font } from '@/constants/constants';
-import * as FileSystem from 'expo-file-system';
+import { Audio } from 'expo-av';
 
 const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const snapPoints = ['30%'];
-  const [audioFile, setAudioFile] = useState<string | null>(null);
-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const [audioFile, setAudioFile] = useState<any>(null);
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
+  const recordingRef = useRef<Audio.Recording | null>(null);
 
   const recordingPermission = useRef(false);
   const canAskPermissionAgain = useRef(true);
 
   useEffect(() => {
-    (async () => {
-      const { granted, canAskAgain } = await getRecordingPermissionsAsync();
-      recordingPermission.current = granted;
-      canAskPermissionAgain.current = canAskAgain;
-    })();
+    (async () => {})();
   }, []);
 
-  const saveTemporaryFile = async (cacheFileLocation: string | null) => {
-    if (cacheFileLocation) {
-      const extenssion = cacheFileLocation.split('.').pop();
-      const filePath = `${FileSystem.documentDirectory}/engtalk_voice_bite_temp.${extenssion}`;
-
-      try {
-        const kaka = await FileSystem.copyAsync({
-          from: `file://${cacheFileLocation}`,
-          to: filePath,
-        });
-        return filePath;
-      } catch (err: any) {
-        console.log(err);
-        return null;
-      }
-    }
-    return null;
-  };
-
   const startRecording = async () => {
-    if (!recordingPermission.current) {
-      await requestRecordingPermissionsAsync();
+    try {
+      if (permissionResponse?.status !== 'granted') {
+        await requestPermission();
+      }
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      recordingRef.current = recording;
+    } catch (err) {
+      console.log(err);
     }
-
-    await audioRecorder.prepareToRecordAsync();
-    audioRecorder.record();
   };
 
   const stopRecording = async () => {
-    if (audioRecorder.isRecording) {
-      await audioRecorder.stop();
-    }
-  };
+    try {
+      console.log('stop recording');
+      await recordingRef.current?.stopAndUnloadAsync();
 
-  const onRecordingEnd = async () => {
-    await stopRecording();
-    const tempFile = await saveTemporaryFile(audioRecorder.uri);
-    console.log(FileSystem.documentDirectory);
-    setAudioFile(tempFile);
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      });
+      const uri = recordingRef.current?.getURI();
+      recordingRef.current = null;
+      setAudioFile(uri);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const restartRecording = () => {
     setAudioFile(null);
   };
+
+  console.log(audioFile);
 
   return (
     <BottomSheetModal
@@ -97,7 +82,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
           </Text>
         ) : !audioFile ? (
           <CircularProgress
-            onRecordingEnd={onRecordingEnd}
+            onRecordingEnd={stopRecording}
             onStartRecording={startRecording}
           />
         ) : (

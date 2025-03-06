@@ -9,8 +9,8 @@ import { Sound } from 'expo-av/build/Audio';
 
 interface Props {
   audioSrc: string;
-  onCancel: () => {};
-  onPost: () => {};
+  onCancel: () => void;
+  onPost: () => void;
 }
 
 const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
@@ -19,17 +19,17 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const { sound } = await Audio.Sound.createAsync(require(audioSrc));
+      const { sound } = await Audio.Sound.createAsync({ uri: audioSrc });
       setSound(sound);
     })();
-    
-    return ()=>{
-      sound?.unloadAsync()
-    }
+
+    return () => {
+      sound?.unloadAsync();
+    };
   }, []);
 
   const onPlay = () => {
-    sound?.playAsync()
+    sound?.playAsync();
   };
 
   const handleCancel = () => {

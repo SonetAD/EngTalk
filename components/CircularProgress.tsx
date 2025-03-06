@@ -35,7 +35,7 @@ const CircularProgress = ({ onRecordingEnd, onStartRecording }: Props) => {
       backgroundColor='#3d5875'
       onAnimationComplete={() => {
         if (currentTimeRef.current > 0) {
-          onRecordingEnd();
+          // onRecordingEnd();
         }
       }}
       ref={(ref) => (progressBarRef.current = ref)}
