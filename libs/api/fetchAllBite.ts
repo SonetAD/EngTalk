@@ -12,7 +12,7 @@ const fetchAllBites = async (data: Props) => {
       page: data.page,
       limit: data.limit,
     });
-    return res.data;
+    return res.data.post;
   } catch (err: any) {
     throw new Error(err?.message);
   }

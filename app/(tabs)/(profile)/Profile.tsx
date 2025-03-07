@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,8 @@ import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
 const Profile = () => {
   const { user } = useSelector((state: any) => state.auth);
   const { userName, avatar } = user.userInfo;
-  const userBites = useSelector((state: any) => state.voiceBite.userBites);
+  const voiceBite = useSelector((state: any) => state.voiceBite);
+  const { userBites, isLoading } = voiceBite;
   const { posts } = userBites;
   const dispatch = useDispatch();
 
@@ -42,5 +43,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-const styles = StyleSheet.create({});

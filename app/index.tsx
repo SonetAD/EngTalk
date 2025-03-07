@@ -13,7 +13,7 @@ const App = () => {
   };
 
   if (isUserLoggedIn) {
-    return <Redirect href='/Profile' />;
+    return <Redirect href='/Explore' />;
   }
 
   return (

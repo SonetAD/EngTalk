@@ -22,7 +22,6 @@ const VoiceBites = ({ avatar, username, fileName }: Props) => {
     : `${Backend.baseURL}/uploads/avatars/${avatar.src}`;
 
   const audioSource = `${Backend.public}/posts/${fileName}`;
-  console.log(audioSource);
 
   useEffect(() => {
     (async () => {

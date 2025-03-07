@@ -7,6 +7,7 @@ import { loginUser } from '@/redux/features/auth/authSlice';
 import LocalStore from '@/libs/localStore';
 import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
 import HomeHeaderComponent from '@/components/HomeHeaderComponent';
+import ExploreHeaderComponent from '@/components/ExploreHeaderComponents';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -66,7 +67,7 @@ const TabLayout = () => {
         name='(home)'
         options={{
           title: 'Home',
-          header:HomeHeaderComponent,
+          header: HomeHeaderComponent,
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
               name='home'
@@ -78,10 +79,11 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name='Post'
+        name='(explore)'
         options={{
-          title: 'Post',
-          headerShown: false,
+          title: 'Explore',
+          header: ExploreHeaderComponent,
+
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
               name='earth'

@@ -17,6 +17,7 @@ import uploadBite from '@/libs/api/uploadBite';
 const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const snapPoints = ['30%'];
   const [audioFile, setAudioFile] = useState<any>(null);
+  const [postingStatus, setPostingStatus] = useState('');
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const recordingRef = useRef<Audio.Recording | null>(null);
 
@@ -73,9 +74,10 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
 
   const postVoiceBite = async () => {
     try {
-      console.log('posting');
+      setPostingStatus('Posting...')
       await uploadBite({ userName, token, file: audioFile });
-      console.log('done');
+      setPostingStatus('')
+      ref?.current?.dismiss()
       dispatch(voiceBiteThunk(userName));
     } catch (err) {
       console.log(err);
@@ -103,12 +105,13 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
             onRecordingEnd={stopRecording}
             onStartRecording={startRecording}
           />
-        ) : (
+        ) : ( !postingStatus?
           <VoiceBitePreview
             audioSrc={audioFile}
             onCancel={restartRecording}
             onPost={postVoiceBite}
           />
+          : <Text style={styles.postingStatus}>{postingStatus}</Text>
         )}
       </BottomSheetView>
     </BottomSheetModal>
@@ -134,4 +137,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
+  postingStatus:{
+    color:Color.white,
+    fontFamily:Font.pBold,
+    textAlign:'center'
+
+  }
 });
