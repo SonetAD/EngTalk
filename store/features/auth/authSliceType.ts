@@ -3,19 +3,23 @@ type User = {
   userInfo: {};
 };
 
-type Status = {
+type AuthStatus = {
   isLoading: boolean;
   isError: boolean;
-  error: string ;
+  error: string;
 };
 
-type AuthState= {
-  user: User,
-  status: Status
+type AuthState = {
+  user: User;
+  authStatus: AuthStatus;
 };
 
-type AuthAction={
-    setUser:(userName:string,password:string)=>Promise<void>
-}
+type Props = {
+  userName: string;
+  password: string;
+};
+type AuthAction = {
+  setUser: ({ userName, password }: Props) => Promise<void>;
+};
 
-export  type AuthSliceType= AuthState & AuthAction
+export type AuthSliceType = AuthState & AuthAction;

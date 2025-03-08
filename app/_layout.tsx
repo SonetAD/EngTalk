@@ -3,8 +3,6 @@ import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
 import Error from '@/components/Error';
 import CustomStatusBar from '@/components/CustomStatusBar';
-import { Provider } from 'react-redux';
-import Store from '@/redux/store/store';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -36,14 +34,12 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-        <Provider store={Store}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name='(tabs)' />
             <Stack.Screen name='(auth)' />
             <Stack.Screen name='index' />
           </Stack>
           <CustomStatusBar />
-        </Provider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
