@@ -2,7 +2,7 @@ import FullScreenView from '@/components/FullScreenView';
 import { useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import ProfileInfo from '@/components/ProfileInfo';
-import VoiceBites from '@/components/VoiceBitesCard';
+import VoiceBiteCard from '@/components/VoiceBiteCard';
 import NoPostAvailable from '@/components/NoPostAvalable';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
@@ -29,7 +29,7 @@ const Profile = () => {
         ListHeaderComponent={() => <ProfileInfo posts={posts.length} />}
         data={posts}
         renderItem={({ item }: any) => (
-          <VoiceBites
+          <VoiceBiteCard
             username={userName}
             avatar={avatar}
             fileName={item?.file}

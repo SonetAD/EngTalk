@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Color, Font, ImageBlurHash } from '@/constants/constants';
@@ -13,9 +19,11 @@ interface Props {
   fileName: string;
 }
 
-const VoiceBites = ({ avatar, username, fileName }: Props) => {
-  const [sound, setSound] = useState<Sound>();
+const VoiceBitesCard = ({ avatar, username, fileName }: Props) => {
+  const soundRef = useRef<Sound | null>(null);
+  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const avatarImageSrc = avatar.default
     ? `${Backend.baseURL}/default/avatars/${avatar.src}`
@@ -25,30 +33,52 @@ const VoiceBites = ({ avatar, username, fileName }: Props) => {
 
   useEffect(() => {
     (async () => {
-      const { sound } = await Audio.Sound.createAsync({ uri: audioSource });
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          setIsPlaying(false);
-          sound.stopAsync();
-        }
-      });
-      setSound(sound);
+      if (isSoundLoaded) {
+        soundRef.current?.setOnPlaybackStatusUpdate((status: any) => {
+          setIsBuffering(status.isBuffering);
+          if (status.isLoaded && status.didJustFinish) {
+            setIsPlaying(false);
+            soundRef.current?.stopAsync();
+            setIsSoundLoaded(false);
+            unloadSound();
+          }
+        });
+      }
     })();
+  }, [isSoundLoaded]);
 
+  useEffect(() => {
     return () => {
-      sound?.unloadAsync();
+      unloadSound();
     };
   }, []);
 
   const onPlay = async () => {
-    if (!isPlaying) {
-      await sound?.playAsync();
-      setIsPlaying(true);
-    } else {
-      await sound?.stopAsync();
-      setIsPlaying(false);
-      sound?.setPositionAsync(0);
+    try {
+      if (!isSoundLoaded) {
+        setIsBuffering(true);
+        const { sound } = await Audio.Sound.createAsync({ uri: audioSource });
+        soundRef.current = sound;
+        setIsBuffering(false);
+        setIsSoundLoaded(true);
+      }
+      if (!isPlaying) {
+        await soundRef.current?.playAsync();
+        setIsPlaying(true);
+      } else {
+        await soundRef.current?.stopAsync();
+        setIsSoundLoaded(false);
+        setIsPlaying(false);
+        unloadSound();
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  const unloadSound = async () => {
+    await soundRef.current?.unloadAsync();
+    soundRef.current = null;
   };
 
   return (
@@ -65,21 +95,28 @@ const VoiceBites = ({ avatar, username, fileName }: Props) => {
 
       <Text style={styles.username}>{username}</Text>
 
-      <TouchableOpacity
+      <Pressable
         onPress={onPlay}
         style={styles.playButton}
       >
-        <Ionicons
-          name={isPlaying ? 'pause-circle' : 'play-circle'}
-          size={36}
-          color={Color.secondary.default}
-        />
-      </TouchableOpacity>
+        {isBuffering ? (
+          <ActivityIndicator
+            size='small'
+            color={Color.secondary.default}
+          />
+        ) : (
+          <Ionicons
+            name={isPlaying ? 'pause-circle' : 'play-circle'}
+            size={36}
+            color={Color.secondary.default}
+          />
+        )}
+      </Pressable>
     </View>
   );
 };
 
-export default VoiceBites;
+export default VoiceBitesCard;
 
 const styles = StyleSheet.create({
   container: {

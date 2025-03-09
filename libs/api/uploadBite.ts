@@ -11,7 +11,6 @@ const uploadBite = async (data: Props) => {
   try {
     const form = new FormData();
     const extension = data.file.split('.').pop()?.toLowerCase();
-    console.log(extension);
     const fileName = `${data.userName}_voice_bite`;
     if (fileName && extension) {
       form.append('voicebite', {

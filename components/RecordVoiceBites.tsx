@@ -80,8 +80,8 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
       setPostingStatus('Posting...');
       await uploadBite({ userName, token, file: audioFile });
       setPostingStatus('');
-      ref?.current?.dismiss();
       getVoiceBite({ userName });
+      ref?.current?.dismiss();
     } catch (err) {
       console.log(err);
     }

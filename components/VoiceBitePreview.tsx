@@ -28,11 +28,13 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
       });
       setSound(sound);
     })();
+  }, []);
 
+  useEffect(() => {
     return () => {
       sound?.unloadAsync();
     };
-  }, []);
+  },[]);
 
   const onPlay = async () => {
     if (!isPlaying) {
@@ -41,11 +43,10 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
     } else {
       await sound?.stopAsync();
       setIsPlaying(false);
-      sound?.setPositionAsync(0);
     }
   };
 
-  const handleCancel = async() => {
+  const handleCancel = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     if (isPlaying) {
@@ -55,7 +56,7 @@ const VoiceBitePreview = ({ audioSrc, onCancel, onPost }: Props) => {
     onCancel();
   };
 
-  const handlePost = async() => {
+  const handlePost = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     if (isPlaying) {
