@@ -12,7 +12,17 @@ const createAuthSlice: StateCreator<
 > = (set, get) => ({
   user: {
     token: '',
-    userInfo: {},
+    userInfo: {
+      userName: '',
+      name: '',
+      gender: '',
+      avatar: {
+        default: false,
+        src: '',
+      },
+      followers: [],
+      following: [],
+    },
   },
   authStatus: {
     isLoading: true,
@@ -21,18 +31,39 @@ const createAuthSlice: StateCreator<
   },
   setUser: async ({ userName, password }) => {
     try {
-      const user = await userLogin({ userName, password });
+      const res = await userLogin({ userName, password });
       set((state) => {
-        state.user.token = user.token;
-        state.user.userInfo = user.user;
+        state.user.token = res.token;
+        state.user.userInfo = {
+          userName: res.user.userName,
+          name: res.user.name,
+          gender: res.user.gender,
+          avatar: {
+            default: res.user.avatar.default,
+            src: res.user.avatar.src,
+          },
+          followers: res.user.followers,
+          following: res.user.following,
+        };
         state.authStatus.isLoading = false;
         state.authStatus.isError = false;
         state.authStatus.error = '';
       });
     } catch (err: any) {
+      console.log(err);
       set((state) => {
         state.user.token = '';
-        state.user.userInfo = {};
+        state.user.userInfo = {
+          userName: '',
+          name: '',
+          gender: '',
+          avatar: {
+            default: true,
+            src: '',
+          },
+          followers: [],
+          following: [],
+        };
         state.authStatus.isLoading = false;
         state.authStatus.isError = true;
         state.authStatus.error = err?.message || 'Something went wrong!';

@@ -1,25 +1,25 @@
-import { Text, View } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import fetchUserPost from '@/libs/api/fetchUserPost';
+import { useEffect } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import ProfileInfo from '@/components/ProfileInfo';
 import VoiceBites from '@/components/VoiceBitesCard';
 import NoPostAvailable from '@/components/NoPostAvalable';
-import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 const Profile = () => {
-  const { user } = useSelector((state: any) => state.auth);
-  const { userName, avatar } = user.userInfo;
-  const voiceBite = useSelector((state: any) => state.voiceBite);
-  const { userBites, isLoading } = voiceBite;
-  const { posts } = userBites;
-  const dispatch = useDispatch();
+  const { userName, avatar, posts, getVoiceBite } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      avatar: state.user.userInfo.avatar,
+      posts: state.userBites.posts,
+      getVoiceBite: state.getVoiceBite,
+    }))
+  );
 
   useEffect(() => {
     if (userName) {
-      dispatch(voiceBiteThunk(userName));
+      getVoiceBite({ userName });
     }
   }, [userName]);
 

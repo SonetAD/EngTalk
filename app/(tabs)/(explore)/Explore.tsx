@@ -2,28 +2,31 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect } from 'react';
 import FullScreenView from '@/components/FullScreenView';
 import { FlashList } from '@shopify/flash-list';
-import { useDispatch, useSelector } from 'react-redux';
-import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
 import VoiceBites from '@/components/VoiceBitesCard';
 import NoPostAvailable from '@/components/NoPostAvalable';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 import CustomLoadingPage from '@/components/CustomLoadingPage';
 
 const Explore = () => {
-  const { user } = useSelector((state: any) => state.auth);
-  const { userName } = user.userInfo;
-  const voiceBite = useSelector((state: any) => state.voiceBite);
-  const { allBites, isLoading } = voiceBite;
-  const { posts } = allBites;
-  const dispatch = useDispatch();
+  const { userName, posts, isLoading, getVoiceBite } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      avatar: state.user.userInfo.avatar,
+      posts: state.allBites.posts,
+      isLoading: state.voiceBiteStatus.isLoading,
+      getVoiceBite: state.getVoiceBite,
+    }))
+  );
 
   useEffect(() => {
     if (userName) {
-      dispatch(voiceBiteThunk(userName));
+      getVoiceBite({ userName });
     }
   }, [userName]);
 
-  if (isLoading) return <CustomLoadingPage />;
+  // if (isLoading) return <CustomLoadingPage />;
 
   return (
     <FullScreenView>
@@ -37,11 +40,11 @@ const Explore = () => {
           />
         )}
         estimatedItemSize={30}
-        ListEmptyComponent={() => (
-          <View style={styles.contaiiner}>
-            <NoPostAvailable />
-          </View>
-        )}
+        // ListEmptyComponent={() => (
+        //   <View style={styles.contaiiner}>
+        //     <NoPostAvailable />
+        //   </View>
+        // )}
       />
     </FullScreenView>
   );

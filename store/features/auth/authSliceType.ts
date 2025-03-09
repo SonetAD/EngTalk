@@ -1,6 +1,16 @@
 type User = {
   token: string;
-  userInfo: {};
+  userInfo: {
+    userName: string;
+    name:string;
+    gender: string;
+    avatar: {
+      default: boolean;
+      src: string;
+    };
+    followers: [];
+    following: [];
+  };
 };
 
 type AuthStatus = {

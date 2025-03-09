@@ -6,7 +6,7 @@ import createAuthSlice from '../features/auth/authSlice';
 import createUserStatSlice from '@/store/features/userStat/userStatSlice';
 import createVoiceBiteSlice from '../features/voiceBite/voiceBiteSlice';
 
-const useStore = create<StoreType>()(
+const useCentralStore = create<StoreType>()(
   immer((...a) => ({
     ...createAuthSlice(...a),
     ...createUserStatSlice(...a),
@@ -14,4 +14,4 @@ const useStore = create<StoreType>()(
   }))
 );
 
-export default useStore;
+export default useCentralStore;

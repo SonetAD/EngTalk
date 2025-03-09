@@ -2,12 +2,12 @@ import { Tabs } from 'expo-router';
 import { Color } from '@/constants/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '@/redux/features/auth/authSlice';
 import LocalStore from '@/libs/localStore';
 import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
 import HomeHeaderComponent from '@/components/HomeHeaderComponent';
 import ExploreHeaderComponent from '@/components/ExploreHeaderComponents';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -38,14 +38,18 @@ const TabIcon = ({ name, color, focused, size }: Props) => {
 };
 
 const TabLayout = () => {
-  const dispatch: any = useDispatch();
-  const { user } = useSelector((state: any) => state.auth);
+  const { userName, setUser } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      setUser: state.setUser,
+    }))
+  );
 
   useEffect(() => {
     const userName = LocalStore.getString('userName');
     const password = LocalStore.getString('passWord');
     if (userName && password) {
-      dispatch(loginUser({ userName, password }));
+      setUser({ userName, password });
     }
   }, []);
 
@@ -113,9 +117,7 @@ const TabLayout = () => {
         name='(profile)'
         options={{
           title: 'Profile',
-          header: () => (
-            <ProfileHeaderComponent userName={user.userInfo.userName} />
-          ),
+          header: () => <ProfileHeaderComponent userName={userName} />,
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
               name='person-circle'

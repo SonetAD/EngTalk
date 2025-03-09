@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 debugger;
 import FullScreenView from '@/components/FullScreenView';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   RTCPeerConnection,
   mediaDevices,
@@ -18,12 +17,18 @@ import getUserInfo from '@/libs/api/userInfo';
 import StartConversation from '@/components/StartConversation';
 import { router } from 'expo-router';
 import ErrorAlert from '@/components/ErrorAlert';
-import { updateUserStat } from '@/redux/features/user/userStatSlice';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 const Call = () => {
-  const { token, userInfo } = useSelector((state: any) => state.auth.user);
-
-  const { userName, gender } = userInfo;
+  const { token, userName, gender, setUserStat } = useCentralStore(
+    useShallow((state) => ({
+      token: state.user.token,
+      userName: state.user.userInfo.userName,
+      gender: state.user.userInfo.gender,
+      setUserStat: state.setUserStat,
+    }))
+  );
 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState(false);
@@ -33,7 +38,6 @@ const Call = () => {
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const timerRef = useRef(0);
-  const dispatch = useDispatch();
 
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const findMatchIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -112,7 +116,7 @@ const Call = () => {
     };
 
     const handleEndCall = () => {
-      dispatch(updateUserStat({ token, talkTime: timerRef.current }));
+      setUserStat({ token, talkTime: timerRef.current });
       router.replace('/Home');
     };
 
@@ -216,7 +220,7 @@ const Call = () => {
   };
 
   const endCall = () => {
-    dispatch(updateUserStat({ token, talkTime: timerRef.current }));
+    setUserStat({ token, talkTime: timerRef.current });
     Socket.emit('callEnd', { targetSocketId: matchedUserData?.targetSocketId });
     router.replace('/Home');
   };

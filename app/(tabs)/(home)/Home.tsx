@@ -1,33 +1,45 @@
 import { StyleSheet, Text, View } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
-import { useDispatch, useSelector } from 'react-redux';
 import CustomLoadingPage from '@/components/CustomLoadingPage';
 import CustomButton from '@/components/CustomButton';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
 import Font from '@/constants/font';
 import Color from '@/constants/color';
-import {  router } from 'expo-router';
+import { router } from 'expo-router';
 import OnlineNow from '@/components/OnlineNow';
 import HomePageStat from '@/components/HomePageStat';
 import { useEffect } from 'react';
-import { updateUserStat } from '@/redux/features/user/userStatSlice';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const { user, isError, isLoading, error } = useSelector(
-    (state: any) => state.auth
-  );
-  const { totalGoldCoin, totalTrophy, talkTime } = useSelector(
-    (state: any) => state.userStat
+  const {
+    token,
+    isLoading,
+    isError,
+    error,
+    totalGoldCoin,
+    totalTrophy,
+    talkTime,
+    getUserStat,
+  } = useCentralStore(
+    useShallow((state) => ({
+      token: state.user.token,
+      isLoading: state.authStatus.isLoading,
+      isError: state.authStatus.isError,
+      error: state.authStatus.error,
+      totalGoldCoin: state.userStat.totalGoldCoin,
+      totalTrophy: state.userStat.totalTrophy,
+      talkTime: state.userStat.talkTime,
+      getUserStat: state.getUserStat,
+    }))
   );
 
   useEffect(() => {
-    if (user.token) {
-      dispatch(updateUserStat({ token: user.token, talkTime: null }));
+    if (token) {
+      getUserStat({ token });
     }
-  }, [isLoading]);
-
-  if (isLoading || isError) return <CustomLoadingPage />;
+  }, [token]);
 
   const startCall = () => {
     router.push('/Call');
@@ -48,6 +60,7 @@ const Home = () => {
           text='Find a Partner'
           containerStyle={styles.btn}
           handlePress={startCall}
+          isLoading={isLoading}
         />
       </View>
     </FullScreenView>

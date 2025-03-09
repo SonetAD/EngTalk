@@ -1,27 +1,40 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Image } from 'expo-image';
 import { Backend } from '@/config';
 import { Color, DeviceWidth, Font, ImageBlurHash } from '@/constants/constants';
 import ProfilePageStat from '@/components/ProfilePageStat';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 interface Props {
   posts: number;
 }
 
 const ProfileInfo = ({ posts }: Props) => {
-  const { user } = useSelector((state: any) => state.auth);
   const {
+    userName,
+    name,
     avatar,
     followers,
     following,
-    name,
     totalGoldCoin,
+    totalTrophy,
     talkTime,
     level,
-    totalTrophy,
-  } = user.userInfo;
+  } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      name: state.user.userInfo.name,
+      avatar: state.user.userInfo.avatar,
+      followers: state.user.userInfo.followers,
+      following: state.user.userInfo.following,
+      totalGoldCoin: state.userStat.totalGoldCoin,
+      totalTrophy: state.userStat.totalTrophy,
+      talkTime: state.userStat.talkTime,
+      level: state.userStat.level,
+    }))
+  );
 
   const avatarImageSrc = avatar?.default
     ? `${Backend.baseURL}/default/avatars/${avatar?.src}`

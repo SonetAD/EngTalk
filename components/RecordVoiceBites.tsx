@@ -10,21 +10,24 @@ import CircularProgress from './CircularProgress';
 import VoiceBitePreview from './VoiceBitePreview';
 import { Color, Font } from '@/constants/constants';
 import { Audio } from 'expo-av';
-import { useDispatch, useSelector } from 'react-redux';
-import { voiceBiteThunk } from '@/redux/features/voiceBites/VoiceBiteSlice';
 import uploadBite from '@/libs/api/uploadBite';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
+  const { token, userName, getVoiceBite } = useCentralStore(
+    useShallow((state) => ({
+      token: state.user.token,
+      userName: state.user.userInfo.userName,
+      getVoiceBite: state.getVoiceBite,
+    }))
+  );
+
   const snapPoints = ['30%'];
   const [audioFile, setAudioFile] = useState<any>(null);
   const [postingStatus, setPostingStatus] = useState('');
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const recordingRef = useRef<Audio.Recording | null>(null);
-
-  const { user } = useSelector((state: any) => state.auth);
-  const { userName } = user.userInfo;
-  const { token } = user;
-  const dispatch = useDispatch();
 
   const recordingPermission = useRef(false);
   const canAskPermissionAgain = useRef(true);
@@ -74,11 +77,11 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
 
   const postVoiceBite = async () => {
     try {
-      setPostingStatus('Posting...')
+      setPostingStatus('Posting...');
       await uploadBite({ userName, token, file: audioFile });
-      setPostingStatus('')
-      ref?.current?.dismiss()
-      dispatch(voiceBiteThunk(userName));
+      setPostingStatus('');
+      ref?.current?.dismiss();
+      getVoiceBite({ userName });
     } catch (err) {
       console.log(err);
     }
@@ -105,13 +108,14 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
             onRecordingEnd={stopRecording}
             onStartRecording={startRecording}
           />
-        ) : ( !postingStatus?
+        ) : !postingStatus ? (
           <VoiceBitePreview
             audioSrc={audioFile}
             onCancel={restartRecording}
             onPost={postVoiceBite}
           />
-          : <Text style={styles.postingStatus}>{postingStatus}</Text>
+        ) : (
+          <Text style={styles.postingStatus}>{postingStatus}</Text>
         )}
       </BottomSheetView>
     </BottomSheetModal>
@@ -137,10 +141,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
-  postingStatus:{
-    color:Color.white,
-    fontFamily:Font.pBold,
-    textAlign:'center'
-
-  }
+  postingStatus: {
+    color: Color.white,
+    fontFamily: Font.pBold,
+    textAlign: 'center',
+  },
 });
