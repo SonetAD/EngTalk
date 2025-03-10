@@ -8,11 +8,12 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
 const Profile = () => {
-  const { userName, avatar, posts, getVoiceBite } = useCentralStore(
+  const { userName, avatar, posts, isLoading, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
       avatar: state.user.userInfo.avatar,
       posts: state.userBites.posts,
+      isLoading: state.voiceBiteStatus.isLoading,
       getVoiceBite: state.getVoiceBite,
     }))
   );
@@ -36,7 +37,7 @@ const Profile = () => {
           />
         )}
         estimatedItemSize={30}
-        ListEmptyComponent={NoPostAvailable()}
+        ListEmptyComponent={() => <NoPostAvailable isLoading={isLoading} />}
       />
     </FullScreenView>
   );

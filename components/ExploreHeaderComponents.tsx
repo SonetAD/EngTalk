@@ -3,16 +3,12 @@ import React, { useCallback, useRef } from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import { Ionicons } from '@expo/vector-icons';
 import RecordVoiceBites from './RecordVoiceBites';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
-
-const ExploreHeaderComponent = () => {
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const recordPopUp = useCallback(async () => {
-    bottomSheetModalRef.current?.present();
-  }, []);
-
+interface Props {
+  recordPopUp: () => void;
+  reference: any;
+}
+const ExploreHeaderComponent = ({ reference, recordPopUp }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>explore</Text>
@@ -23,7 +19,7 @@ const ExploreHeaderComponent = () => {
           color={Color.white}
         />
       </Pressable>
-      <RecordVoiceBites ref={bottomSheetModalRef} />
+      <RecordVoiceBites ref={reference} />
     </View>
   );
 };

@@ -10,7 +10,7 @@ import { useShallow } from 'zustand/react/shallow';
 import CustomLoadingPage from '@/components/CustomLoadingPage';
 
 const Explore = () => {
-  const { userName,posts, isLoading, getVoiceBite } = useCentralStore(
+  const { userName, posts, isLoading, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
       avatar: state.user.userInfo.avatar,
@@ -26,8 +26,6 @@ const Explore = () => {
     }
   }, [userName]);
 
-  if (isLoading) return <CustomLoadingPage />;
-
   return (
     <FullScreenView>
       <FlashList
@@ -42,7 +40,7 @@ const Explore = () => {
         estimatedItemSize={30}
         ListEmptyComponent={() => (
           <View style={styles.contaiiner}>
-            <NoPostAvailable />
+            <NoPostAvailable isLoading={isLoading} />
           </View>
         )}
       />

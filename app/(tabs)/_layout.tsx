@@ -1,13 +1,14 @@
 import { Tabs } from 'expo-router';
 import { Color } from '@/constants/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import LocalStore from '@/libs/localStore';
 import ProfileHeaderComponent from '@/components/ProfileHeaderComponent';
 import HomeHeaderComponent from '@/components/HomeHeaderComponent';
 import ExploreHeaderComponent from '@/components/ExploreHeaderComponents';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -44,6 +45,12 @@ const TabLayout = () => {
       setUser: state.setUser,
     }))
   );
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const recordPopUp = useCallback(async () => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   useEffect(() => {
     const userName = LocalStore.getString('userName');
@@ -86,7 +93,7 @@ const TabLayout = () => {
         name='(explore)'
         options={{
           title: 'Explore',
-          header: ExploreHeaderComponent,
+          header: () => <ExploreHeaderComponent reference={bottomSheetModalRef} recordPopUp={recordPopUp} />,
 
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
