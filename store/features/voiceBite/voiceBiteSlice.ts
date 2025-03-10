@@ -13,13 +13,13 @@ const createVoiceBiteSlice: StateCreator<
 > = (set, get) => ({
   allBites: {
     posts: [],
-    pages: 0,
-    total: 0,
+    totalPages: 0,
+    totalPosts: 0,
   },
   userBites: {
     posts: [],
-    pages: 0,
-    total: 0,
+    totalPages: 0,
+    totalPosts: 0,
   },
 
   voiceBiteStatus: {
@@ -30,20 +30,20 @@ const createVoiceBiteSlice: StateCreator<
   getVoiceBite: async ({ userName }) => {
     try {
       const [userBites, allBites] = await Promise.all([
-        fetchUserBite({ userName, page: 1, limit: 20 }),
-        fetchAllBites({ page: 1, limit: 20 }),
+        fetchUserBite({ userName, page: 1, limit: 10 }),
+        fetchAllBites({ page: 1, limit: 10 }),
       ]);
       set((state) => {
-          state.allBites=allBites
-          state.userBites=userBites
+        state.allBites = allBites;
+        state.userBites = userBites;
         state.voiceBiteStatus.isLoading = false;
         state.voiceBiteStatus.isError = false;
         state.voiceBiteStatus.error = '';
       });
     } catch (err: any) {
       set((state) => {
-          state.allBites={posts:[],pages:0,total:0}
-          state.userBites={posts:[],pages:0,total:0}
+        state.allBites = { posts: [], totalPages: 0, totalPosts: 0 };
+        state.userBites = { posts: [], totalPages: 0, totalPosts: 0 };
         state.voiceBiteStatus.isLoading = false;
         state.voiceBiteStatus.isError = true;
         state.voiceBiteStatus.error = err?.message || 'Something went wrong!';

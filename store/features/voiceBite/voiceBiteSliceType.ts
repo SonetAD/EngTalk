@@ -1,7 +1,7 @@
 type VoiceBite = {
   posts: [];
-  pages: number;
-  total: number;
+  totalPages: number;
+  totalPosts: number;
 };
 
 type VoiceBiteStatus = {

@@ -10,9 +10,9 @@ interface Props {
 const fetchUserBite = async (data: Props) => {
   try {
     const res = await axios.post(Backend.userPost, {
-        userName:data.userName,
-        page:data.page,
-        limit:data.limit
+      userName: data.userName,
+      page: data.page,
+      limit: data.limit,
     });
     return res.data.post;
   } catch (err: any) {

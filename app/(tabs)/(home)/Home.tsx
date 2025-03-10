@@ -44,8 +44,6 @@ const Home = () => {
   const startCall = () => {
     router.push('/Call');
   };
-  
-  
 
   return (
     <FullScreenView>

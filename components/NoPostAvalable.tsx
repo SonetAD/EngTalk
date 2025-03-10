@@ -25,7 +25,7 @@ const NoPostAvailable = ({ isLoading }: Props) => {
           size='large'
         />
       ) : (
-        <View>
+        <View style={styles.container}>
           <Ionicons
             name='cloud-outline'
             size={50}
