@@ -29,15 +29,7 @@ const Explore = () => {
   const startScrollingRef = useRef(false);
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
-
-  // Memoizing biteStore to avoid unnecessary re-renders
-  const biteStore = useMemo(
-    () => ({
-      totalPages: allBites?.totalPages || 0,
-      posts: allBites?.posts || [],
-    }),
-    [allBites]
-  );
+  const [refreshing, setRefreshing] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
@@ -50,7 +42,7 @@ const Explore = () => {
   const fetchNextPage = useCallback(async () => {
     if (
       startScrollingRef.current &&
-      biteStore.totalPages > currendPageRef.current
+      allBites.totalPages > currendPageRef.current
     ) {
       setLoadingMore(true);
       currendPageRef.current++;
@@ -70,7 +62,30 @@ const Explore = () => {
         }));
       }
     }
-  }, [biteStore.totalPages]);
+  }, [allBites.totalPages]);
+
+  const refreshControl = async () => {
+    try {
+      currendPageRef.current = 1;
+      setRefreshing(true);
+      const res = await fetchAllBites({
+        page: 1,
+        limit: 10,
+      });
+      if (res.posts?.length) {
+        useCentralStore.setState((prev) => ({
+          allBites: {
+            totalPages: res.totalPages,
+            posts: res.posts,
+            totalBites: res.totalPosts,
+          },
+        }));
+      }
+      setRefreshing(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // Memoized render item function
   const renderItem = useCallback(
@@ -87,7 +102,7 @@ const Explore = () => {
   return (
     <FullScreenView>
       <FlashList
-        data={biteStore.posts}
+        data={allBites.posts}
         renderItem={renderItem}
         estimatedItemSize={50}
         ListEmptyComponent={
@@ -96,7 +111,9 @@ const Explore = () => {
           </View>
         }
         onEndReached={fetchNextPage}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0}
+        onRefresh={refreshControl}
+        refreshing={refreshing}
         onMomentumScrollBegin={() => (startScrollingRef.current = true)}
         ListFooterComponent={
           loadingMore ? (

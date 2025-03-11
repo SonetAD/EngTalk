@@ -11,29 +11,19 @@ import { ActivityIndicator } from 'react-native';
 import { Color } from '@/constants/constants';
 
 const Profile = () => {
-  const { userName, userBites, totalBites, isLoading, getVoiceBite } =
-    useCentralStore(
-      useShallow((state) => ({
-        userName: state.user.userInfo.userName,
-        userBites: state.userBites,
-        totalBites: state.userBites.totalPosts,
-        isLoading: state.voiceBiteStatus.isLoading,
-        getVoiceBite: state.getVoiceBite,
-      }))
-    );
+  const { userName, userBites, isLoading, getVoiceBite } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      userBites: state.userBites,
+      isLoading: state.voiceBiteStatus.isLoading,
+      getVoiceBite: state.getVoiceBite,
+    }))
+  );
 
   const startScrollingRef = useRef(false);
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
-
-  // Memoizing biteStore to avoid unnecessary re-renders
-  const biteStore = useMemo(
-    () => ({
-      totalPages: userBites?.totalPages || 0,
-      posts: userBites?.posts || [],
-    }),
-    [userBites]
-  );
+  const [refreshing, setRefreshing] = useState(false);
 
   // Fetch initial data
   useEffect(() => {
@@ -46,7 +36,7 @@ const Profile = () => {
   const fetchNextPage = useCallback(async () => {
     if (
       startScrollingRef.current &&
-      biteStore.totalPages > currendPageRef.current
+      userBites.totalPages > currendPageRef.current
     ) {
       setLoadingMore(true);
       currendPageRef.current++;
@@ -62,12 +52,37 @@ const Profile = () => {
         useCentralStore.setState((prev) => ({
           userBites: {
             totalPages: res.totalPages,
-            posts: [...prev.allBites.posts, ...res.posts],
+            posts: [...prev.userBites.posts, ...res.posts],
+            totalBites: res.totalPosts,
           },
         }));
       }
     }
-  }, [biteStore.totalPages]);
+  }, [userBites.totalPages]);
+
+  const refreshControl = async () => {
+    try {
+      currendPageRef.current = 1;
+      setRefreshing(true);
+      const res = await fetchUserBite({
+        userName,
+        page: 1,
+        limit: 10,
+      });
+      if (res.posts?.length) {
+        useCentralStore.setState((prev) => ({
+          userBites: {
+            totalPages: res.totalPages,
+            posts: res.posts,
+            totalBites: res.totalPosts,
+          },
+        }));
+      }
+      setRefreshing(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // Memoized render item function
   const renderItem = useCallback(
@@ -82,20 +97,22 @@ const Profile = () => {
   );
 
   const headerComponent = useCallback(
-    ({ item }: any) => <ProfileInfo posts={totalBites} />,
-    [totalBites]
+    () => <ProfileInfo posts={userBites.totalPosts} />,
+    [userBites.totalPages]
   );
 
   return (
     <FullScreenView>
       <FlashList
         ListHeaderComponent={headerComponent}
-        data={biteStore.posts}
+        data={userBites.posts}
         renderItem={renderItem}
         estimatedItemSize={50}
         ListEmptyComponent={<NoPostAvailable isLoading={isLoading} />}
         onEndReached={fetchNextPage}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.3}
+        onRefresh={refreshControl}
+        refreshing={refreshing}
         onMomentumScrollBegin={() => (startScrollingRef.current = true)}
         ListFooterComponent={
           loadingMore ? (
