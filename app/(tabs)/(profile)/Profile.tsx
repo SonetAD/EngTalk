@@ -1,5 +1,5 @@
 import FullScreenView from '@/components/FullScreenView';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import ProfileInfo from '@/components/ProfileInfo';
 import VoiceBiteCard from '@/components/VoiceBiteCard';
@@ -11,91 +11,92 @@ import { ActivityIndicator } from 'react-native';
 import { Color } from '@/constants/constants';
 
 const Profile = () => {
-  const { userName, avatar, userBites, isLoading, getVoiceBite } =
+  const { userName, userBites, totalBites, isLoading, getVoiceBite } =
     useCentralStore(
       useShallow((state) => ({
         userName: state.user.userInfo.userName,
-        avatar: state.user.userInfo.avatar,
         userBites: state.userBites,
+        totalBites: state.userBites.totalPosts,
         isLoading: state.voiceBiteStatus.isLoading,
         getVoiceBite: state.getVoiceBite,
       }))
     );
 
   const startScrollingRef = useRef(false);
-  const [loadingMore, setLoadingMore] = useState(false);
   const currendPageRef = useRef(1);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  const [biteStore, setBiteStore] = useState<any>({
-    totalPages: 0,
-    posts: [],
-    totalPosts:0
-  });
+  // Memoizing biteStore to avoid unnecessary re-renders
+  const biteStore = useMemo(
+    () => ({
+      totalPages: userBites?.totalPages || 0,
+      posts: userBites?.posts || [],
+    }),
+    [userBites]
+  );
 
+  // Fetch initial data
   useEffect(() => {
     if (userName) {
       getVoiceBite({ userName });
     }
   }, [userName]);
 
-  useEffect(() => {
-    setBiteStore((prev: any) => ({
-      totalPages: userBites.totalPages,
-      posts: userBites.posts,
-      totalPosts:userBites.totalPosts
-    }));
-  }, [userBites]);
-
-  const onScrollEnd = async () => {
+  // Function to fetch next page efficiently
+  const fetchNextPage = useCallback(async () => {
     if (
       startScrollingRef.current &&
       biteStore.totalPages > currendPageRef.current
     ) {
       setLoadingMore(true);
-      try {
-        currendPageRef.current++;
-        const res = await fetchUserBite({
-          userName: userName,
-          page: currendPageRef.current,
-          limit: 10,
-        });
-        const newPosts: any = res.posts || [];
-        setBiteStore((prev: any) => ({
-          totalPages: res.totalPages,
-          posts: [...prev.posts, ...newPosts],
-          totalPosts:res.totalPosts
-        }));
+      currendPageRef.current++;
 
-        setLoadingMore(false);
-      } catch (err) {
-        console.log(err);
+      const res = await fetchUserBite({
+        userName,
+        page: currendPageRef.current,
+        limit: 10,
+      });
+      setLoadingMore(false);
+
+      if (res.posts?.length) {
+        useCentralStore.setState((prev) => ({
+          userBites: {
+            totalPages: res.totalPages,
+            posts: [...prev.allBites.posts, ...res.posts],
+          },
+        }));
       }
-    } else {
-      currendPageRef.current = 1;
     }
-  };
+  }, [biteStore.totalPages]);
+
+  // Memoized render item function
+  const renderItem = useCallback(
+    ({ item }: any) => (
+      <VoiceBiteCard
+        username={item?.user?.userName}
+        avatar={item?.user?.avatar}
+        fileName={item?.file}
+      />
+    ),
+    []
+  );
+
+  const headerComponent = useCallback(
+    ({ item }: any) => <ProfileInfo posts={totalBites} />,
+    [totalBites]
+  );
 
   return (
     <FullScreenView>
       <FlashList
-        ListHeaderComponent={() => (
-          <ProfileInfo posts={biteStore.posts.length} />
-        )}
+        ListHeaderComponent={headerComponent}
         data={biteStore.posts}
-        renderItem={({ item }: any) => (
-          <VoiceBiteCard
-            username={userName}
-            avatar={avatar}
-            fileName={item?.file}
-          />
-        )}
-        estimatedItemSize={30}
-        ListEmptyComponent={() => <NoPostAvailable isLoading={isLoading} />}
-        onEndReached={onScrollEnd}
-        onEndReachedThreshold={0.001}
-        onMomentumScrollBegin={() => {
-          startScrollingRef.current = true;
-        }}
+        renderItem={renderItem}
+        estimatedItemSize={50}
+        ListEmptyComponent={<NoPostAvailable isLoading={isLoading} />}
+        onEndReached={fetchNextPage}
+        onEndReachedThreshold={0.1}
+        onMomentumScrollBegin={() => (startScrollingRef.current = true)}
         ListFooterComponent={
           loadingMore ? (
             <ActivityIndicator

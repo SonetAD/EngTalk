@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
 import { Image } from 'expo-image';
 import { Backend } from '@/config';
 import { Color, DeviceWidth, Font, ImageBlurHash } from '@/constants/constants';
