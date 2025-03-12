@@ -21,6 +21,9 @@ export const Backend = {
   get allPost() {
     return `${this.baseURL}/post/allpost`;
   },
+  get leaderBoard() {
+    return `${this.baseURL}/user/leaderboard`;
+  },
   get uploadPost() {
     return `${this.baseURL}/post/upload`;
   },
