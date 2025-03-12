@@ -9,6 +9,7 @@ import ExploreHeaderComponent from '@/components/ExploreHeaderComponents';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import LeaderBoardHeaderComponent from '@/components/LeaderBoardHeaderComponent';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -93,7 +94,12 @@ const TabLayout = () => {
         name='(explore)'
         options={{
           title: 'Explore',
-          header: () => <ExploreHeaderComponent reference={bottomSheetModalRef} recordPopUp={recordPopUp} />,
+          header: () => (
+            <ExploreHeaderComponent
+              reference={bottomSheetModalRef}
+              recordPopUp={recordPopUp}
+            />
+          ),
 
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
@@ -109,7 +115,8 @@ const TabLayout = () => {
         name='LeaderBoard'
         options={{
           title: 'Leaderboard',
-          headerShown: false,
+          header: LeaderBoardHeaderComponent,
+
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
               name='trophy'

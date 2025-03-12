@@ -26,7 +26,6 @@ const Explore = () => {
     }))
   );
 
-  const startScrollingRef = useRef(false);
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -40,10 +39,7 @@ const Explore = () => {
 
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
-    if (
-      startScrollingRef.current &&
-      allBites.totalPages > currendPageRef.current
-    ) {
+    if (allBites.totalPages > currendPageRef.current) {
       setLoadingMore(true);
       currendPageRef.current++;
 
@@ -92,6 +88,7 @@ const Explore = () => {
     ({ item }: any) => (
       <VoiceBiteCard
         username={item?.user?.userName}
+        name={item?.user?.name}
         avatar={item?.user?.avatar}
         fileName={item?.file}
       />
@@ -111,10 +108,9 @@ const Explore = () => {
           </View>
         }
         onEndReached={fetchNextPage}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.3}
         onRefresh={refreshControl}
         refreshing={refreshing}
-        onMomentumScrollBegin={() => (startScrollingRef.current = true)}
         ListFooterComponent={
           loadingMore ? (
             <ActivityIndicator

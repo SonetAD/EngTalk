@@ -4,6 +4,11 @@ import fetchLeaderBoard from '@/libs/api/fetchLeaderBoard';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import FullScreenView from '@/components/FullScreenView';
+import TopThreeUser from '@/components/topThreeUser';
+import { DeviceHeight } from '@/constants/dimensions';
+import CustomLoadingPage from '@/components/CustomLoadingPage';
+import { FlashList } from '@shopify/flash-list';
+import LeaderboardCard from '@/components/LeaderBoardCard';
 
 const LeaderBoard = () => {
   const { token } = useCentralStore(
@@ -15,6 +20,7 @@ const LeaderBoard = () => {
     topUsers: [],
     totalUsersInLevel: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     (async () => {
       try {
@@ -25,6 +31,8 @@ const LeaderBoard = () => {
             topUsers: res.topUsers,
             totalUsersInLevel: res.totalUsersInLevel,
           });
+
+          setIsLoading(false);
         }
       } catch (err) {
         console.log(err);
@@ -32,16 +40,35 @@ const LeaderBoard = () => {
     })();
   }, [token]);
 
-  console.log(leaderBoard);
+  if (isLoading) return <CustomLoadingPage />;
+
   return (
     <FullScreenView>
-      <View>
-        <Text>LeaderBoard</Text>
-      </View>
+      <FlashList
+        ListHeaderComponent={() => (
+          <TopThreeUser userList={leaderBoard.topUsers.slice(0, 3)} />
+        )}
+        data={leaderBoard.topUsers}
+        renderItem={({ item, index }: { item: any; index: number }) => (
+          <LeaderboardCard
+            avatar={item?.avatar}
+            rank={index + 1}
+            name={item?.name}
+            username={item?.userName}
+            totalTrophy={item?.totalTrophy}
+          />
+        )}
+        estimatedItemSize={50}
+      />
     </FullScreenView>
   );
 };
 
 export default LeaderBoard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    marginTop: DeviceHeight * 0.1,
+    height: DeviceHeight,
+  },
+});

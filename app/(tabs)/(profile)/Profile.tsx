@@ -14,13 +14,13 @@ const Profile = () => {
   const { userName, userBites, isLoading, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
+      name: state.user.userInfo.name,
       userBites: state.userBites,
       isLoading: state.voiceBiteStatus.isLoading,
       getVoiceBite: state.getVoiceBite,
     }))
   );
 
-  const startScrollingRef = useRef(false);
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -35,7 +35,6 @@ const Profile = () => {
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
     if (
-      startScrollingRef.current &&
       userBites.totalPages > currendPageRef.current
     ) {
       setLoadingMore(true);
@@ -89,6 +88,7 @@ const Profile = () => {
     ({ item }: any) => (
       <VoiceBiteCard
         username={item?.user?.userName}
+        name={item?.user?.name}
         avatar={item?.user?.avatar}
         fileName={item?.file}
       />
@@ -113,7 +113,6 @@ const Profile = () => {
         onEndReachedThreshold={0.3}
         onRefresh={refreshControl}
         refreshing={refreshing}
-        onMomentumScrollBegin={() => (startScrollingRef.current = true)}
         ListFooterComponent={
           loadingMore ? (
             <ActivityIndicator

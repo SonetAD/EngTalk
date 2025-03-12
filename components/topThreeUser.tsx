@@ -1,12 +1,11 @@
 import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { Image } from 'expo-image';
-import { View,Text,StyleSheet } from 'react-native';
+import { Backend } from '@/config';
+import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 
 interface User {
-  avatar: string;
-  username: string;
-  name: string;
-  totalTrophy: number;
+  avatar: { default: boolean; src: string };
 }
 
 interface Props {
@@ -16,49 +15,33 @@ interface Props {
 const TopThreeUser = ({ userList }: Props) => {
   if (userList.length < 3) return null; // Ensure we have 3 users
 
+  const getAvatarUri = (avatar: { default: boolean; src: string }) => {
+    return `${Backend.baseURL}/default/avatars/${avatar.src}`;
+  };
+
   return (
     <View style={styles.container}>
-      {/* 2nd Place - Left */}
-      <View style={[styles.userContainer, styles.secondPlace]}>
-        <Image
-          source={userList[1].avatar}
-          style={styles.avatar}
-          contentFit='cover'
-        />
-        <Text style={styles.name}>{userList[1].name}</Text>
-        <Text style={styles.username}>@{userList[1].username}</Text>
-        <Text style={[styles.trophy, styles.silver]}>
-          🥈 {userList[1].totalTrophy}
-        </Text>
-      </View>
+      <Text style={styles.topThree}>The Crowned Trio</Text>
+      <Image
+        source={getAvatarUri(userList[0].avatar)}
+        style={[styles.avatar, styles.firstPlace]}
+        contentFit='cover'
+      />
 
-      {/* 1st Place - Center (Biggest) */}
-      <View style={[styles.userContainer, styles.firstPlace]}>
+      <View style={styles.bottomRow}>
         <Image
-          source={userList[0].avatar}
-          style={[styles.avatar, styles.firstAvatar]}
+          source={getAvatarUri(userList[1].avatar)}
+          style={[styles.avatar, styles.secondPlace]}
           contentFit='cover'
         />
-        <Text style={styles.name}>{userList[0].name}</Text>
-        <Text style={styles.username}>@{userList[0].username}</Text>
-        <Text style={[styles.trophy, styles.gold]}>
-          🥇 {userList[0].totalTrophy}
-        </Text>
-      </View>
 
-      {/* 3rd Place - Right */}
-      <View style={[styles.userContainer, styles.thirdPlace]}>
         <Image
-          source={userList[2].avatar}
-          style={styles.avatar}
+          source={getAvatarUri(userList[2].avatar)}
+          style={[styles.avatar, styles.thirdPlace]}
           contentFit='cover'
         />
-        <Text style={styles.name}>{userList[2].name}</Text>
-        <Text style={styles.username}>@{userList[2].username}</Text>
-        <Text style={[styles.trophy, styles.bronze]}>
-          🥉 {userList[2].totalTrophy}
-        </Text>
       </View>
+      <Text style={styles.topThree}>The Crowned Trio</Text>
     </View>
   );
 };
@@ -67,58 +50,50 @@ export default TopThreeUser;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginBottom: 20,
-  },
-  userContainer: {
     alignItems: 'center',
-    padding: 10,
-    borderRadius: 10,
   },
-  firstPlace: {
-    backgroundColor: '#FFD700',
-    padding: 12,
-    borderRadius: 12,
-    elevation: 10,
+  topThree: {
+    color: Color.white,
+    fontFamily: Font.pBold,
+    fontSize: 20,
+    marginVertical: 10,
   },
-  secondPlace: {
-    backgroundColor: '#C0C0C0',
-    marginRight: 20,
-    elevation: 5,
-  },
-  thirdPlace: {
-    backgroundColor: '#CD7F32',
-    marginLeft: 20,
-    elevation: 5,
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: DeviceWidth,
+    marginTop: DeviceHeight * 0.02,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginBottom: 5,
+    borderRadius: 50,
+    borderWidth: 4,
   },
-  firstAvatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  firstPlace: {
+    width: DeviceWidth * 0.21,
+    height: DeviceWidth * 0.21,
+    borderColor: '#FFD700',
+    shadowColor: '#FFD700',
+    shadowOpacity: 0.8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
   },
-  name: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#fff',
+  secondPlace: {
+    width: DeviceWidth * 0.18,
+    height: DeviceWidth * 0.18,
+    borderColor: '#C0C0C0',
+    shadowColor: '#C0C0C0',
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
   },
-  username: {
-    fontSize: 12,
-    color: '#ddd',
+  thirdPlace: {
+    width: DeviceWidth * 0.18,
+    height: DeviceWidth * 0.18,
+    borderColor: '#CD7F32',
+    shadowColor: '#CD7F32',
+    shadowOpacity: 0.6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
   },
-  trophy: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  gold: { color: '#FFD700' },
-  silver: { color: '#C0C0C0' },
-  bronze: { color: '#CD7F32' },
 });

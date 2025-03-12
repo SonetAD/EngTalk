@@ -16,10 +16,11 @@ import { Sound } from 'expo-av/build/Audio';
 interface Props {
   avatar: { default: boolean; src: string };
   username: string;
+  name: string;
   fileName: string;
 }
 
-const VoiceBitesCard = ({ avatar, username, fileName }: Props) => {
+const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
   const soundRef = useRef<Sound | null>(null);
   const [isSoundLoaded, setIsSoundLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -93,7 +94,7 @@ const VoiceBitesCard = ({ avatar, username, fileName }: Props) => {
         />
       </View>
 
-      <Text style={styles.username}>{username}</Text>
+      <Text style={styles.username}>{name}</Text>
 
       <Pressable
         onPress={onPlay}
