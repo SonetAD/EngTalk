@@ -41,7 +41,7 @@ const TopThreeUser = ({ userList }: Props) => {
           contentFit='cover'
         />
       </View>
-      <Text style={styles.topThree}>The Crowned Trio</Text>
+      <Text style={styles.topTen}>The Best of the Best 10</Text>
     </View>
   );
 };
@@ -54,10 +54,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topThree: {
-    color: Color.white,
+    color: 'gold',
     fontFamily: Font.pBold,
     fontSize: 20,
-    marginVertical: 10,
+    marginVertical: 20,
+  },
+  topTen: {
+    color: Color.gray.oneHundred,
+    fontFamily: Font.pRegular,
+    fontSize: 14,
+    marginTop: 10,
   },
   bottomRow: {
     flexDirection: 'row',

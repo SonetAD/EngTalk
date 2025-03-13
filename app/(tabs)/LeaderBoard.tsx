@@ -21,24 +21,33 @@ const LeaderBoard = () => {
     totalUsersInLevel: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   useEffect(() => {
-    (async () => {
-      try {
-        if (token) {
-          const res = await fetchLeaderBoard({ token });
-          setLeaderBoard({
-            position: res.position,
-            topUsers: res.topUsers,
-            totalUsersInLevel: res.totalUsersInLevel,
-          });
-
-          setIsLoading(false);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    })();
+    fetchTopList(token);
   }, [token]);
+
+  const fetchTopList = async (token: string) => {
+    try {
+      if (token) {
+        const res = await fetchLeaderBoard({ token });
+        setLeaderBoard({
+          position: res.position,
+          topUsers: res.topUsers,
+          totalUsersInLevel: res.totalUsersInLevel,
+        });
+
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const refreshControl = async () => {
+    setIsRefreshing(true);
+    await fetchTopList(token);
+    setIsRefreshing(false);
+  };
 
   if (isLoading) return <CustomLoadingPage />;
 
@@ -59,6 +68,8 @@ const LeaderBoard = () => {
           />
         )}
         estimatedItemSize={50}
+        onRefresh={refreshControl}
+        refreshing={isRefreshing}
       />
     </FullScreenView>
   );
