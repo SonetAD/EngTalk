@@ -100,8 +100,9 @@ const Explore = () => {
     <FullScreenView>
       <FlashList
         data={allBites.posts}
+        numColumns={2}
         renderItem={renderItem}
-        estimatedItemSize={50}
+        estimatedItemSize={300}
         ListEmptyComponent={
           <View style={styles.container}>
             <NoPostAvailable isLoading={isLoading} />

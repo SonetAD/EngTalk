@@ -4,14 +4,17 @@ import {
   Text,
   Pressable,
   StyleSheet,
+  Animated,
+  Easing,
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Ionicons } from '@expo/vector-icons';
-import { Color, Font, ImageBlurHash } from '@/constants/constants';
-import { Backend } from '@/config';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import { Audio } from 'expo-av';
 import { Sound } from 'expo-av/build/Audio';
+import { Color, Font, ImageBlurHash } from '@/constants/constants';
+import { Backend } from '@/config';
 
 interface Props {
   avatar: { default: boolean; src: string };
@@ -20,11 +23,17 @@ interface Props {
   fileName: string;
 }
 
+const gradients = [
+  [Color.primary, Color.secondary.default],
+  [Color.primary, Color.secondary.oneHundred],
+  [Color.primary, Color.secondary.twoHundred],
+];
+
 const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
   const soundRef = useRef<Sound | null>(null);
-  const [isSoundLoaded, setIsSoundLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const avatarImageSrc = avatar.default
     ? `${Backend.baseURL}/default/avatars/${avatar.src}`
@@ -33,47 +42,42 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
   const audioSource = `${Backend.public}/posts/${fileName}`;
 
   useEffect(() => {
-    (async () => {
-      if (isSoundLoaded) {
-        soundRef.current?.setOnPlaybackStatusUpdate((status: any) => {
-          setIsBuffering(status.isBuffering);
-          if (status.isLoaded && status.didJustFinish) {
-            setIsPlaying(false);
-            soundRef.current?.stopAsync();
-            setIsSoundLoaded(false);
-            unloadSound();
-          }
-        });
-      }
-    })();
-  }, [isSoundLoaded]);
-
-  useEffect(() => {
     return () => {
       unloadSound();
     };
   }, []);
 
-  const onPlay = async () => {
+  const togglePlay = async () => {
     try {
-      if (!isSoundLoaded) {
-        setIsBuffering(true);
-        const { sound } = await Audio.Sound.createAsync({ uri: audioSource });
-        soundRef.current = sound;
-        setIsBuffering(false);
-        setIsSoundLoaded(true);
-      }
       if (!isPlaying) {
-        await soundRef.current?.playAsync();
-        setIsPlaying(true);
+        setIsBuffering(true);
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: audioSource },
+          { shouldPlay: true }
+        );
+        soundRef.current = sound;
+
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded) {
+            setIsBuffering(false);
+            if (status.didJustFinish) {
+              animatePlay(false);
+              unloadSound();
+              setIsPlaying(false);
+            }
+          }
+        });
+
+        animatePlay(true);
       } else {
         await soundRef.current?.stopAsync();
-        setIsSoundLoaded(false);
-        setIsPlaying(false);
         unloadSound();
+        animatePlay(false);
       }
+      setIsPlaying(!isPlaying);
     } catch (err) {
       console.log(err);
+      setIsBuffering(false);
     }
   };
 
@@ -82,38 +86,78 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
     soundRef.current = null;
   };
 
+  const animatePlay = (playing: boolean) => {
+    Animated.timing(scaleAnim, {
+      toValue: playing ? 1.05 : 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const randomGradient =
+    gradients[Math.floor(Math.random() * gradients.length)];
+
   return (
-    <View style={styles.container}>
-      <View style={styles.avatarWrapper}>
-        <Image
-          source={avatarImageSrc}
-          placeholder={ImageBlurHash}
-          contentFit='cover'
-          transition={1000}
-          style={styles.avatar}
-        />
-      </View>
-
-      <Text style={styles.username}>{name}</Text>
-
-      <Pressable
-        onPress={onPlay}
-        style={styles.playButton}
+    <Pressable
+      onPress={togglePlay}
+      style={styles.container}
+    >
+      <Animated.View
+        style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
       >
-        {isBuffering ? (
-          <ActivityIndicator
-            size='small'
-            color={Color.secondary.default}
-          />
+        {isPlaying ? (
+          <LinearGradient
+            colors={randomGradient}
+            style={styles.gradient}
+          >
+            <View style={styles.avatarWrapper}>
+              {isBuffering ? (
+                <ActivityIndicator
+                  size='large'
+                  color={Color.white}
+                />
+              ) : (
+                <Image
+                  source={avatarImageSrc}
+                  placeholder={ImageBlurHash}
+                  contentFit='cover'
+                  transition={1000}
+                  style={styles.avatar}
+                />
+              )}
+            </View>
+            <Text style={styles.username}>
+              {name.length > 15 ? name.substring(0, 15) + '...' : name}
+            </Text>
+          </LinearGradient>
         ) : (
-          <Ionicons
-            name={isPlaying ? 'pause-circle' : 'play-circle'}
-            size={36}
-            color={Color.secondary.default}
-          />
+          <BlurView
+            intensity={50}
+            style={[styles.cardBackground, styles.blurBackground]}
+          >
+            <View style={styles.avatarWrapper}>
+              {isBuffering ? (
+                <ActivityIndicator
+                  size='large'
+                  color={Color.white}
+                />
+              ) : (
+                <Image
+                  source={avatarImageSrc}
+                  placeholder={ImageBlurHash}
+                  contentFit='cover'
+                  transition={1000}
+                  style={styles.avatar}
+                />
+              )}
+            </View>
+            <Text style={styles.username}>
+              {name.length > 15 ? name.substring(0, 15) + '...' : name}
+            </Text>
+          </BlurView>
         )}
-      </Pressable>
-    </View>
+      </Animated.View>
+    </Pressable>
   );
 };
 
@@ -121,54 +165,58 @@ export default VoiceBitesCard;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flex: 1,
+    margin: 6,
     alignItems: 'center',
-    backgroundColor: 'rgba(22, 22, 34, 0.9)',
+    justifyContent: 'center',
+  },
+  card: {
+    width: 180,
+    height: 300,
+    borderRadius: 16,
+    shadowColor: Color.black.default,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
+    overflow: 'hidden',
+  },
+  cardBackground: {
+    flex: 1,
     padding: 14,
     borderRadius: 16,
-    marginVertical: 8,
-    shadowColor: Color.black.default,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  blurBackground: {
+    backgroundColor: 'rgba(22, 22, 34, 0.3)',
+  },
+  gradient: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarWrapper: {
-    width: 54,
-    height: 54,
-    borderRadius: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    overflow: 'hidden',
+    backgroundColor: Color.black.twoHundred,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.black.twoHundred,
-    padding: 3,
-    borderWidth: 2,
-    borderColor: Color.secondary.default,
-    shadowColor: Color.secondary.default,
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 76,
+    height: 76,
+    borderRadius: 38,
   },
   username: {
-    flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: Font.pSemiBold,
     color: Color.white,
-    marginLeft: 10,
-  },
-  playButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 156, 1, 0.1)',
-    shadowColor: Color.secondary.default,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
+    marginTop: 12,
+    textAlign: 'center',
   },
 });

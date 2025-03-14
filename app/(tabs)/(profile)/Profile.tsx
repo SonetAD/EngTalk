@@ -34,9 +34,7 @@ const Profile = () => {
 
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
-    if (
-      userBites.totalPages > currendPageRef.current
-    ) {
+    if (userBites.totalPages > currendPageRef.current) {
       setLoadingMore(true);
       currendPageRef.current++;
 
@@ -106,8 +104,9 @@ const Profile = () => {
       <FlashList
         ListHeaderComponent={headerComponent}
         data={userBites.posts}
+        numColumns={2}
         renderItem={renderItem}
-        estimatedItemSize={50}
+        estimatedItemSize={300}
         ListEmptyComponent={<NoPostAvailable isLoading={isLoading} />}
         onEndReached={fetchNextPage}
         onEndReachedThreshold={0.3}
