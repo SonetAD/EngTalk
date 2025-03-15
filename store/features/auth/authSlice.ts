@@ -3,9 +3,10 @@ import userLogin from '@/libs/api/userLogin';
 import { AuthSliceType } from '@/store/features/auth/authSliceType';
 import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
+import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 
 const createAuthSlice: StateCreator<
-  AuthSliceType & UserStatSliceType & VoiceBiteSliceType,
+  AuthSliceType & UserStatSliceType & VoiceBiteSliceType & OtherUserInfoSliceType,
   [['zustand/immer', never]],
   [],
   AuthSliceType

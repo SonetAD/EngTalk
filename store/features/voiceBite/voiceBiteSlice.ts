@@ -4,9 +4,10 @@ import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
 import fetchUserBite from '@/libs/api/fetchUserBite';
 import fetchAllBites from '@/libs/api/fetchAllBite';
+import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 
 const createVoiceBiteSlice: StateCreator<
-  VoiceBiteSliceType & AuthSliceType & UserStatSliceType,
+  VoiceBiteSliceType & AuthSliceType & UserStatSliceType & OtherUserInfoSliceType,
   [['zustand/immer', never]],
   [],
   VoiceBiteSliceType

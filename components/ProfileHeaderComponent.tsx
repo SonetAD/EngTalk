@@ -5,17 +5,20 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   userName: string;
+  otherUser?: boolean;
 }
 
-const ProfileHeaderComponent = ({ userName }: Props) => {
+const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.userName}>{userName}</Text>
-      <Ionicons
-        name='settings-outline'
-        size={20}
-        color={Color.white}
-      />
+      {!otherUser && (
+        <Ionicons
+          name='settings-outline'
+          size={20}
+          color={Color.white}
+        />
+      )}
     </View>
   );
 };

@@ -1,32 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Backend } from '@/config';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
+import useCentralStore from '@/store/store/Store';
 
 interface User {
   avatar: { default: boolean; src: string };
+  userName: string;
 }
 
 interface Props {
   userList: User[];
+  viewProfile: () => void;
 }
 
-const TopThreeUser = ({ userList }: Props) => {
-  if (userList.length < 3) return null; // Ensure we have 3 users
-
+const TopThreeUser = ({ userList, viewProfile }: Props) => {
+  const setOtherUser = useCentralStore((state) => state.setOtherUser);
+  if (userList.length < 3) return null;
   const getAvatarUri = (avatar: { default: boolean; src: string }) => {
     return `${Backend.baseURL}/default/avatars/${avatar.src}`;
+  };
+
+  const viewOtherUserProfile = (userName: string) => {
+    setOtherUser(userName);
+    viewProfile();
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.topThree}>The Crowned Trio</Text>
-      <Image
-        source={getAvatarUri(userList[0].avatar)}
-        style={[styles.avatar, styles.firstPlace]}
-        contentFit='cover'
-      />
+      <Pressable onPress={() => viewOtherUserProfile(userList[0].userName)}>
+        <Image
+          source={getAvatarUri(userList[0].avatar)}
+          style={[styles.avatar, styles.firstPlace]}
+          contentFit='cover'
+        />
+      </Pressable>
 
       <View style={styles.bottomRow}>
         <Image

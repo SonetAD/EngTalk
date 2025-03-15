@@ -12,7 +12,6 @@ interface Props {
 
 const ProfileInfo = ({ posts }: Props) => {
   const {
-    userName,
     name,
     avatar,
     followers,
@@ -23,7 +22,6 @@ const ProfileInfo = ({ posts }: Props) => {
     level,
   } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
       name: state.user.userInfo.name,
       avatar: state.user.userInfo.avatar,
       followers: state.user.userInfo.followers,
@@ -58,7 +56,7 @@ const ProfileInfo = ({ posts }: Props) => {
           <Text style={styles.statText}>followers</Text>
         </View>
         <View>
-          <Text style={styles.statNumber}>{followers?.length || 0}</Text>
+          <Text style={styles.statNumber}>{following?.length || 0}</Text>
           <Text style={styles.statText}>following</Text>
         </View>
       </View>

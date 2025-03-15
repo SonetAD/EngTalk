@@ -9,6 +9,7 @@ import { DeviceHeight } from '@/constants/dimensions';
 import CustomLoadingPage from '@/components/CustomLoadingPage';
 import { FlashList } from '@shopify/flash-list';
 import LeaderboardCard from '@/components/LeaderBoardCard';
+import { router } from 'expo-router';
 
 const LeaderBoard = () => {
   const { token } = useCentralStore(
@@ -48,6 +49,10 @@ const LeaderBoard = () => {
     await fetchTopList(token);
     setIsRefreshing(false);
   };
+  
+  const navigateToOtherProfile=()=>{
+    router.push('/OtherProfile');
+  }
 
   if (isLoading) return <CustomLoadingPage />;
 
@@ -55,7 +60,7 @@ const LeaderBoard = () => {
     <FullScreenView>
       <FlashList
         ListHeaderComponent={() => (
-          <TopThreeUser userList={leaderBoard.topUsers.slice(0, 3)} />
+          <TopThreeUser userList={leaderBoard.topUsers.slice(0, 3)} viewProfile={navigateToOtherProfile} />
         )}
         data={leaderBoard.topUsers}
         renderItem={({ item, index }: { item: any; index: number }) => (

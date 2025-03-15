@@ -40,9 +40,10 @@ const TabIcon = ({ name, color, focused, size }: Props) => {
 };
 
 const TabLayout = () => {
-  const { userName, setUser } = useCentralStore(
+  const { userName, otherUser, setUser } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
+      otherUser: state.otherUser,
       setUser: state.setUser,
     }))
   );
@@ -138,6 +139,18 @@ const TabLayout = () => {
               color={color}
               focused={focused}
               size={size}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name='OtherProfile'
+        options={{
+          href: null,
+          header: () => (
+            <ProfileHeaderComponent
+              userName={otherUser}
+              otherUser={true}
             />
           ),
         }}

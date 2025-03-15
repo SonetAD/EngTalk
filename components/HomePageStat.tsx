@@ -7,12 +7,13 @@ import Color from '@/constants/color';
 import { AnimatedRollingNumber } from 'react-native-animated-rolling-numbers';
 
 interface Props {
-  goldCoin: number;
+  goldCoin?: number;
   trophy: number;
   talkTime: number;
+  level?: number;
 }
 
-const HomePageStat = ({ goldCoin, trophy, talkTime }: Props) => {
+const HomePageStat = ({ goldCoin, trophy, talkTime, level }: Props) => {
   return (
     <Animated.View
       entering={FadeInUp.duration(700)}
@@ -23,12 +24,12 @@ const HomePageStat = ({ goldCoin, trophy, talkTime }: Props) => {
         style={styles.statBox}
       >
         <Ionicons
-          name='medal-outline'
+          name={level ? 'stats-chart-outline' : 'medal-outline'}
           size={30}
           color='gold'
         />
         <AnimatedRollingNumber
-          value={goldCoin || 0}
+          value={level || goldCoin || 0}
           textStyle={styles.statText}
           useGrouping
           enableCompactNotation
@@ -47,7 +48,7 @@ const HomePageStat = ({ goldCoin, trophy, talkTime }: Props) => {
           color='orange'
         />
         <AnimatedRollingNumber
-          value={trophy}
+          value={trophy || 0}
           textStyle={styles.statText}
           useGrouping
           enableCompactNotation
@@ -66,7 +67,7 @@ const HomePageStat = ({ goldCoin, trophy, talkTime }: Props) => {
           color='lightblue'
         />
         <AnimatedRollingNumber
-          value={talkTime}
+          value={talkTime || 0}
           textStyle={styles.statText}
           useGrouping
           enableCompactNotation

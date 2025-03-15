@@ -3,9 +3,10 @@ import updateTalkTime from '@/libs/api/updateTalkTime';
 import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { AuthSliceType } from '@/store/features/auth/authSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
+import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 
 const createUserStatSlice: StateCreator<
-  UserStatSliceType & AuthSliceType & VoiceBiteSliceType,
+  UserStatSliceType & AuthSliceType & VoiceBiteSliceType & OtherUserInfoSliceType,
   [['zustand/immer', never]],
   [],
   UserStatSliceType
