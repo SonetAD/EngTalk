@@ -12,25 +12,19 @@ interface User {
 
 interface Props {
   userList: User[];
-  viewProfile: () => void;
+  viewProfile: (otherUserName: string) => void;
 }
 
 const TopThreeUser = ({ userList, viewProfile }: Props) => {
-  const setOtherUser = useCentralStore((state) => state.setOtherUser);
   if (userList.length < 3) return null;
   const getAvatarUri = (avatar: { default: boolean; src: string }) => {
     return `${Backend.baseURL}/default/avatars/${avatar.src}`;
   };
 
-  const viewOtherUserProfile = (userName: string) => {
-    setOtherUser(userName);
-    viewProfile();
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.topThree}>The Crowned Trio</Text>
-      <Pressable onPress={() => viewOtherUserProfile(userList[0].userName)}>
+      <Pressable onPress={() => viewProfile(userList[0].userName)}>
         <Image
           source={getAvatarUri(userList[0].avatar)}
           style={[styles.avatar, styles.firstPlace]}
@@ -39,14 +33,14 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
       </Pressable>
 
       <View style={styles.bottomRow}>
-        <Pressable onPress={() => viewOtherUserProfile(userList[1].userName)}>
+        <Pressable onPress={() => viewProfile(userList[1].userName)}>
           <Image
             source={getAvatarUri(userList[1].avatar)}
             style={[styles.avatar, styles.secondPlace]}
             contentFit='cover'
           />
         </Pressable>
-        <Pressable onPress={() => viewOtherUserProfile(userList[2].userName)}>
+        <Pressable onPress={() => viewProfile(userList[2].userName)}>
           <Image
             source={getAvatarUri(userList[2].avatar)}
             style={[styles.avatar, styles.thirdPlace]}

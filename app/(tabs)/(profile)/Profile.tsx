@@ -66,7 +66,7 @@ const Profile = () => {
           userBites: {
             totalPages: res.totalPages,
             posts: res.posts,
-            totalBites: res.totalPosts,
+            totalPosts: res.totalPosts,
           },
         }));
       }

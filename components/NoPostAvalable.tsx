@@ -8,9 +8,10 @@ import RecordVoiceBites from './RecordVoiceBites';
 
 interface Props {
   isLoading: boolean;
+  otherUser?: boolean;
 }
 
-const NoPostAvailable = ({ isLoading }: Props) => {
+const NoPostAvailable = ({ isLoading, otherUser }: Props) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const recordPopUp = useCallback(async () => {
@@ -32,11 +33,13 @@ const NoPostAvailable = ({ isLoading }: Props) => {
             color={Color.secondary.twoHundred}
           />
           <Text style={styles.text}>No Voice Bites Yet</Text>
+          {!otherUser && 
           <CustomButton
             text='Create A Bite'
             handlePress={recordPopUp}
             containerStyle={styles.btn}
           />
+          }
           <RecordVoiceBites ref={bottomSheetModalRef} />
         </View>
       )}

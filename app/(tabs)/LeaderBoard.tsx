@@ -12,8 +12,12 @@ import LeaderboardCard from '@/components/LeaderBoardCard';
 import { router } from 'expo-router';
 
 const LeaderBoard = () => {
-  const { token } = useCentralStore(
-    useShallow((state) => ({ token: state.user.token }))
+  const { token, userName, setOtherUser } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.user.userInfo.userName,
+      token: state.user.token,
+      setOtherUser: state.setOtherUser,
+    }))
   );
 
   const [leaderBoard, setLeaderBoard] = useState({
@@ -49,10 +53,15 @@ const LeaderBoard = () => {
     await fetchTopList(token);
     setIsRefreshing(false);
   };
-  
-  const navigateToOtherProfile=()=>{
-    router.push('/OtherProfile');
-  }
+
+  const navigateToOtherProfile = (otherUseName: string) => {
+    if (userName === otherUseName) {
+      router.navigate('/Profile');
+    } else {
+      setOtherUser(otherUseName);
+      router.push('/OtherProfile');
+    }
+  };
 
   if (isLoading) return <CustomLoadingPage />;
 
@@ -60,7 +69,10 @@ const LeaderBoard = () => {
     <FullScreenView>
       <FlashList
         ListHeaderComponent={() => (
-          <TopThreeUser userList={leaderBoard.topUsers.slice(0, 3)} viewProfile={navigateToOtherProfile} />
+          <TopThreeUser
+            userList={leaderBoard.topUsers.slice(0, 3)}
+            viewProfile={navigateToOtherProfile}
+          />
         )}
         data={leaderBoard.topUsers}
         renderItem={({ item, index }: { item: any; index: number }) => (

@@ -25,7 +25,11 @@ const OtherProfile = () => {
 
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
-    if (userBites.totalPages > currendPageRef.current) {
+    if (
+      userBites.totalPages > currendPageRef.current &&
+      !loadingMore &&
+      !refreshing
+    ) {
       setLoadingMore(true);
       currendPageRef.current++;
 
@@ -34,17 +38,20 @@ const OtherProfile = () => {
         page: currendPageRef.current,
         limit: 10,
       });
-      setLoadingMore(false);
 
       if (res.posts?.length) {
         useCentralStore.setState((prev) => ({
-          userBites: {
-            totalPages: res.totalPages,
-            posts: [...prev.userBites.posts, ...res.posts],
-            totalBites: res.totalPosts,
+          otherUser: {
+            ...prev.otherUser,
+            otherUserBites: {
+              totalPages: res.totalPages,
+              posts: [...prev.otherUser.otherUserBites.posts, ...res.posts],
+              totalPosts: res.totalPosts,
+            },
           },
         }));
       }
+      setLoadingMore(false);
     }
   }, [userBites.totalPages]);
 
@@ -59,15 +66,18 @@ const OtherProfile = () => {
       });
       if (res.posts?.length) {
         useCentralStore.setState((prev) => ({
-          userBites: {
-            totalPages: res.totalPages,
-            posts: res.posts,
-            totalBites: res.totalPosts,
+          otherUser: {
+            ...prev.otherUser,
+            otherUserBites: {
+              totalPages: res.totalPages,
+              posts: res.posts,
+              totalPosts: res.totalPosts,
+            },
           },
         }));
       }
       setRefreshing(false);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
     }
   };
@@ -95,7 +105,12 @@ const OtherProfile = () => {
         numColumns={2}
         renderItem={renderItem}
         estimatedItemSize={300}
-        ListEmptyComponent={<NoPostAvailable isLoading={isLoading} />}
+        ListEmptyComponent={
+          <NoPostAvailable
+            isLoading={isLoading}
+            otherUser={true}
+          />
+        }
         onEndReached={fetchNextPage}
         onEndReachedThreshold={0.3}
         onRefresh={refreshControl}
