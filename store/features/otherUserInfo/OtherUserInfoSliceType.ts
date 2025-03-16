@@ -1,10 +1,37 @@
+type VoiceBite = {
+  posts: [];
+  totalPages: number;
+  totalPosts: number;
+};
+
+type User = {
+  userName: string;
+  name: string;
+  avatar: {
+    default: boolean;
+    src: string;
+  };
+  followers: [];
+  following: [];
+  level: number;
+  talkTime: number;
+  totalTrophy: number;
+  otherUserBites: VoiceBite;
+};
+
+type OtherUserInfoStatus = {
+  isLoading: boolean;
+  isError: boolean;
+  error: string;
+};
+
 type OtherUserInfoState = {
-  otherUser: string;
+  otherUser: User;
+  otherUserInfoStatus: OtherUserInfoStatus;
 };
 
 type OtherUserInfoAction = {
   setOtherUser: (userName: string) => void;
 };
 
-
-export type OtherUserInfoSliceType= OtherUserInfoState & OtherUserInfoAction
+export type OtherUserInfoSliceType = OtherUserInfoState & OtherUserInfoAction;

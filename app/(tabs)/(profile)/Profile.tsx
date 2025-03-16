@@ -11,13 +11,11 @@ import { ActivityIndicator } from 'react-native';
 import { Color } from '@/constants/constants';
 
 const Profile = () => {
-  const { userName, userBites, isLoading, getVoiceBite } = useCentralStore(
+  const { userName, userBites, isLoading } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
-      name: state.user.userInfo.name,
       userBites: state.userBites,
       isLoading: state.voiceBiteStatus.isLoading,
-      getVoiceBite: state.getVoiceBite,
     }))
   );
 
@@ -25,16 +23,13 @@ const Profile = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Fetch initial data
-  useEffect(() => {
-    if (userName) {
-      getVoiceBite({ userName });
-    }
-  }, [userName]);
-
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
-    if (userBites.totalPages > currendPageRef.current) {
+    if (
+      userBites.totalPages > currendPageRef.current &&
+      !loadingMore &&
+      !refreshing
+    ) {
       setLoadingMore(true);
       currendPageRef.current++;
 
@@ -43,17 +38,17 @@ const Profile = () => {
         page: currendPageRef.current,
         limit: 10,
       });
-      setLoadingMore(false);
 
-      if (res.posts?.length) {
+      if (res?.posts?.length > 0) {
         useCentralStore.setState((prev) => ({
           userBites: {
             totalPages: res.totalPages,
             posts: [...prev.userBites.posts, ...res.posts],
-            totalBites: res.totalPosts,
+            totalPosts: res.totalPosts,
           },
         }));
       }
+      setLoadingMore(false);
     }
   }, [userBites.totalPages]);
 
@@ -94,10 +89,7 @@ const Profile = () => {
     []
   );
 
-  const headerComponent = useCallback(
-    () => <ProfileInfo posts={userBites.totalPosts} />,
-    [userBites.totalPages]
-  );
+  const headerComponent = useCallback(() => <ProfileInfo />, []);
 
   return (
     <FullScreenView>

@@ -6,16 +6,13 @@ import ProfilePageStat from '@/components/ProfilePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
-interface Props {
-  posts: number;
-}
-
-const ProfileInfo = ({ posts }: Props) => {
+const ProfileInfo = () => {
   const {
     name,
     avatar,
     followers,
     following,
+    totalUserBites,
     totalGoldCoin,
     totalTrophy,
     talkTime,
@@ -30,6 +27,7 @@ const ProfileInfo = ({ posts }: Props) => {
       totalTrophy: state.userStat.totalTrophy,
       talkTime: state.userStat.talkTime,
       level: state.userStat.level,
+      totalUserBites: state.userBites.totalPosts,
     }))
   );
 
@@ -48,7 +46,7 @@ const ProfileInfo = ({ posts }: Props) => {
           style={styles.avatar}
         />
         <View>
-          <Text style={styles.statNumber}>{posts || 0}</Text>
+          <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
         </View>
         <View>

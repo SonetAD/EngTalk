@@ -40,11 +40,12 @@ const TabIcon = ({ name, color, focused, size }: Props) => {
 };
 
 const TabLayout = () => {
-  const { userName, otherUser, setUser } = useCentralStore(
+  const { userName, otherUserName, setUser, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
-      otherUser: state.otherUser,
+      otherUserName: state.otherUser.userName,
       setUser: state.setUser,
+      getVoiceBite: state.getVoiceBite,
     }))
   );
 
@@ -61,6 +62,12 @@ const TabLayout = () => {
       setUser({ userName, password });
     }
   }, []);
+
+  useEffect(() => {
+    if (userName) {
+      getVoiceBite({ userName });
+    }
+  }, [userName]);
 
   return (
     <Tabs
@@ -149,7 +156,7 @@ const TabLayout = () => {
           href: null,
           header: () => (
             <ProfileHeaderComponent
-              userName={otherUser}
+              userName={otherUserName}
               otherUser={true}
             />
           ),

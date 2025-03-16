@@ -39,17 +39,20 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
       </Pressable>
 
       <View style={styles.bottomRow}>
-        <Image
-          source={getAvatarUri(userList[1].avatar)}
-          style={[styles.avatar, styles.secondPlace]}
-          contentFit='cover'
-        />
-
-        <Image
-          source={getAvatarUri(userList[2].avatar)}
-          style={[styles.avatar, styles.thirdPlace]}
-          contentFit='cover'
-        />
+        <Pressable onPress={() => viewOtherUserProfile(userList[1].userName)}>
+          <Image
+            source={getAvatarUri(userList[1].avatar)}
+            style={[styles.avatar, styles.secondPlace]}
+            contentFit='cover'
+          />
+        </Pressable>
+        <Pressable onPress={() => viewOtherUserProfile(userList[2].userName)}>
+          <Image
+            source={getAvatarUri(userList[2].avatar)}
+            style={[styles.avatar, styles.thirdPlace]}
+            contentFit='cover'
+          />
+        </Pressable>
       </View>
       <Text style={styles.topTen}>The Best of the Best 10</Text>
     </View>

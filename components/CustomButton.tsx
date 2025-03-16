@@ -13,6 +13,7 @@ interface Props {
   containerStyle?: object;
   textStyle?: object;
   isLoading?: boolean;
+  feedBackOff?: boolean;
 }
 
 const CustomButton = ({
@@ -21,12 +22,14 @@ const CustomButton = ({
   containerStyle,
   textStyle,
   isLoading,
+  feedBackOff,
 }: Props) => {
   return (
     <TouchableOpacity
-      onPress={()=>{
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      onPress={() => {
+        if (!feedBackOff) {          
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }
         handlePress();
       }}
       style={
@@ -65,5 +68,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Color.primary,
     textAlign: 'center',
-  },
+  }
 });

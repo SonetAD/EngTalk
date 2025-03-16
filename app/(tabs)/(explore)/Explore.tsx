@@ -17,12 +17,10 @@ import fetchAllBites from '@/libs/api/fetchAllBite';
 import { Color } from '@/constants/constants';
 
 const Explore = () => {
-  const { userName, allBites, isLoading, getVoiceBite } = useCentralStore(
+  const { allBites, isLoading } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
       allBites: state.allBites,
       isLoading: state.voiceBiteStatus.isLoading,
-      getVoiceBite: state.getVoiceBite,
     }))
   );
 
@@ -30,16 +28,13 @@ const Explore = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Fetch initial data
-  useEffect(() => {
-    if (userName) {
-      getVoiceBite({ userName });
-    }
-  }, [userName]);
-
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
-    if (allBites.totalPages > currendPageRef.current) {
+    if (
+      allBites.totalPages > currendPageRef.current &&
+      !loadingMore &&
+      !refreshing
+    ) {
       setLoadingMore(true);
       currendPageRef.current++;
 
@@ -47,7 +42,6 @@ const Explore = () => {
         page: currendPageRef.current,
         limit: 10,
       });
-      setLoadingMore(false);
 
       if (res.posts?.length) {
         useCentralStore.setState((prev) => ({
@@ -57,6 +51,7 @@ const Explore = () => {
           },
         }));
       }
+      setLoadingMore(false);
     }
   }, [allBites.totalPages]);
 

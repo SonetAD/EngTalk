@@ -11,28 +11,17 @@ import { Color } from '@/constants/constants';
 import OtherProfileInfo from '@/components/OtherProfileInfo';
 
 const OtherProfile = () => {
-  const { userName, otherUser, userBites, isLoading, getVoiceBite } =
-    useCentralStore(
-      useShallow((state) => ({
-        otherUser: state.otherUser,
-        userName: state.user.userInfo.userName,
-        name: state.user.userInfo.name,
-        userBites: state.userBites,
-        isLoading: state.voiceBiteStatus.isLoading,
-        getVoiceBite: state.getVoiceBite,
-      }))
-    );
+  const { userName, userBites, isLoading } = useCentralStore(
+    useShallow((state) => ({
+      userName: state.otherUser.userName,
+      isLoading: state.otherUserInfoStatus.isLoading,
+      userBites: state.otherUser.otherUserBites,
+    }))
+  );
 
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
-  // Fetch initial data
-  useEffect(() => {
-    if (userName) {
-      getVoiceBite({ userName });
-    }
-  }, [userName]);
 
   // Function to fetch next page efficiently
   const fetchNextPage = useCallback(async () => {
@@ -96,15 +85,7 @@ const OtherProfile = () => {
     []
   );
 
-  const headerComponent = useCallback(
-    () => (
-      <OtherProfileInfo
-        posts={userBites.totalPosts}
-        userName={otherUser}
-      />
-    ),
-    [userBites.totalPages]
-  );
+  const headerComponent = useCallback(() => <OtherProfileInfo />, []);
 
   return (
     <FullScreenView>
