@@ -8,4 +8,11 @@ const Socket = io(Backend.instaCall, {
   timeout: 10000,
 });
 
+export const NotificationSocket = io(Backend.notificationSocket, {
+  transports: ['websocket'],
+  reconnection: true,
+  reconnectionAttempts: 5,
+  timeout: 10000,
+});
+
 export default Socket;

@@ -34,6 +34,10 @@ export const Backend = {
   get instaCall() {
     return `${this.baseURL}/instaCall`;
   },
+  get notificationSocket() {
+    return `${this.baseURL}/notification`;
+  },
+
   get iceServerURL() {
     return `${this.baseURL}/iceserver`;
   },

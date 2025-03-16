@@ -5,17 +5,21 @@ import Color from '@/constants/color';
 import Font from '@/constants/font';
 import { Easing } from 'react-native-reanimated';
 import { DeviceWidth } from '@/constants/dimensions';
-import Socket from '@/libs/Socket';
+import { NotificationSocket } from '@/libs/Socket';
+import useCentralStore from '@/store/store/Store';
 
 const OnlineNow = () => {
+  const userName = useCentralStore((state) => state.user.userInfo.userName);
   const [onlineCount, setOnlineCount] = useState(0);
 
   useEffect(() => {
-    Socket.on('activeUserCount', (activeUser) => {
-      setOnlineCount(activeUser);
-    });
-    Socket.emit('newUser');
-  }, []);
+    if (userName) {
+      NotificationSocket.on('activeUserCount', (activeUser) => {
+        setOnlineCount(activeUser);
+      });
+      NotificationSocket.emit('newUser', userName);
+    }
+  }, [userName]);
 
   return (
     <View style={styles.onlineContainer}>

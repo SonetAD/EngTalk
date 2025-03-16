@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
-import CustomLoadingPage from '@/components/CustomLoadingPage';
 import CustomButton from '@/components/CustomButton';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
 import Font from '@/constants/font';
