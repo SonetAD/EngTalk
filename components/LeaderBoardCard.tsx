@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Color, Font, ImageBlurHash } from '@/constants/constants';
@@ -11,9 +11,17 @@ interface Props {
   username: string;
   name: string;
   totalTrophy: number;
+  viewProfile: (otherUserName: string) => void;
 }
 
-const LeaderboardCard = ({ rank, avatar, name, totalTrophy }: Props) => {
+const LeaderboardCard = ({
+  username,
+  rank,
+  avatar,
+  name,
+  totalTrophy,
+  viewProfile,
+}: Props) => {
   const avatarImageSrc = avatar.default
     ? `${Backend.baseURL}/default/avatars/${avatar.src}`
     : `${Backend.baseURL}/uploads/avatars/${avatar.src}`;
@@ -23,13 +31,15 @@ const LeaderboardCard = ({ rank, avatar, name, totalTrophy }: Props) => {
       <Text style={styles.rank}>{rank}</Text>
 
       <View style={styles.avatarWrapper}>
-        <Image
-          source={avatarImageSrc}
-          placeholder={ImageBlurHash}
-          contentFit='cover'
-          transition={1000}
-          style={styles.avatar}
-        />
+        <Pressable onPress={()=>viewProfile(username)}>
+          <Image
+            source={avatarImageSrc}
+            placeholder={ImageBlurHash}
+            contentFit='cover'
+            transition={1000}
+            style={styles.avatar}
+          />
+        </Pressable>
       </View>
 
       {/* Username */}

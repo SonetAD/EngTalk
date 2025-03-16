@@ -82,6 +82,7 @@ const LeaderBoard = () => {
             name={item?.name}
             username={item?.userName}
             totalTrophy={item?.totalTrophy}
+            viewProfile={navigateToOtherProfile}
           />
         )}
         estimatedItemSize={50}

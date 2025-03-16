@@ -6,10 +6,14 @@ import HomePageStat from './HomePageStat';
 import CustomButton from './CustomButton';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import followUser from '@/libs/api/followUser';
+import getUserInfo from '@/libs/api/userInfo';
 
 const OtherProfileInfo = () => {
   const {
     name,
+    otherUserName,
+    token,
     avatar,
     followers,
     following,
@@ -20,6 +24,7 @@ const OtherProfileInfo = () => {
   } = useCentralStore(
     useShallow((state) => ({
       name: state.otherUser.name,
+      otherUserName: state.otherUser.userName,
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
       following: state.otherUser.following,
@@ -27,12 +32,20 @@ const OtherProfileInfo = () => {
       talkTime: state.otherUser.talkTime,
       level: state.otherUser.level,
       totalUserBites: state.otherUser.otherUserBites.totalPosts,
+      token: state.user.token,
     }))
   );
 
   const avatarImageSrc = avatar?.default
     ? `${Backend.baseURL}/default/avatars/${avatar?.src}`
     : `${Backend.baseURL}/default/avatars/${avatar?.src}`;
+
+  const followOtherUser = async () => {
+    followUser({
+      token,
+      userName: otherUserName,
+    })      
+  };
 
   return (
     <View>
@@ -64,7 +77,7 @@ const OtherProfileInfo = () => {
           containerStyle={[styles.btn]}
           text='Follow'
           feedBackOff={true}
-          handlePress={() => {}}
+          handlePress={followOtherUser}
         />
         <CustomButton
           containerStyle={[styles.btn, styles.mesageBtn]}

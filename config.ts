@@ -18,6 +18,9 @@ export const Backend = {
   get userPost() {
     return `${this.baseURL}/post/userpost`;
   },
+  get followUserURL() {
+    return `${this.baseURL}/user/follow`;
+  },
   get allPost() {
     return `${this.baseURL}/post/allpost`;
   },
