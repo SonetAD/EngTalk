@@ -8,10 +8,13 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import followUser from '@/libs/api/followUser';
 import getUserInfo from '@/libs/api/userInfo';
+import { NotificationSocket } from '@/libs/Socket';
+import { useEffect, useState } from 'react';
 
 const OtherProfileInfo = () => {
   const {
     name,
+    userName,
     otherUserName,
     token,
     avatar,
@@ -24,6 +27,7 @@ const OtherProfileInfo = () => {
   } = useCentralStore(
     useShallow((state) => ({
       name: state.otherUser.name,
+      userName: state.user.userInfo.userName,
       otherUserName: state.otherUser.userName,
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
@@ -36,15 +40,46 @@ const OtherProfileInfo = () => {
     }))
   );
 
+  const [followingInProgress, setFollowingInProgress] = useState(false);
+  const [followStatus, setFollowStatus] = useState(false);
+
+  useEffect(() => {
+    if (userName) {
+      if (followers.includes(userName)) {
+        setFollowStatus(true);
+      } else {
+        setFollowStatus(false);
+      }
+    }
+  }, [followers, userName]);
+
   const avatarImageSrc = avatar?.default
     ? `${Backend.baseURL}/default/avatars/${avatar?.src}`
     : `${Backend.baseURL}/default/avatars/${avatar?.src}`;
 
   const followOtherUser = async () => {
-    followUser({
-      token,
-      userName: otherUserName,
-    })      
+    try {
+      setFollowingInProgress(true);
+      await followUser({
+        token,
+        userName: otherUserName,
+      })
+      const otherUserInfo = await getUserInfo(otherUserName)
+
+      if (otherUserInfo) {
+        useCentralStore.setState((prev) => ({
+          otherUser: {
+            ...prev.otherUser,
+            followers: otherUserInfo.user.followers,
+            following: otherUserInfo.user.following,
+          },
+        }));
+        NotificationSocket.emit('follow', otherUserName);
+        setFollowingInProgress(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -74,13 +109,15 @@ const OtherProfileInfo = () => {
       <Text style={styles.location}>Bangladesh</Text>
       <View style={styles.btnGroup}>
         <CustomButton
-          containerStyle={[styles.btn]}
-          text='Follow'
+          containerStyle={[styles.btn, followStatus && styles.noBgBtn]}
+          textStyle={followStatus ? { color: Color.secondary.default } : {}}
+          text={followStatus ? 'Following' : 'Follow'}
           feedBackOff={true}
           handlePress={followOtherUser}
+          isLoading={followingInProgress}
         />
         <CustomButton
-          containerStyle={[styles.btn, styles.mesageBtn]}
+          containerStyle={[styles.btn, styles.noBgBtn]}
           textStyle={{ color: Color.secondary.default }}
           text='Message'
           feedBackOff={true}
@@ -154,7 +191,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.secondary.default,
   },
-  mesageBtn: {
+  noBgBtn: {
     backgroundColor: Color.black.twoHundred,
   },
 });

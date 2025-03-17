@@ -5,10 +5,14 @@ import { Color, DeviceWidth, Font, ImageBlurHash } from '@/constants/constants';
 import ProfilePageStat from '@/components/ProfilePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import { useEffect } from 'react';
+import { NotificationSocket } from '@/libs/Socket';
+import getUserInfo from '@/libs/api/userInfo';
 
 const ProfileInfo = () => {
   const {
     name,
+    userName,
     avatar,
     followers,
     following,
@@ -20,6 +24,7 @@ const ProfileInfo = () => {
   } = useCentralStore(
     useShallow((state) => ({
       name: state.user.userInfo.name,
+      userName: state.user.userInfo.userName,
       avatar: state.user.userInfo.avatar,
       followers: state.user.userInfo.followers,
       following: state.user.userInfo.following,
@@ -30,6 +35,24 @@ const ProfileInfo = () => {
       totalUserBites: state.userBites.totalPosts,
     }))
   );
+
+  useEffect(() => {
+    if (userName) {
+      NotificationSocket.on('follow', async (otherUserName) => {
+        const updatedUserInfo = await getUserInfo(userName);
+        useCentralStore.setState((prev) => ({
+          user: {
+            ...prev.user,
+            userInfo: {
+              ...prev.user.userInfo,
+              following: updatedUserInfo.user.following,
+              followers: updatedUserInfo.user.followers,
+            },
+          },
+        }));
+      });
+    }
+  }, [userName]);
 
   const avatarImageSrc = avatar?.default
     ? `${Backend.baseURL}/default/avatars/${avatar?.src}`

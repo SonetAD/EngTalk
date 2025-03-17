@@ -8,8 +8,8 @@ type User = {
       default: boolean;
       src: string;
     };
-    followers: [];
-    following: [];
+    followers: string[];
+    following: string[];
   };
 };
 

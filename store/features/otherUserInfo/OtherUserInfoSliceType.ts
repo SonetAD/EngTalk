@@ -11,8 +11,8 @@ type User = {
     default: boolean;
     src: string;
   };
-  followers: [];
-  following: [];
+  followers: string[];
+  following: string[];
   level: number;
   talkTime: number;
   totalTrophy: number;
