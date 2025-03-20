@@ -20,12 +20,9 @@ type SetProps = {
   talkTime: number;
   token: string;
 };
-type GetProps = {
-  token: string;
-};
 type UserStatAction = {
-  getUserStat: ({ token }: GetProps) => Promise<void>;
-  setUserStat: ({ talkTime, token }: SetProps) => Promise<void>;
+  getUserStat: () => Promise<void>;
+  setUserStat: (talkTime: number) => Promise<void>;
 };
 
 export type UserStatSliceType = UserStatState & UserStatAction;

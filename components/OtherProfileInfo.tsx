@@ -10,6 +10,7 @@ import followUser from '@/libs/api/followUser';
 import getUserInfo from '@/libs/api/userInfo';
 import { NotificationSocket } from '@/libs/Socket';
 import { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 
 const OtherProfileInfo = () => {
   const {
@@ -24,6 +25,7 @@ const OtherProfileInfo = () => {
     talkTime,
     level,
     totalUserBites,
+    getConversation
   } = useCentralStore(
     useShallow((state) => ({
       name: state.otherUser.name,
@@ -37,6 +39,7 @@ const OtherProfileInfo = () => {
       level: state.otherUser.level,
       totalUserBites: state.otherUser.otherUserBites.totalPosts,
       token: state.user.token,
+      getConversation: state.getConversation
     }))
   );
 
@@ -81,6 +84,11 @@ const OtherProfileInfo = () => {
       console.log(err);
     }
   };
+  
+  const openChatScreen=()=>{
+    getConversation(otherUserName)
+    router.push('/Chat');
+  }
 
   return (
     <View>
@@ -121,7 +129,7 @@ const OtherProfileInfo = () => {
           textStyle={{ color: Color.secondary.default }}
           text='Message'
           feedBackOff={true}
-          handlePress={() => {}}
+          handlePress={openChatScreen}
         />
       </View>
       <HomePageStat

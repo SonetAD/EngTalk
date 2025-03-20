@@ -1,4 +1,12 @@
-import {  StyleSheet, Text, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import React, { useState } from 'react';
 import FullScreenView from '@/components/FullScreenView';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
@@ -39,61 +47,67 @@ const Signin = () => {
       LocalStore.set('passWord', formData.passWord);
 
       router.replace('/');
-    } catch (err:any) {
+    } catch (err: any) {
       setErrorMessage(err.message);
       setShowErrorAlert(true);
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <FullScreenView>
-        <View style={styles.main}>
-          <Ionicons
-            name='person-circle'
-            size={40}
-            color={Color.white}
-          />
-
-          <Text style={styles.heading}>
-            Welcome back. Everyone’s been missing you!
-          </Text>
-
-          <FormField
-            placeholder='email / username'
-            value={formData.userName}
-            onChangeText={(text) =>
-              setFormData({ ...formData, userName: text })
-            }
-            keyboardType='email-address'
-          />
-          <FormField
-            placeholder='password'
-            value={formData.passWord}
-            onChangeText={(text) =>
-              setFormData({ ...formData, passWord: text })
-            }
-          />
-          <CustomButton
-            text='Sign In'
-            isLoading={isLoading}
-            handlePress={handleSubmit}
-          />
-          <View style={styles.signUp}>
-            <Text style={styles.txt}>Don't have an account? </Text>
-            <Link
-              href='/Signup'
-              style={styles.link}
-            >
-              Sign Up
-            </Link>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.main}>
+            <Ionicons
+              name='person-circle'
+              size={40}
+              color={Color.white}
+            />
+            <Text style={styles.heading}>
+              Welcome back. Everyone’s been missing you!
+            </Text>
+            <FormField
+              placeholder='email / username'
+              value={formData.userName}
+              onChangeText={(text) =>
+                setFormData({ ...formData, userName: text })
+              }
+              keyboardType='email-address'
+            />
+            <FormField
+              placeholder='password'
+              value={formData.passWord}
+              onChangeText={(text) =>
+                setFormData({ ...formData, passWord: text })
+              }
+            />
+            <CustomButton
+              text='Sign In'
+              isLoading={isLoading}
+              handlePress={handleSubmit}
+            />
+            <View style={styles.signUp}>
+              <Text style={styles.txt}>Don't have an account? </Text>
+              <Link
+                href='/Signup'
+                style={styles.link}
+              >
+                Sign Up
+              </Link>
+            </View>
           </View>
-        </View>
-        <ErrorAlert
-          message={errorMessage}
-          visibility={showErrorAlert}
-          setVisibility={setShowErrorAlert}
-        />
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+      <ErrorAlert
+        message={errorMessage}
+        visibility={showErrorAlert}
+        setVisibility={setShowErrorAlert}
+      />
     </FullScreenView>
   );
 };
@@ -102,13 +116,11 @@ export default Signin;
 
 const styles = StyleSheet.create({
   main: {
-    height: DeviceHeight,
-    width: DeviceWidth,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
   },
-
   heading: {
     color: Color.gray.oneHundred,
     textAlign: 'center',

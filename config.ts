@@ -44,6 +44,15 @@ export const Backend = {
   get public() {
     return `${this.baseURL}/public`;
   },
+  get sendMessageURL() {
+    return `${this.baseURL}/message/send`;
+  },
+  get inboxURL() {
+    return `${this.baseURL}/message/inbox`;
+  },
+  get conversationURL() {
+    return `${this.baseURL}/message/conversation`;
+  },
 };
 
 export const getIcServer = async (authToken: string) => {

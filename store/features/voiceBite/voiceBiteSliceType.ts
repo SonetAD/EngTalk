@@ -16,11 +16,8 @@ type VoiceBiteState = {
   voiceBiteStatus: VoiceBiteStatus;
 };
 
-type Prop = {
-  userName: string;
-};
 type VoiceBiteAction = {
-  getVoiceBite: ({ userName }: Prop) => Promise<void>;
+  getVoiceBite: () => Promise<void>;
 };
 
 export type VoiceBiteSliceType = VoiceBiteState & VoiceBiteAction;

@@ -4,9 +4,14 @@ import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { AuthSliceType } from '@/store/features/auth/authSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
+import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 
 const createUserStatSlice: StateCreator<
-  UserStatSliceType & AuthSliceType & VoiceBiteSliceType & OtherUserInfoSliceType,
+  UserStatSliceType &
+    AuthSliceType &
+    VoiceBiteSliceType &
+    OtherUserInfoSliceType
+  & ConversationSliceType,
   [['zustand/immer', never]],
   [],
   UserStatSliceType
@@ -22,9 +27,12 @@ const createUserStatSlice: StateCreator<
     isError: false,
     error: '',
   },
-  getUserStat: async ({ token }) => {
+  getUserStat: async () => {
     try {
-      const res = await updateTalkTime({ token, talkTime: null });
+      const res = await updateTalkTime({
+        token: get().user.token,
+        talkTime: null,
+      });
       const userData = res.user;
       set((state) => {
         state.userStat.totalGoldCoin = userData.totalGoldCoin;
@@ -47,9 +55,9 @@ const createUserStatSlice: StateCreator<
       });
     }
   },
-  setUserStat: async ({ talkTime, token }) => {
+  setUserStat: async (talkTime) => {
     try {
-      const res = await updateTalkTime({ token, talkTime });
+      const res = await updateTalkTime({ token: get().user.token, talkTime });
       const userData = res.user;
       set((state) => {
         state.userStat.totalGoldCoin = userData.totalGoldCoin;

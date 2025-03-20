@@ -7,38 +7,28 @@ import Color from '@/constants/color';
 import { router } from 'expo-router';
 import OnlineNow from '@/components/OnlineNow';
 import HomePageStat from '@/components/HomePageStat';
-import { useEffect } from 'react';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
 const Home = () => {
   const {
-    token,
     isLoading,
     isError,
     error,
     totalGoldCoin,
     totalTrophy,
     talkTime,
-    getUserStat,
   } = useCentralStore(
     useShallow((state) => ({
-      token: state.user.token,
       isLoading: state.authStatus.isLoading,
       isError: state.authStatus.isError,
       error: state.authStatus.error,
       totalGoldCoin: state.userStat.totalGoldCoin,
       totalTrophy: state.userStat.totalTrophy,
       talkTime: state.userStat.talkTime,
-      getUserStat: state.getUserStat,
     }))
   );
 
-  useEffect(() => {
-    if (token) {
-      getUserStat({ token });
-    }
-  }, [token]);
 
   const startCall = () => {
     router.push('/Call');

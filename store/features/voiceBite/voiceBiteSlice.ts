@@ -5,9 +5,14 @@ import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceTyp
 import fetchUserBite from '@/libs/api/fetchUserBite';
 import fetchAllBites from '@/libs/api/fetchAllBite';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
+import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 
 const createVoiceBiteSlice: StateCreator<
-  VoiceBiteSliceType & AuthSliceType & UserStatSliceType & OtherUserInfoSliceType,
+  VoiceBiteSliceType &
+    AuthSliceType &
+    UserStatSliceType &
+    OtherUserInfoSliceType &
+    ConversationSliceType,
   [['zustand/immer', never]],
   [],
   VoiceBiteSliceType
@@ -28,10 +33,14 @@ const createVoiceBiteSlice: StateCreator<
     isError: false,
     error: '',
   },
-  getVoiceBite: async ({ userName }) => {
+  getVoiceBite: async () => {
     try {
       const [userBites, allBites] = await Promise.all([
-        fetchUserBite({ userName, page: 1, limit: 10 }),
+        fetchUserBite({
+          userName: get().user.userInfo.userName,
+          page: 1,
+          limit: 10,
+        }),
         fetchAllBites({ page: 1, limit: 10 }),
       ]);
       set((state) => {

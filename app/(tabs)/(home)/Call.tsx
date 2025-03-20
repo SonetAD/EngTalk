@@ -116,7 +116,7 @@ const Call = () => {
     };
 
     const handleEndCall = () => {
-      setUserStat({ token, talkTime: timerRef.current });
+      setUserStat(timerRef.current);
       router.replace('/Home');
     };
 
@@ -220,7 +220,7 @@ const Call = () => {
   };
 
   const endCall = () => {
-    setUserStat({ token, talkTime: timerRef.current });
+    setUserStat(timerRef.current);
     Socket.emit('callEnd', { targetSocketId: matchedUserData?.targetSocketId });
     router.replace('/Home');
   };

@@ -6,12 +6,14 @@ import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceTyp
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import getUserInfo from '@/libs/api/userInfo';
 import fetchUserBite from '@/libs/api/fetchUserBite';
+import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 
 const createOtherUserInfoSliceJJ: StateCreator<
   OtherUserInfoSliceType &
     AuthSliceType &
     UserStatSliceType &
-    VoiceBiteSliceType,
+    VoiceBiteSliceType &
+    ConversationSliceType,
   [['zustand/immer', never]],
   [],
   OtherUserInfoSliceType

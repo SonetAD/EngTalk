@@ -1,4 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import React, { useState } from 'react';
 import FullScreenView from '@/components/FullScreenView';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
@@ -60,54 +69,74 @@ const Signup = () => {
 
   return (
     <FullScreenView>
-      <View style={styles.main}>
-        <Ionicons
-          name='person-circle-outline'
-          size={40}
-          color={Color.white}
-        />
-
-        <Text style={styles.heading}>
-          New here? The world is waiting to hear your voice!
-        </Text>
-
-        <FormField
-          placeholder='name'
-          value={formData.name}
-          onChangeText={(text) => setFormData({ ...formData, name: text })}
-        />
-        <FormField
-          placeholder='email'
-          value={formData.email}
-          onChangeText={(text) => setFormData({ ...formData, email: text })}
-        />
-        <GenderSelection
-          gender={formData.gender}
-          setGender={(selectedGender: string) =>
-            setFormData({ ...formData, gender: selectedGender })
-          }
-        />
-
-        <FormField
-          placeholder='password'
-          value={formData.passWord}
-          onChangeText={(text) => setFormData({ ...formData, passWord: text })}
-        />
-        <CustomButton
-          text='Sign Up'
-          isLoading={isLoading}
-          handlePress={handleSubmit}
-        />
-        <View style={styles.signIn}>
-          <Text style={styles.txt}>Already have an account? </Text>
-          <Link
-            href='/Signin'
-            style={styles.link}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
+            keyboardShouldPersistTaps='handled'
           >
-            Sign In
-          </Link>
-        </View>
-      </View>
+            <View style={styles.main}>
+              <Ionicons
+                name='person-circle-outline'
+                size={40}
+                color={Color.white}
+              />
+
+              <Text style={styles.heading}>
+                New here? The world is waiting to hear your voice!
+              </Text>
+
+              <FormField
+                placeholder='name'
+                value={formData.name}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, name: text })
+                }
+              />
+              <FormField
+                placeholder='email'
+                value={formData.email}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, email: text })
+                }
+              />
+              <GenderSelection
+                gender={formData.gender}
+                setGender={(selectedGender: string) =>
+                  setFormData({ ...formData, gender: selectedGender })
+                }
+              />
+              <FormField
+                placeholder='password'
+                value={formData.passWord}
+                onChangeText={(text) =>
+                  setFormData({ ...formData, passWord: text })
+                }
+              />
+
+              <CustomButton
+                text='Sign Up'
+                isLoading={isLoading}
+                handlePress={handleSubmit}
+              />
+
+              <View style={styles.signIn}>
+                <Text style={styles.txt}>Already have an account? </Text>
+                <Link
+                  href='/Signin'
+                  style={styles.link}
+                >
+                  Sign In
+                </Link>
+              </View>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+
       <ErrorAlert
         visibility={showErrorAlert}
         setVisibility={setShowErrorAlert}
@@ -120,13 +149,17 @@ const Signup = () => {
 export default Signup;
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
   main: {
-    height: DeviceHeight,
     width: DeviceWidth,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   heading: {
     color: Color.gray.oneHundred,
     textAlign: 'center',

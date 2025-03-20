@@ -34,8 +34,9 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack screenOptions={{ headerShown: false }} initialRouteName='index'>
             <Stack.Screen name='(auth)' />
+            <Stack.Screen name='Chat' />
             <Stack.Screen name='(tabs)' />
             <Stack.Screen name='index' />
           </Stack>
