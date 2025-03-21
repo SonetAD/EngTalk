@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Backend } from '@/config';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
-import useCentralStore from '@/store/store/Store';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface User {
   avatar: { default: boolean; src: string };
@@ -17,16 +17,13 @@ interface Props {
 
 const TopThreeUser = ({ userList, viewProfile }: Props) => {
   if (userList.length < 3) return null;
-  const getAvatarUri = (avatar: { default: boolean; src: string }) => {
-    return `${Backend.baseURL}/default/avatars/${avatar.src}`;
-  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.topThree}>The Crowned Trio</Text>
       <Pressable onPress={() => viewProfile(userList[0].userName)}>
         <Image
-          source={getAvatarUri(userList[0].avatar)}
+          source={getAvatarUrl(userList[0].avatar)}
           style={[styles.avatar, styles.firstPlace]}
           contentFit='cover'
         />
@@ -35,14 +32,14 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
       <View style={styles.bottomRow}>
         <Pressable onPress={() => viewProfile(userList[1].userName)}>
           <Image
-            source={getAvatarUri(userList[1].avatar)}
+            source={getAvatarUrl(userList[1].avatar)}
             style={[styles.avatar, styles.secondPlace]}
             contentFit='cover'
           />
         </Pressable>
         <Pressable onPress={() => viewProfile(userList[2].userName)}>
           <Image
-            source={getAvatarUri(userList[2].avatar)}
+            source={getAvatarUrl(userList[2].avatar)}
             style={[styles.avatar, styles.thirdPlace]}
             contentFit='cover'
           />

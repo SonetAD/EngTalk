@@ -15,6 +15,7 @@ import { Audio } from 'expo-av';
 import { Sound } from 'expo-av/build/Audio';
 import { Color, Font, ImageBlurHash } from '@/constants/constants';
 import { Backend } from '@/config';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface Props {
   avatar: { default: boolean; src: string };
@@ -35,9 +36,7 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
   const [isBuffering, setIsBuffering] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  const avatarImageSrc = avatar.default
-    ? `${Backend.baseURL}/default/avatars/${avatar.src}`
-    : `${Backend.baseURL}/uploads/avatars/${avatar.src}`;
+  const avatarImageSrc =getAvatarUrl(avatar); 
 
   const audioSource = `${Backend.public}/posts/${fileName}`;
 

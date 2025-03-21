@@ -23,7 +23,7 @@ const fetchConversation = async (data: Props) => {
         },
       }
     );
-    return res.data;
+    return res.data.conversation;
   } catch (err: any) {
     console.log(err.response?.data);
     throw new Error(err?.message);

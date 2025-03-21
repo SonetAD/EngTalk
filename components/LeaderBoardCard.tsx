@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Color, Font, ImageBlurHash } from '@/constants/constants';
 import { Backend } from '@/config';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface Props {
   rank: number;
@@ -22,9 +23,7 @@ const LeaderboardCard = ({
   totalTrophy,
   viewProfile,
 }: Props) => {
-  const avatarImageSrc = avatar.default
-    ? `${Backend.baseURL}/default/avatars/${avatar.src}`
-    : `${Backend.baseURL}/uploads/avatars/${avatar.src}`;
+  const avatarImageSrc =getAvatarUrl(avatar);
 
   return (
     <View style={styles.container}>

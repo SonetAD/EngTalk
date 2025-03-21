@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 const HomeHeaderComponent = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.userName}>eng<Text style={styles.talk}>talk</Text></Text>
+      <Text style={styles.eng}>eng<Text style={[styles.eng, styles.talk]}>talk</Text></Text>
       <Ionicons
         name='chatbubble-ellipses-outline'
         size={20}
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 20,
   },
-  userName: {
+  eng: {
     color: Color.white,
     fontSize: 20,
     fontFamily: Font.pSemiBold,

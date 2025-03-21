@@ -8,6 +8,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useEffect } from 'react';
 import { NotificationSocket } from '@/libs/Socket';
 import getUserInfo from '@/libs/api/userInfo';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
 const ProfileInfo = () => {
   const {
@@ -54,9 +55,7 @@ const ProfileInfo = () => {
     }
   }, [userName]);
 
-  const avatarImageSrc = avatar?.default
-    ? `${Backend.baseURL}/default/avatars/${avatar?.src}`
-    : `${Backend.baseURL}/default/avatars/${avatar?.src}`;
+  const avatarImageSrc =getAvatarUrl( avatar ); 
 
   return (
     <View>

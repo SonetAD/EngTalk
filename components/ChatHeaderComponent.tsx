@@ -10,16 +10,20 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Backend } from '@/config';
 import { Image } from 'expo-image';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
-interface Props {
-  name: string;
-  avatar: { src: string; default: boolean };
-}
+const ChatHeaderComponent = () => {
+  const { otherChatParticipantName, otherChatParticipantAvatar } =
+    useCentralStore(
+      useShallow((state) => ({
+        otherChatParticipantName: state.otherChatParticipant.name,
+        otherChatParticipantAvatar: state.otherChatParticipant.avatar,
+      }))
+    );
 
-const ChatHeaderComponent = ({ name, avatar }: Props) => {
-  const avatarImageSrc = avatar?.default
-    ? `${Backend.baseURL}/default/avatars/${avatar?.src}`
-    : `${Backend.baseURL}/default/avatars/${avatar?.src}`;
+  const avatarImageSrc = getAvatarUrl(otherChatParticipantAvatar);
 
   return (
     <View style={styles.container}>
@@ -31,7 +35,7 @@ const ChatHeaderComponent = ({ name, avatar }: Props) => {
         style={styles.avatar}
       />
 
-      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.name}>{otherChatParticipantName}</Text>
     </View>
   );
 };
@@ -43,19 +47,21 @@ const styles = StyleSheet.create({
     backgroundColor: Color.primary,
     height: DeviceHeight * 0.1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     paddingTop: 50,
     paddingHorizontal: 20,
+    gap: 5,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 50,
   },
 
   name: {
     color: Color.white,
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: Font.pSemiBold,
   },
 });

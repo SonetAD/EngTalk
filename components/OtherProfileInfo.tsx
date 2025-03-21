@@ -11,6 +11,7 @@ import getUserInfo from '@/libs/api/userInfo';
 import { NotificationSocket } from '@/libs/Socket';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
+import getAvatarUrl from '@/libs/getAvatarUrl';
 
 const OtherProfileInfo = () => {
   const {
@@ -25,7 +26,7 @@ const OtherProfileInfo = () => {
     talkTime,
     level,
     totalUserBites,
-    getConversation
+    getConversation,
   } = useCentralStore(
     useShallow((state) => ({
       name: state.otherUser.name,
@@ -39,7 +40,7 @@ const OtherProfileInfo = () => {
       level: state.otherUser.level,
       totalUserBites: state.otherUser.otherUserBites.totalPosts,
       token: state.user.token,
-      getConversation: state.getConversation
+      getConversation: state.getConversation,
     }))
   );
 
@@ -56,9 +57,7 @@ const OtherProfileInfo = () => {
     }
   }, [followers, userName]);
 
-  const avatarImageSrc = avatar?.default
-    ? `${Backend.baseURL}/default/avatars/${avatar?.src}`
-    : `${Backend.baseURL}/default/avatars/${avatar?.src}`;
+  const avatarImageSrc = getAvatarUrl(avatar);
 
   const followOtherUser = async () => {
     try {
@@ -66,8 +65,8 @@ const OtherProfileInfo = () => {
       await followUser({
         token,
         userName: otherUserName,
-      })
-      const otherUserInfo = await getUserInfo(otherUserName)
+      });
+      const otherUserInfo = await getUserInfo(otherUserName);
 
       if (otherUserInfo) {
         useCentralStore.setState((prev) => ({
@@ -84,11 +83,11 @@ const OtherProfileInfo = () => {
       console.log(err);
     }
   };
-  
-  const openChatScreen=()=>{
-    getConversation(otherUserName)
+
+  const openChatScreen = () => {
+    getConversation(otherUserName);
     router.push('/Chat');
-  }
+  };
 
   return (
     <View>

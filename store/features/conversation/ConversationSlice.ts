@@ -7,6 +7,7 @@ import fetchAllBites from '@/libs/api/fetchAllBite';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import fetchConversation from '@/libs/api/fetchConversation';
+import getUserInfo from '@/libs/api/userInfo';
 
 const defaultUser = {
   userName: '',
@@ -52,12 +53,19 @@ const createConversationSlice: StateCreator<
         page: 1,
         limit: 10,
       });
+      let otherChatParticipant=defaultUser;
+      if (res.participants) {
+        otherChatParticipant = res.participants.find(
+          (user: any) => user.userName !== get().user.userInfo.userName
+        );
+      }
+      else{
+        const getOtherChatParticipantInfo=await getUserInfo(otherUserName);
+        otherChatParticipant=getOtherChatParticipantInfo.user;
+      }
+
       set((state) => {
-        // const otherChatParticipant = res.participants.find(
-        //   (user: any) => user.userName === get().user.userInfo.userName
-        // );
-        console.log(res);
-        state.otherChatParticipant = defaultUser;
+        state.otherChatParticipant = otherChatParticipant;
         state.messages = res.messages;
         state.totalMessages = res.totalMessages;
         state.totalPages = res.totalPages;
