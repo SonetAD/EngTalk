@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { Color, Font, ImageBlurHash } from '@/constants/constants';
@@ -46,10 +48,32 @@ const MessageBubble = ({ message }: Props) => {
         />
       )}
 
-      <View style={styles.textContainer}>
-        <Text style={isMe ? styles.myMessage : styles.otherMessage}>
-          {message.message}
-        </Text>
+      <View
+        style={[
+          styles.messageWrapper,
+          isMe ? styles.myMessageWrapper : styles.otherMessageWrapper,
+        ]}
+      >
+        <BlurView
+          intensity={30}
+          tint={isMe ? 'light' : 'dark'}
+          style={styles.blurContainer}
+        >
+          <LinearGradient
+            colors={
+              isMe
+                ? ['rgba(255,156,1,0.3)', 'rgba(255,144,1,0.2)']
+                : ['rgba(35,37,51,0.4)', 'rgba(30,30,45,0.3)']
+            }
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.textContainer}
+          >
+            <Text style={isMe ? styles.myMessage : styles.otherMessage}>
+              {message.message}
+            </Text>
+          </LinearGradient>
+        </BlurView>
       </View>
     </View>
   );
@@ -65,9 +89,11 @@ const styles = StyleSheet.create({
   },
   rightAlign: {
     alignSelf: 'flex-end',
+    justifyContent: 'flex-end',
   },
   leftAlign: {
     alignSelf: 'flex-start',
+    justifyContent: 'flex-start',
   },
   avatar: {
     width: 35,
@@ -75,17 +101,34 @@ const styles = StyleSheet.create({
     borderRadius: 17.5,
     marginRight: 8,
   },
-  textContainer: {
+  messageWrapper: {
     maxWidth: '75%',
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  myMessageWrapper: {
+    alignSelf: 'flex-end',
+  },
+  otherMessageWrapper: {
+    alignSelf: 'flex-start',
+  },
+  blurContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  textContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 20,
   },
   myMessage: {
     fontSize: 15,
-    color: Color.secondary.default,
-    fontFamily:Font.pSemiBold
+    color: Color.white,
+    fontFamily: Font.pSemiBold,
   },
   otherMessage: {
     fontSize: 15,
-    color: Color.white,
+    color: Color.gray.oneHundred,
     fontFamily: Font.pBold,
   },
 });

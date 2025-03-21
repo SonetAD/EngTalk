@@ -1,7 +1,6 @@
 import {
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   Keyboard,
   StyleSheet,
   View,
@@ -21,6 +20,8 @@ const Chat = () => {
     }))
   );
 
+  console.log(messages);
+
   return (
     <FullScreenView>
       <KeyboardAvoidingView
@@ -28,21 +29,21 @@ const Chat = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 70}
         style={styles.keyboardAvoiding}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.listContainer}>
             <FlashList
               data={messages}
               renderItem={({ item }) => <MessageBubble message={item} />}
               estimatedItemSize={60}
-              contentContainerStyle={styles.scrollView}
+              contentContainerStyle={styles.listContent} // Fixed: No justifyContent
               keyboardShouldPersistTaps='handled'
               inverted
             />
-
-            {/* Message input box always at the bottom */}
-            <MessageInputBox />
           </View>
-        </TouchableWithoutFeedback>
+
+          {/* Input box remains at the bottom */}
+          <MessageInputBox />
+        </View>
       </KeyboardAvoidingView>
     </FullScreenView>
   );
@@ -57,7 +58,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollView: {
+  listContainer: {
+    flex: 1,
+  },
+  listContent: {
     paddingVertical: 20,
   },
 });
