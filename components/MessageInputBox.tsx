@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TextInput,
@@ -6,15 +6,19 @@ import {
   Keyboard,
   Pressable,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Color, Font } from '@/constants/constants';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import sendMessage from '@/libs/api/sendMessage';
+import { NotificationSocket } from '@/libs/Socket';
 
 const MessageInputBox = () => {
   const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [newMessage, setNewMessage] = useState({});
 
   const { token, otherChatParticipant } = useCentralStore(
     useShallow((state) => ({
@@ -23,15 +27,28 @@ const MessageInputBox = () => {
     }))
   );
 
+  useEffect(() => {
+    NotificationSocket.emit('message', {
+      otherUserName: otherChatParticipant.userName,
+      message: newMessage,
+    });
+  }, [newMessage]);
+
   const sendMessageFunction = async () => {
     if (message.trim().length > 0) {
       try {
-        await sendMessage({
+        setIsSending(true);
+        const newMessage = await sendMessage({
           token,
           receiver: otherChatParticipant.userName,
           message,
           messageType: 'text',
         });
+        useCentralStore.setState((prev) => ({
+          messages: [newMessage.message, ...prev.messages],
+        }));
+        setIsSending(false);
+        setNewMessage(newMessage.message);
         setMessage('');
       } catch (err) {
         console.log(err);
@@ -55,12 +72,20 @@ const MessageInputBox = () => {
         <TouchableOpacity
           onPress={sendMessageFunction}
           style={styles.sendButton}
+          disabled={isSending}
         >
-          <Ionicons
-            name='send'
-            size={24}
-            color='#007AFF'
-          />
+          {isSending ? (
+            <ActivityIndicator
+              size='small'
+              color='#007AFF'
+            />
+          ) : (
+            <Ionicons
+              name='send'
+              size={24}
+              color='#007AFF'
+            />
+          )}
         </TouchableOpacity>
       </View>
     </Pressable>

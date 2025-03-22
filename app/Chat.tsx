@@ -5,22 +5,36 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import FullScreenView from '@/components/FullScreenView';
 import MessageInputBox from '@/components/MessageInputBox';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { FlashList } from '@shopify/flash-list';
 import MessageBubble from '@/components/MessageBubble';
+import { NotificationSocket } from '@/libs/Socket';
 
 const Chat = () => {
-  const { messages } = useCentralStore(
+  const { messages, otherChatParticipant } = useCentralStore(
     useShallow((state) => ({
       messages: state.messages,
+      otherChatParticipant: state.otherChatParticipant,
     }))
   );
 
-  console.log(messages);
+  useEffect(() => {
+    NotificationSocket.on('message', ({ userName, message }) => {
+      if (userName === otherChatParticipant?.userName) {
+        useCentralStore.setState((prev) => ({
+          messages: [message, ...prev.messages],
+        }));
+      }
+    });
+
+    return () => {
+      NotificationSocket.off('message');
+    };
+  }, []);
 
   return (
     <FullScreenView>

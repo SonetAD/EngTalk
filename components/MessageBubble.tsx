@@ -9,11 +9,9 @@ import { Image } from 'expo-image';
 import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface Message {
-  _id: string;
   message: string;
   messageType: string;
   sender: {
-    _id: string;
     avatar: { src: string; default: boolean };
     name: string;
     userName: string;
