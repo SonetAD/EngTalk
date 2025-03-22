@@ -1,5 +1,5 @@
 import FullScreenView from '@/components/FullScreenView';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import VoiceBiteCard from '@/components/VoiceBiteCard';
 import NoPostAvailable from '@/components/NoPostAvalable';

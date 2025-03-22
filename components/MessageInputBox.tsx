@@ -18,7 +18,7 @@ import { NotificationSocket } from '@/libs/Socket';
 const MessageInputBox = () => {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [newMessage, setNewMessage] = useState({});
+  const [newMessage, setNewMessage] = useState(null);
 
   const { token, otherChatParticipant } = useCentralStore(
     useShallow((state) => ({
@@ -28,10 +28,12 @@ const MessageInputBox = () => {
   );
 
   useEffect(() => {
-    NotificationSocket.emit('message', {
-      otherUserName: otherChatParticipant.userName,
-      message: newMessage,
-    });
+    if (newMessage) {
+      NotificationSocket.emit('message', {
+        otherUserName: otherChatParticipant.userName,
+        message: newMessage,
+      });
+    }
   }, [newMessage]);
 
   const sendMessageFunction = async () => {

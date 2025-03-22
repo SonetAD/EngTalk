@@ -25,7 +25,7 @@ type Conversation = {
   otherChatParticipant: User;
   messages: Message[];
   totalMessages:number;
-  totalPages:number
+  totalConversationPages:number
   conversationStatus: ConversationStatus;
 };
 

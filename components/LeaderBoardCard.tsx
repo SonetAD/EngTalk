@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
-import { Color, Font, ImageBlurHash } from '@/constants/constants';
-import { Backend } from '@/config';
-import getAvatarUrl from '@/libs/getAvatarUrl';
+import { Color, Font } from '@/constants/constants';
+import CustomAvatar from './CustomAvatar';
 
 interface Props {
   rank: number;
@@ -23,28 +21,21 @@ const LeaderboardCard = ({
   totalTrophy,
   viewProfile,
 }: Props) => {
-  const avatarImageSrc =getAvatarUrl(avatar);
-
   return (
     <View style={styles.container}>
       <Text style={styles.rank}>{rank}</Text>
 
       <View style={styles.avatarWrapper}>
-        <Pressable onPress={()=>viewProfile(username)}>
-          <Image
-            source={avatarImageSrc}
-            placeholder={ImageBlurHash}
-            contentFit='cover'
-            transition={1000}
-            style={styles.avatar}
+        <Pressable onPress={() => viewProfile(username)}>
+          <CustomAvatar
+            avatar={avatar}
+            avatarStyle={styles.avatar}
           />
         </Pressable>
       </View>
 
-      {/* Username */}
       <Text style={styles.username}>{name}</Text>
 
-      {/* Trophy Count */}
       <View style={styles.trophyContainer}>
         <Text style={styles.trophyCount}>{totalTrophy}</Text>
         <Ionicons
@@ -99,7 +90,6 @@ const styles = StyleSheet.create({
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 25,
   },
   username: {
     flex: 1,

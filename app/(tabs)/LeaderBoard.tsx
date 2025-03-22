@@ -54,11 +54,11 @@ const LeaderBoard = () => {
     setIsRefreshing(false);
   };
 
-  const navigateToOtherProfile = (otherUseName: string) => {
-    if (userName === otherUseName) {
+  const navigateToOtherProfile = (otherUserName: string) => {
+    if (userName === otherUserName) {
       router.navigate('/Profile');
     } else {
-      setOtherUser(otherUseName);
+      setOtherUser(otherUserName);
       router.push('/OtherProfile');
     }
   };

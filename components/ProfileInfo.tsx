@@ -1,14 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
-import { Backend } from '@/config';
-import { Color, DeviceWidth, Font, ImageBlurHash } from '@/constants/constants';
+import { Color, DeviceWidth, Font } from '@/constants/constants';
 import ProfilePageStat from '@/components/ProfilePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { useEffect } from 'react';
 import { NotificationSocket } from '@/libs/Socket';
 import getUserInfo from '@/libs/api/userInfo';
-import getAvatarUrl from '@/libs/getAvatarUrl';
+import CustomAvatar from './CustomAvatar';
 
 const ProfileInfo = () => {
   const {
@@ -55,18 +53,10 @@ const ProfileInfo = () => {
     }
   }, [userName]);
 
-  const avatarImageSrc =getAvatarUrl( avatar ); 
-
   return (
     <View>
       <View style={styles.info}>
-        <Image
-          source={avatarImageSrc}
-          placeholder={ImageBlurHash}
-          contentFit='cover'
-          transition={1000}
-          style={styles.avatar}
-        />
+        <CustomAvatar avatar={avatar} />
         <View>
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
@@ -102,11 +92,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     marginTop: 10,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
   },
   statNumber: {
     color: Color.white,

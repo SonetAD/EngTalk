@@ -1,15 +1,8 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { act, useState } from 'react';
-import { Image } from 'expo-image';
-import {
-  Color,
-  DeviceHeight,
-  DeviceWidth,
-  Font,
-  ImageBlurHash,
-} from '@/constants/constants';
+import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomButton from '@/components/CustomButton';
-import { Backend } from '@/config';
+import CustomAvatar from './CustomAvatar';
 
 interface Props {
   name: string;
@@ -31,18 +24,12 @@ const FoundPartner = ({
   isLoading,
 }: Props) => {
   const [isAccepted, setIsAccepted] = useState(false);
-  const avatarImageSrc = avatar.default
-    ? `${Backend.baseURL}/default/avatars/${avatar.src}`
-    : `${Backend.baseURL}/default/avatars/${avatar.src}`;
 
   return (
     <View style={styles.container}>
-      <Image
-        source={avatarImageSrc}
-        placeholder={ImageBlurHash}
-        contentFit='cover'
-        transition={1000}
-        style={styles.avatar}
+      <CustomAvatar
+        avatar={avatar}
+        avatarStyle={styles.avatar}
       />
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>
@@ -93,8 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    height: 100,
-    width: 100,
+    borderRadius: 10,
   },
   name: {
     color: Color.gray.oneHundred,

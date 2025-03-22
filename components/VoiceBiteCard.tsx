@@ -8,14 +8,13 @@ import {
   Easing,
   ActivityIndicator,
 } from 'react-native';
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { Audio } from 'expo-av';
 import { Sound } from 'expo-av/build/Audio';
-import { Color, Font, ImageBlurHash } from '@/constants/constants';
+import { Color, Font } from '@/constants/constants';
 import { Backend } from '@/config';
-import getAvatarUrl from '@/libs/getAvatarUrl';
+import CustomAvatar from './CustomAvatar';
 
 interface Props {
   avatar: { default: boolean; src: string };
@@ -35,8 +34,6 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const avatarImageSrc =getAvatarUrl(avatar); 
 
   const audioSource = `${Backend.public}/posts/${fileName}`;
 
@@ -93,7 +90,7 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
     }).start();
   };
 
-  const randomGradient =
+  const randomGradient: any =
     gradients[Math.floor(Math.random() * gradients.length)];
 
   return (
@@ -116,12 +113,9 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
                   color={Color.white}
                 />
               ) : (
-                <Image
-                  source={avatarImageSrc}
-                  placeholder={ImageBlurHash}
-                  contentFit='cover'
-                  transition={1000}
-                  style={styles.avatar}
+                <CustomAvatar
+                  avatar={avatar}
+                  avatarStyle={styles.avatar}
                 />
               )}
             </View>
@@ -141,12 +135,9 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
                   color={Color.white}
                 />
               ) : (
-                <Image
-                  source={avatarImageSrc}
-                  placeholder={ImageBlurHash}
-                  contentFit='cover'
-                  transition={1000}
-                  style={styles.avatar}
+                <CustomAvatar
+                  avatar={avatar}
+                  avatarStyle={styles.avatar}
                 />
               )}
             </View>

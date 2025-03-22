@@ -38,7 +38,7 @@ const createConversationSlice: StateCreator<
   otherChatParticipant: defaultUser,
   messages: [defaultMessage],
   totalMessages: 0,
-  totalPages: 0,
+  totalConversationPages: 0,
 
   conversationStatus: {
     isLoading: true,
@@ -51,7 +51,7 @@ const createConversationSlice: StateCreator<
         token: get().user.token,
         otherUserName,
         page: 1,
-        limit: 10,
+        limit: 15,
       });
       let otherChatParticipant=defaultUser;
       if (res.participants) {
@@ -68,7 +68,7 @@ const createConversationSlice: StateCreator<
         state.otherChatParticipant = otherChatParticipant;
         state.messages = res.messages;
         state.totalMessages = res.totalMessages;
-        state.totalPages = res.totalPages;
+        state.totalConversationPages = res.totalPages;
         state.conversationStatus.isLoading = false;
         state.conversationStatus.isError = false;
         state.conversationStatus.error = '';

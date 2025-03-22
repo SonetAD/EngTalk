@@ -1,20 +1,18 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useRef, useState } from 'react';
-import { Image } from 'expo-image';
 import {
   Color,
   DeviceHeight,
   DeviceWidth,
   Font,
-  ImageBlurHash,
 } from '@/constants/constants';
 import { RTCView, MediaStream } from 'react-native-webrtc';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 
 import CustomButton from '@/components/CustomButton';
-import { Backend } from '@/config';
 import LiveTimer from './liveTimer';
+import CustomAvatar from './CustomAvatar';
 
 interface Props {
   name: string;
@@ -39,23 +37,13 @@ const StartConversation = ({
   matchedUserData,
   timerRef,
 }: Props) => {
-  const avatarImageSrc = avatar.default
-    ? `${Backend.baseURL}/default/avatars/${avatar.src}`
-    : `${Backend.baseURL}/default/avatars/${avatar.src}`;
-
   const [isMuted, setIsMuted] = useState(false);
   const [isLoudSpeakerOn, setIsLoudSpeakerOn] = useState(false);
 
   return (
     <View style={styles.container}>
       <LiveTimer timerRef={timerRef} />
-      <Image
-        source={avatarImageSrc}
-        placeholder={ImageBlurHash}
-        contentFit='cover'
-        transition={1000}
-        style={styles.avatar}
-      />
+      <CustomAvatar avatar={avatar} avatarStyle={styles.avatar} />
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>
 
@@ -129,8 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   avatar: {
-    height: 100,
-    width: 100,
+    borderRadius: 10,
   },
   name: {
     color: Color.gray.oneHundred,

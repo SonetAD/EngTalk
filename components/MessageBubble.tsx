@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
-import { Color, Font, ImageBlurHash } from '@/constants/constants';
-import { Image } from 'expo-image';
-import getAvatarUrl from '@/libs/getAvatarUrl';
+import { Color, Font } from '@/constants/constants';
+import { router } from 'expo-router';
+import CustomAvatar from './CustomAvatar';
 
 interface Message {
   message: string;
@@ -24,26 +24,27 @@ interface Props {
 }
 
 const MessageBubble = ({ message }: Props) => {
-  const { userName } = useCentralStore(
+  const { userName, setOtherUser } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
+      setOtherUser: state.setOtherUser,
     }))
   );
 
   const isMe = message.sender.userName === userName;
+  const viewProfile = (otherUserName: string) => {
+    setOtherUser(otherUserName);
+    router.push('/OtherProfile');
+  };
 
   return (
     <View
       style={[styles.container, isMe ? styles.rightAlign : styles.leftAlign]}
     >
       {!isMe && (
-        <Image
-          source={getAvatarUrl(message.sender.avatar)}
-          placeholder={ImageBlurHash}
-          contentFit='cover'
-          transition={1000}
-          style={styles.avatar}
-        />
+        <Pressable onPress={() => viewProfile(message.sender.userName)}>
+          <CustomAvatar avatar={message.sender.avatar} avatarStyle={styles.avatar} />
+        </Pressable>
       )}
 
       <View

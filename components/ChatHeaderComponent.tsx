@@ -1,18 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import {
-  Color,
-  DeviceHeight,
-  DeviceWidth,
-  Font,
-  ImageBlurHash,
-} from '@/constants/constants';
-import { Ionicons } from '@expo/vector-icons';
-import { Backend } from '@/config';
-import { Image } from 'expo-image';
+import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
-import getAvatarUrl from '@/libs/getAvatarUrl';
+import CustomAvatar from './CustomAvatar';
 
 const ChatHeaderComponent = () => {
   const { otherChatParticipantName, otherChatParticipantAvatar } =
@@ -23,16 +14,11 @@ const ChatHeaderComponent = () => {
       }))
     );
 
-  const avatarImageSrc = getAvatarUrl(otherChatParticipantAvatar);
-
   return (
     <View style={styles.container}>
-      <Image
-        source={avatarImageSrc}
-        placeholder={ImageBlurHash}
-        contentFit='cover'
-        transition={1000}
-        style={styles.avatar}
+      <CustomAvatar
+        avatar={otherChatParticipantAvatar}
+        avatarStyle={styles.avatar}
       />
 
       <Text style={styles.name}>{otherChatParticipantName}</Text>
@@ -56,7 +42,6 @@ const styles = StyleSheet.create({
   avatar: {
     width: 40,
     height: 40,
-    borderRadius: 50,
   },
 
   name: {
