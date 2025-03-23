@@ -6,6 +6,7 @@ import CustomStatusBar from '@/components/CustomStatusBar';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ChatHeaderComponent from '@/components/ChatHeaderComponent';
+import InboxHeaderComponent from '@/components/InboxHeaderComponent';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -35,19 +36,30 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
-          <Stack screenOptions={{ headerShown: false }} initialRouteName='index'>
-            <Stack.Screen name='(auth)' />
-            <Stack.Screen name='Chat' options={
-              {
-                header:ChatHeaderComponent,
-                headerShown: true
+        <Stack
+          screenOptions={{ headerShown: false }}
+          initialRouteName='index'
+        >
+          <Stack.Screen name='(auth)' />
+          <Stack.Screen
+            name='Chat'
+            options={{
+              header: ChatHeaderComponent,
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name='Inbox'
+            options={{
+              header: InboxHeaderComponent,
+              headerShown: true,
+            }}
+          />
 
-              }
-            } />
-            <Stack.Screen name='(tabs)' />
-            <Stack.Screen name='index' />
-          </Stack>
-          <CustomStatusBar />
+          <Stack.Screen name='(tabs)' />
+          <Stack.Screen name='index' />
+        </Stack>
+        <CustomStatusBar />
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );

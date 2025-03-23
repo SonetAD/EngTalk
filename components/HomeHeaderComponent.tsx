@@ -1,15 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Color, DeviceHeight, Font } from '@/constants/constants';
 import CustomBrightIcon from './CustomBrightIcon';
+import { router } from 'expo-router';
 
 const HomeHeaderComponent = () => {
+  const openInbox = () => {
+    router.navigate('/Inbox');
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.eng}>
         eng<Text style={[styles.eng, styles.talk]}>talk</Text>
       </Text>
-      <CustomBrightIcon name='chatbubble-ellipses-outline' />
+      <Pressable onPress={openInbox}>
+        <CustomBrightIcon name='chatbubble-ellipses-outline' />
+      </Pressable>
     </View>
   );
 };
