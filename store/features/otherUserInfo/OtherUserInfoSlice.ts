@@ -1,5 +1,4 @@
 import { StateCreator } from 'zustand';
-import userLogin from '@/libs/api/userLogin';
 import { AuthSliceType } from '@/store/features/auth/authSliceType';
 import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
@@ -7,13 +6,15 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import getUserInfo from '@/libs/api/userInfo';
 import fetchUserBite from '@/libs/api/fetchUserBite';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
+import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 
-const createOtherUserInfoSliceJJ: StateCreator<
+const createOtherUserInfoSlice: StateCreator<
   OtherUserInfoSliceType &
     AuthSliceType &
     UserStatSliceType &
     VoiceBiteSliceType &
-    ConversationSliceType,
+    ConversationSliceType &
+    InboxSliceType,
   [['zustand/immer', never]],
   [],
   OtherUserInfoSliceType
@@ -66,4 +67,4 @@ const createOtherUserInfoSliceJJ: StateCreator<
   },
 });
 
-export default createOtherUserInfoSliceJJ;
+export default createOtherUserInfoSlice;

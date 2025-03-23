@@ -10,6 +10,7 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import LeaderBoardHeaderComponent from '@/components/LeaderBoardHeaderComponent';
+import { NotificationSocket } from '@/libs/Socket';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -40,7 +41,15 @@ const TabIcon = ({ name, color, focused, size }: Props) => {
 };
 
 const TabLayout = () => {
-  const { userName,token, otherUserName, setUser, getVoiceBite,getUserStat} = useCentralStore(
+  const {
+    userName,
+    token,
+    otherUserName,
+    setUser,
+    getVoiceBite,
+    getUserStat,
+    setInbox,
+  } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
       token: state.user.token,
@@ -48,6 +57,7 @@ const TabLayout = () => {
       setUser: state.setUser,
       getVoiceBite: state.getVoiceBite,
       getUserStat: state.getUserStat,
+      setInbox: state.setInbox,
     }))
   );
 
@@ -68,9 +78,21 @@ const TabLayout = () => {
   useEffect(() => {
     if (userName) {
       getVoiceBite();
-      getUserStat()
+      getUserStat();
     }
   }, [userName]);
+
+  useEffect(() => {
+    if (token) {
+      setInbox();
+      NotificationSocket.on('message', () => {
+        setInbox();
+      });
+    }
+    return () => {
+      NotificationSocket.off('message');
+    };
+  }, [token]);
 
   return (
     <Tabs

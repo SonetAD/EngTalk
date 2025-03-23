@@ -5,13 +5,15 @@ import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
+import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 
 const createAuthSlice: StateCreator<
   AuthSliceType &
     UserStatSliceType &
     VoiceBiteSliceType &
     OtherUserInfoSliceType &
-    ConversationSliceType,
+    ConversationSliceType &
+    InboxSliceType,
   [['zustand/immer', never]],
   [],
   AuthSliceType

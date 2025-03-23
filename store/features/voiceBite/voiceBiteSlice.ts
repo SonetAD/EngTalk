@@ -6,13 +6,15 @@ import fetchUserBite from '@/libs/api/fetchUserBite';
 import fetchAllBites from '@/libs/api/fetchAllBite';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
+import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 
 const createVoiceBiteSlice: StateCreator<
   VoiceBiteSliceType &
     AuthSliceType &
     UserStatSliceType &
     OtherUserInfoSliceType &
-    ConversationSliceType,
+    ConversationSliceType &
+    InboxSliceType,
   [['zustand/immer', never]],
   [],
   VoiceBiteSliceType

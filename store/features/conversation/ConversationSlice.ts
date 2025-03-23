@@ -2,12 +2,11 @@ import { StateCreator } from 'zustand';
 import { AuthSliceType } from '@/store/features/auth/authSliceType';
 import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
-import fetchUserBite from '@/libs/api/fetchUserBite';
-import fetchAllBites from '@/libs/api/fetchAllBite';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import fetchConversation from '@/libs/api/fetchConversation';
 import getUserInfo from '@/libs/api/userInfo';
+import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 
 const defaultUser = {
   userName: '',
@@ -30,11 +29,13 @@ const createConversationSlice: StateCreator<
     VoiceBiteSliceType &
     AuthSliceType &
     UserStatSliceType &
-    OtherUserInfoSliceType,
+    OtherUserInfoSliceType & 
+    InboxSliceType,
   [['zustand/immer', never]],
   [],
   ConversationSliceType
 > = (set, get) => ({
+  conversationId:'',
   otherChatParticipant: defaultUser,
   messages: [defaultMessage],
   totalMessages: 0,
@@ -53,18 +54,18 @@ const createConversationSlice: StateCreator<
         page: 1,
         limit: 15,
       });
-      let otherChatParticipant=defaultUser;
+      let otherChatParticipant = defaultUser;
       if (res.participants) {
         otherChatParticipant = res.participants.find(
           (user: any) => user.userName !== get().user.userInfo.userName
         );
-      }
-      else{
-        const getOtherChatParticipantInfo=await getUserInfo(otherUserName);
-        otherChatParticipant=getOtherChatParticipantInfo.user;
+      } else {
+        const getOtherChatParticipantInfo = await getUserInfo(otherUserName);
+        otherChatParticipant = getOtherChatParticipantInfo.user;
       }
 
       set((state) => {
+        state.conversationId=res.conversationId
         state.otherChatParticipant = otherChatParticipant;
         state.messages = res.messages;
         state.totalMessages = res.totalMessages;
@@ -79,7 +80,7 @@ const createConversationSlice: StateCreator<
         state.otherChatParticipant = defaultUser;
         state.messages = [defaultMessage];
         state.totalMessages = 0;
-        state.totalPages = 0;
+        state.totalConversationPages = 0;
         state.conversationStatus.isLoading = false;
         state.conversationStatus.isError = true;
         state.conversationStatus.error =

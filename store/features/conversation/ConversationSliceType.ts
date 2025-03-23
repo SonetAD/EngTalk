@@ -22,10 +22,11 @@ type ConversationStatus = {
 };
 
 type Conversation = {
+  conversationId: string;
   otherChatParticipant: User;
   messages: Message[];
-  totalMessages:number;
-  totalConversationPages:number
+  totalMessages: number;
+  totalConversationPages: number;
   conversationStatus: ConversationStatus;
 };
 

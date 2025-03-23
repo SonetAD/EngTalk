@@ -23,6 +23,8 @@ const Chat = () => {
   const {
     token,
     messages,
+    conversationId,
+    setReadStatus,
     totalConversationPages,
     isLoading,
     otherChatParticipantUserName,
@@ -30,6 +32,8 @@ const Chat = () => {
     useShallow((state) => ({
       token: state.user.token,
       messages: state.messages,
+      setReadStatus: state.setReadStatus,
+      conversationId: state.conversationId,
       isLoading: state.conversationStatus.isLoading,
       totalConversationPages: state.totalConversationPages,
       otherChatParticipantUserName: state.otherChatParticipant.userName,
@@ -46,11 +50,13 @@ const Chat = () => {
         }));
       }
     });
-
-    return () => {
-      NotificationSocket.off('message');
-    };
   }, [otherChatParticipantUserName]);
+
+  useEffect(() => {
+    if (conversationId) {
+      setReadStatus(conversationId);
+    }
+  }, [conversationId]);
 
   const loadMoreMessage = useCallback(async () => {
     if (totalConversationPages > currendPageRef.current && !loadingMore) {
@@ -66,7 +72,7 @@ const Chat = () => {
 
       if (res.messages?.length) {
         useCentralStore.setState((prev) => ({
-          messages: [ ...prev.messages, ...res.messages],
+          messages: [...prev.messages, ...res.messages],
         }));
       }
       setLoadingMore(false);

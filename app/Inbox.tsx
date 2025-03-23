@@ -8,40 +8,25 @@ import CustomLoadingPage from '@/components/CustomLoadingPage';
 import { FlashList } from '@shopify/flash-list';
 import { Color } from '@/constants/constants';
 import ConversationCard from '@/components/ConversationCard';
+import { NotificationSocket } from '@/libs/Socket';
 
 const Inbox = () => {
-  const { token } = useCentralStore(
+  const { inbox, isLoading } = useCentralStore(
     useShallow((state) => ({
-      token: state.user.token,
+      inbox: state.inbox,
+      isLoading: state.inboxStatus.isLoading,
     }))
   );
 
-  const [conversations, setConversations] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      if (token) {
-        try {
-          setIsLoading(true);
-          const inbox = await fetchInbox({ token });
-          setConversations(inbox.conversations);
-          console.log(inbox.conversations[0]);
-          setIsLoading(false);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    })();
-  }, [token]);
   return (
     <FullScreenView>
       {isLoading ? (
         <CustomLoadingPage />
       ) : (
         <FlashList
-          data={conversations}
+          data={inbox}
           renderItem={({ item }) => <ConversationCard conversation={item} />}
           estimatedItemSize={60}
           ListFooterComponent={
