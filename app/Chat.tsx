@@ -40,8 +40,6 @@ const Chat = () => {
 
   useEffect(() => {
     NotificationSocket.on('message', ({ userName, message }) => {
-      console.log(userName);
-      console.log(otherChatParticipantUserName);
       if (userName === otherChatParticipantUserName) {
         useCentralStore.setState((prev) => ({
           messages: [message, ...prev.messages],
@@ -68,7 +66,7 @@ const Chat = () => {
 
       if (res.messages?.length) {
         useCentralStore.setState((prev) => ({
-          messages: [...res.messages, ...prev.messages],
+          messages: [ ...prev.messages, ...res.messages],
         }));
       }
       setLoadingMore(false);

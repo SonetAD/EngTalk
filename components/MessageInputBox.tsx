@@ -46,9 +46,6 @@ const MessageInputBox = () => {
           message,
           messageType: 'text',
         });
-        useCentralStore.setState((prev) => ({
-          messages: [newMessage.message, ...prev.messages],
-        }));
         setIsSending(false);
         setNewMessage(newMessage.message);
         setMessage('');

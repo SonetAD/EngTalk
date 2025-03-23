@@ -1,8 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useRef } from 'react';
-import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
-import { Ionicons } from '@expo/vector-icons';
+import { Color, DeviceHeight, Font } from '@/constants/constants';
 import RecordVoiceBites from './RecordVoiceBites';
+import CustomBrightIcon from './CustomBrightIcon';
 
 interface Props {
   recordPopUp: () => void;
@@ -13,11 +12,7 @@ const ExploreHeaderComponent = ({ reference, recordPopUp }: Props) => {
     <View style={styles.container}>
       <Text style={styles.title}>explore</Text>
       <Pressable onPress={recordPopUp}>
-        <Ionicons
-          name='add-outline'
-          size={20}
-          color={Color.white}
-        />
+        <CustomBrightIcon name='add-outline' />
       </Pressable>
       <RecordVoiceBites ref={reference} />
     </View>
@@ -32,7 +27,7 @@ const styles = StyleSheet.create({
     height: DeviceHeight * 0.1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 50,
+    paddingTop: (DeviceHeight * 0.1) / 2,
     paddingHorizontal: 20,
   },
   title: {

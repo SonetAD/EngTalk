@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     height: DeviceHeight * 0.1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 50,
+    paddingTop: (DeviceHeight * 0.1) / 2,
     paddingHorizontal: 20,
   },
   title: {

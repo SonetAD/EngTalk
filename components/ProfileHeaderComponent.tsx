@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
-import { Ionicons } from '@expo/vector-icons';
+import CustomBrightIcon from './CustomBrightIcon';
 
 interface Props {
   userName: string;
@@ -12,13 +12,7 @@ const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.userName}>{userName}</Text>
-      {!otherUser && (
-        <Ionicons
-          name='settings-outline'
-          size={20}
-          color={Color.white}
-        />
-      )}
+      {!otherUser && <CustomBrightIcon name='settings-outline' />}
     </View>
   );
 };
@@ -31,7 +25,7 @@ const styles = StyleSheet.create({
     height: DeviceHeight * 0.1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 50,
+    paddingTop: (DeviceHeight * 0.1) / 2,
     paddingHorizontal: 20,
   },
   userName: {
