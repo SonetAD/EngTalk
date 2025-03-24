@@ -10,11 +10,13 @@ import { NotificationSocket } from '@/libs/Socket';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import CustomAvatar from './CustomAvatar';
+import capitalizeFirstLetter from './capitalizeFirstLetter';
 
 const OtherProfileInfo = () => {
   const {
     name,
     userName,
+    gender,
     otherUserName,
     token,
     avatar,
@@ -30,6 +32,7 @@ const OtherProfileInfo = () => {
       name: state.otherUser.name,
       userName: state.user.userInfo.userName,
       otherUserName: state.otherUser.userName,
+      gender: state.otherUser.gender,
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
       following: state.otherUser.following,
@@ -111,6 +114,7 @@ const OtherProfileInfo = () => {
         </View>
       </View>
       <Text style={styles.name}>{name}</Text>
+      <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={styles.location}>Bangladesh</Text>
       <View style={styles.btnGroup}>
         <CustomButton
@@ -173,6 +177,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 12,
   },
+  gender: {
+    color: '#FFC0CB',
+    fontFamily: Font.pSemiBold,
+    marginHorizontal: 10,
+    fontSize: 12,
+  },
+
   voiceBites: {
     color: Color.white,
     fontFamily: Font.pBold,

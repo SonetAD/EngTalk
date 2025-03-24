@@ -1,28 +1,41 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import CustomAvatar from './CustomAvatar';
+import { router } from 'expo-router';
 
 const ChatHeaderComponent = () => {
-  const { otherChatParticipantName, otherChatParticipantAvatar } =
-    useCentralStore(
-      useShallow((state) => ({
-        otherChatParticipantName: state.otherChatParticipant.name,
-        otherChatParticipantAvatar: state.otherChatParticipant.avatar,
-      }))
-    );
+  const {
+    otherChatParticipantUserName,
+    otherChatParticipantName,
+    otherChatParticipantAvatar,
+    setOtherUser,
+  } = useCentralStore(
+    useShallow((state) => ({
+      otherChatParticipantName: state.otherChatParticipant.name,
+      otherChatParticipantUserName: state.otherChatParticipant.userName,
+      otherChatParticipantAvatar: state.otherChatParticipant.avatar,
+      setOtherUser: state.setOtherUser,
+    }))
+  );
 
+  const viewProfile = () => {
+    setOtherUser(otherChatParticipantUserName);
+    router.push('/OtherProfile');
+  };
   return (
-    <View style={styles.container}>
-      <CustomAvatar
-        avatar={otherChatParticipantAvatar}
-        avatarStyle={styles.avatar}
-      />
+    <Pressable onPress={viewProfile}>
+      <View style={styles.container}>
+        <CustomAvatar
+          avatar={otherChatParticipantAvatar}
+          avatarStyle={styles.avatar}
+        />
 
-      <Text style={styles.name}>{otherChatParticipantName}</Text>
-    </View>
+        <Text style={styles.name}>{otherChatParticipantName}</Text>
+      </View>
+    </Pressable>
   );
 };
 

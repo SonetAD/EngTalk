@@ -7,6 +7,7 @@ type VoiceBite = {
 type User = {
   userName: string;
   name: string;
+  gender: string;
   avatar: {
     default: boolean;
     src: string;

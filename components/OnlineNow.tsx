@@ -40,7 +40,7 @@ export default OnlineNow;
 const styles = StyleSheet.create({
   onlineContainer: {
     alignItems: 'center',
-    marginVertical: 10,
+    marginTop: 10,
   },
   onlineNowText: {
     color: Color.gray.oneHundred,

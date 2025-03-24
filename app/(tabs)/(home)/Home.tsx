@@ -9,26 +9,21 @@ import OnlineNow from '@/components/OnlineNow';
 import HomePageStat from '@/components/HomePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import GenderFilterComponent from '@/components/GenderFilterComponent';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Home = () => {
-  const {
-    isLoading,
-    isError,
-    error,
-    totalGoldCoin,
-    totalTrophy,
-    talkTime,
-  } = useCentralStore(
-    useShallow((state) => ({
-      isLoading: state.authStatus.isLoading,
-      isError: state.authStatus.isError,
-      error: state.authStatus.error,
-      totalGoldCoin: state.userStat.totalGoldCoin,
-      totalTrophy: state.userStat.totalTrophy,
-      talkTime: state.userStat.talkTime,
-    }))
-  );
-
+  const { isLoading, isError, error, totalGoldCoin, totalTrophy, talkTime } =
+    useCentralStore(
+      useShallow((state) => ({
+        isLoading: state.authStatus.isLoading,
+        isError: state.authStatus.isError,
+        error: state.authStatus.error,
+        totalGoldCoin: state.userStat.totalGoldCoin,
+        totalTrophy: state.userStat.totalTrophy,
+        talkTime: state.userStat.talkTime,
+      }))
+    );
 
   const startCall = () => {
     router.push('/Call');
@@ -36,22 +31,25 @@ const Home = () => {
 
   return (
     <FullScreenView>
-      <View style={styles.container}>
-        <Text style={styles.headline}>Speak With Confidence</Text>
-        <OnlineNow />
-        <HomePageStat
-          goldCoin={totalGoldCoin}
-          trophy={totalTrophy}
-          talkTime={talkTime}
-        />
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.headline}>Speak With Confidence</Text>
+          <OnlineNow />
+          <HomePageStat
+            goldCoin={totalGoldCoin}
+            trophy={totalTrophy}
+            talkTime={talkTime}
+          />
+          <GenderFilterComponent />
 
-        <CustomButton
-          text='Find a Partner'
-          containerStyle={styles.btn}
-          handlePress={startCall}
-          isLoading={isLoading}
-        />
-      </View>
+          <CustomButton
+            text='Find a Partner'
+            containerStyle={styles.btn}
+            handlePress={startCall}
+            isLoading={isLoading}
+          />
+        </View>
+      </ScrollView>
     </FullScreenView>
   );
 };
@@ -61,7 +59,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   headline: {
@@ -74,7 +71,6 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: DeviceWidth * 0.5,
-    position: 'absolute',
-    bottom: DeviceHeight * 0.1,
+    marginTop: DeviceHeight * 0.1,
   },
 });

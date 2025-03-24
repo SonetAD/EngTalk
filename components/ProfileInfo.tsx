@@ -7,11 +7,13 @@ import { useEffect } from 'react';
 import { NotificationSocket } from '@/libs/Socket';
 import getUserInfo from '@/libs/api/userInfo';
 import CustomAvatar from './CustomAvatar';
+import capitalizeFirstLetter from './capitalizeFirstLetter';
 
 const ProfileInfo = () => {
   const {
     name,
     userName,
+    gender,
     avatar,
     followers,
     following,
@@ -24,6 +26,7 @@ const ProfileInfo = () => {
     useShallow((state) => ({
       name: state.user.userInfo.name,
       userName: state.user.userInfo.userName,
+      gender: state.user.userInfo.gender,
       avatar: state.user.userInfo.avatar,
       followers: state.user.userInfo.followers,
       following: state.user.userInfo.following,
@@ -71,6 +74,7 @@ const ProfileInfo = () => {
         </View>
       </View>
       <Text style={styles.name}>{name}</Text>
+      <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={styles.location}>Bangladesh</Text>
       <ProfilePageStat
         goldCoin={totalGoldCoin}
@@ -116,6 +120,13 @@ const styles = StyleSheet.create({
     fontFamily: Font.pRegular,
     marginHorizontal: 10,
     fontSize: 12,
+  },
+  gender:{
+    color:'#FFC0CB',
+    fontFamily: Font.pSemiBold,
+    marginHorizontal: 10,
+    fontSize: 12,
+
   },
   voiceBites: {
     color: Color.white,

@@ -3,20 +3,16 @@ import React, { useEffect } from 'react';
 import { Color, DeviceHeight, Font } from '@/constants/constants';
 import CustomBrightIcon from './CustomBrightIcon';
 import { router } from 'expo-router';
-import useCentralStore from '@/store/store/Store';
-import { useShallow } from 'zustand/react/shallow';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
 
-const HomeHeaderComponent = () => {
-  const { hasUnreadMessage } = useCentralStore(
-    useShallow((state) => ({
-      hasUnreadMessage: state.hasUnreadMessage,
-    }))
-  );
+interface Props {
+  hasUnreadMessage: boolean;
+}
+const HomeHeaderComponent = ({hasUnreadMessage}:Props) => {
 
   const openInbox = () => {
     router.navigate('/Inbox');

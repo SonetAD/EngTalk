@@ -8,7 +8,7 @@ import CustomLoadingPage from '@/components/CustomLoadingPage';
 import { FlashList } from '@shopify/flash-list';
 import { Color } from '@/constants/constants';
 import ConversationCard from '@/components/ConversationCard';
-import { NotificationSocket } from '@/libs/Socket';
+import NoConversationAvalable from '@/components/NoConversationAvalable';
 
 const Inbox = () => {
   const { inbox, isLoading } = useCentralStore(
@@ -37,6 +37,7 @@ const Inbox = () => {
               />
             ) : null
           }
+          ListEmptyComponent={NoConversationAvalable}
         />
       )}
     </FullScreenView>
