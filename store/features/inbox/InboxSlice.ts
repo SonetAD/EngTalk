@@ -47,15 +47,21 @@ const createInboxSlice: StateCreator<
     error: '',
   },
   hasUnreadMessage: false,
+  inboxTotalPages: 0,
   setInbox: async () => {
     try {
-      const res = await fetchInbox({ token: get().user.token });
+      const res = await fetchInbox({
+        token: get().user.token,
+        page: 1,
+        limit: 10,
+      });
       const hasUnradMessage = res.conversations.some(
         (conversation: any) => !conversation.readStatus
       );
 
       set((state) => {
         state.inbox = res.conversations;
+        state.inboxTotalPages = res.totalPages;
         state.hasUnreadMessage = hasUnradMessage;
         state.inboxStatus.isLoading = false;
         state.inboxStatus.isError = false;
@@ -65,6 +71,7 @@ const createInboxSlice: StateCreator<
       console.log(err);
       set((state) => {
         state.inbox = [];
+        state.inboxTotalPages = 0;
         state.inboxStatus.isLoading = false;
         state.inboxStatus.isError = true;
         state.inboxStatus.error = err?.message || 'Something went wrong!';

@@ -10,19 +10,17 @@ interface Props {
 
 const fetchConversation = async (data: Props) => {
   try {
-    const res = await axios.post(
-      Backend.conversationURL,
-      {
+    const res = await axios.get(Backend.conversationURL, {
+      params: {
         receiver: data.otherUserName,
         page: data.page,
         limit: data.limit,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${data.token}`,
-        },
-      }
-    );
+
+      headers: {
+        Authorization: `Bearer ${data.token}`,
+      },
+    });
     return res.data.conversation;
   } catch (err: any) {
     console.log(err.response?.data);

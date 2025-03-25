@@ -25,7 +25,8 @@ type InboxStatus = {
 type Inbox = {
   inbox: SingleConversation[];
   inboxStatus: InboxStatus;
-  hasUnreadMessage:boolean
+  hasUnreadMessage: boolean;
+  inboxTotalPages: number;
 };
 
 type Action = {
