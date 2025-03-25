@@ -33,21 +33,19 @@ const EditProfile = () => {
     name: '',
     email: '',
     password: '',
+    image: '',
   });
-  const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setFormData({ ...formData, image: result.assets[0].uri });
     }
   };
 
@@ -67,8 +65,8 @@ const EditProfile = () => {
               <View style={styles.headerContainer}>
                 <Pressable onPress={pickImage}>
                   <CustomAvatar
-                    avatar={image ? image : avatar}
-                    customSrc={image ? true : false}
+                    avatar={formData.image ? formData.image : avatar}
+                    customSrc={formData.image  ? true : false}
                   />
                 </Pressable>
               </View>
