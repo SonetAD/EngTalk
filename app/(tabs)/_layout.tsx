@@ -49,7 +49,7 @@ const TabLayout = () => {
     getVoiceBite,
     getUserStat,
     setInbox,
-    hasUnreadMessage
+    hasUnreadMessage,
   } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
@@ -59,7 +59,7 @@ const TabLayout = () => {
       getVoiceBite: state.getVoiceBite,
       getUserStat: state.getUserStat,
       setInbox: state.setInbox,
-      hasUnreadMessage: state.hasUnreadMessage
+      hasUnreadMessage: state.hasUnreadMessage,
     }))
   );
 
@@ -114,7 +114,9 @@ const TabLayout = () => {
         name='(home)'
         options={{
           title: 'Home',
-          header:()=> <HomeHeaderComponent hasUnreadMessage={hasUnreadMessage} />,
+          header: () => (
+            <HomeHeaderComponent hasUnreadMessage={hasUnreadMessage} />
+          ),
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
               name='home'

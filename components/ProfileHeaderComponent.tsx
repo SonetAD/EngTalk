@@ -2,6 +2,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomBrightIcon from './CustomBrightIcon';
+import { Pressable } from 'react-native-gesture-handler';
+import { router } from 'expo-router';
 
 interface Props {
   userName: string;
@@ -9,10 +11,17 @@ interface Props {
 }
 
 const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
+  const editProfile=()=>{
+    router.push('/EditProfile');
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.userName}>{userName}</Text>
-      {!otherUser && <CustomBrightIcon name='settings-outline' />}
+      {!otherUser && (
+        <Pressable onPress={editProfile}>
+          <CustomBrightIcon name='settings-outline' />
+        </Pressable>
+      )}
     </View>
   );
 };

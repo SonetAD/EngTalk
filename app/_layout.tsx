@@ -7,6 +7,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ChatHeaderComponent from '@/components/ChatHeaderComponent';
 import InboxHeaderComponent from '@/components/InboxHeaderComponent';
+import EditProfileHeaderComponent from '@/components/EditProfileHeaderComponent';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -52,6 +53,13 @@ const RootLayout = () => {
             name='Inbox'
             options={{
               header: InboxHeaderComponent,
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name='EditProfile'
+            options={{
+              header: EditProfileHeaderComponent,
               headerShown: true,
             }}
           />

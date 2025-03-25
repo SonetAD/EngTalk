@@ -8,6 +8,9 @@ export const Backend = {
   get signupURL() {
     return `${this.baseURL}/user/signup`;
   },
+  get updateProfileURL() {
+    return `${this.baseURL}/user/update`;
+  },
   get userInfo() {
     return `${this.baseURL}/user/info`;
   },

@@ -3,6 +3,7 @@ type User = {
   userInfo: {
     userName: string;
     name:string;
+    email:string;
     gender: string;
     avatar: {
       default: boolean;

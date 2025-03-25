@@ -23,6 +23,7 @@ const createAuthSlice: StateCreator<
     userInfo: {
       userName: '',
       name: '',
+      email:'',
       gender: '',
       avatar: {
         default: false,
@@ -45,6 +46,7 @@ const createAuthSlice: StateCreator<
         state.user.userInfo = {
           userName: res.user.userName,
           name: res.user.name,
+          email:res.user.email,
           gender: res.user.gender,
           avatar: {
             default: res.user.avatar.default,
@@ -64,6 +66,7 @@ const createAuthSlice: StateCreator<
         state.user.userInfo = {
           userName: '',
           name: '',
+          email:'',
           gender: '',
           avatar: {
             default: true,
