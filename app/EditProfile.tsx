@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import React, { useState } from 'react';
 import FullScreenView from '@/components/FullScreenView';
@@ -15,6 +16,7 @@ import { useShallow } from 'zustand/react/shallow';
 import FormField from '@/components/FormField';
 import CustomAvatar from '@/components/CustomAvatar';
 import { Color, Font } from '@/constants/constants';
+import * as ImagePicker from 'expo-image-picker';
 
 const EditProfile = () => {
   const { name, userName, email, avatar } = useCentralStore(
@@ -32,6 +34,22 @@ const EditProfile = () => {
     email: '',
     password: '',
   });
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   return (
     <FullScreenView>
@@ -47,7 +65,12 @@ const EditProfile = () => {
           >
             <View style={styles.container}>
               <View style={styles.headerContainer}>
-                <CustomAvatar avatar={avatar} />
+                <Pressable onPress={pickImage}>
+                  <CustomAvatar
+                    avatar={image ? image : avatar}
+                    customSrc={image ? true : false}
+                  />
+                </Pressable>
               </View>
 
               <View style={styles.formContainer}>
