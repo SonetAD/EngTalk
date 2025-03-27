@@ -7,9 +7,10 @@ import { ConversationSliceType } from '@/store/features/conversation/Conversatio
 import fetchConversation from '@/libs/api/fetchConversation';
 import getUserInfo from '@/libs/api/userInfo';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const defaultUser = {
-  userName: '',
+  userId: '',
   avatar: {
     default: true,
     src: '',
@@ -29,13 +30,14 @@ const createConversationSlice: StateCreator<
     VoiceBiteSliceType &
     AuthSliceType &
     UserStatSliceType &
-    OtherUserInfoSliceType & 
-    InboxSliceType,
+    OtherUserInfoSliceType &
+    InboxSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   ConversationSliceType
 > = (set, get) => ({
-  conversationId:'',
+  conversationId: '',
   otherChatParticipant: defaultUser,
   messages: [defaultMessage],
   totalMessages: 0,
@@ -46,11 +48,11 @@ const createConversationSlice: StateCreator<
     isError: false,
     error: '',
   },
-  getConversation: async (otherUserName) => {
+  getConversation: async (otherUserId) => {
     try {
       const res = await fetchConversation({
         token: get().user.token,
-        otherUserName,
+        userId:otherUserId,
         page: 1,
         limit: 15,
       });
@@ -60,13 +62,14 @@ const createConversationSlice: StateCreator<
           (user: any) => user.userName !== get().user.userInfo.userName
         );
       } else {
-        const getOtherChatParticipantInfo = await getUserInfo(otherUserName);
+        const getOtherChatParticipantInfo = await getUserInfo(otherUserId);
         otherChatParticipant = getOtherChatParticipantInfo.user;
       }
 
       set((state) => {
-        state.conversationId=res.conversationId
+        state.conversationId = res.conversationId;
         state.otherChatParticipant = otherChatParticipant;
+        state.otherChatParticipant.userId = otherUserId;
         state.messages = res.messages;
         state.totalMessages = res.totalMessages;
         state.totalConversationPages = res.totalPages;

@@ -43,6 +43,7 @@ const TabIcon = ({ name, color, focused, size }: Props) => {
 const TabLayout = () => {
   const {
     userName,
+    userId,
     token,
     otherUserName,
     setUser,
@@ -53,6 +54,7 @@ const TabLayout = () => {
   } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       token: state.user.token,
       otherUserName: state.otherUser.userName,
       setUser: state.setUser,
@@ -78,11 +80,11 @@ const TabLayout = () => {
   }, []);
 
   useEffect(() => {
-    if (userName) {
+    if (userId) {
       getVoiceBite();
       getUserStat();
     }
-  }, [userName]);
+  }, [userId]);
 
   useEffect(() => {
     if (token) {

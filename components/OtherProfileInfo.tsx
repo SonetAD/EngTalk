@@ -16,6 +16,7 @@ const OtherProfileInfo = () => {
   const {
     name,
     userName,
+    otherUserId,
     gender,
     otherUserName,
     token,
@@ -31,6 +32,7 @@ const OtherProfileInfo = () => {
     useShallow((state) => ({
       name: state.otherUser.name,
       userName: state.user.userInfo.userName,
+      otherUserId: state.otherUser.userId,
       otherUserName: state.otherUser.userName,
       gender: state.otherUser.gender,
       avatar: state.otherUser.avatar,
@@ -63,9 +65,9 @@ const OtherProfileInfo = () => {
       setFollowingInProgress(true);
       await followUser({
         token,
-        userName: otherUserName,
+        userId: otherUserId,
       });
-      const otherUserInfo = await getUserInfo(otherUserName);
+      const otherUserInfo = await getUserInfo(otherUserId);
 
       if (otherUserInfo) {
         useCentralStore.setState((prev) => ({
@@ -75,7 +77,7 @@ const OtherProfileInfo = () => {
             following: otherUserInfo.user.following,
           },
         }));
-        NotificationSocket.emit('follow', otherUserName);
+        NotificationSocket.emit('follow', otherUserId);
         setFollowingInProgress(false);
       }
     } catch (err) {

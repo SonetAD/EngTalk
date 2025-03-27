@@ -6,6 +6,7 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import fetchInbox from '@/libs/api/fetchInbox';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const defaultUser = {
   userName: '',
@@ -28,7 +29,8 @@ const createInboxSlice: StateCreator<
     VoiceBiteSliceType &
     AuthSliceType &
     UserStatSliceType &
-    OtherUserInfoSliceType,
+    OtherUserInfoSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   InboxSliceType

@@ -19,7 +19,7 @@ const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
       <Text style={styles.userName}>{userName}</Text>
       {!otherUser && (
         <Pressable onPress={editProfile}>
-          <CustomBrightIcon name='settings-outline' />
+          <CustomBrightIcon name='create-outline' />
         </Pressable>
       )}
     </View>

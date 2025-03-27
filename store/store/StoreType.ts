@@ -4,10 +4,12 @@ import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceTyp
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 export type StoreType = AuthSliceType &
   UserStatSliceType &
   VoiceBiteSliceType &
   OtherUserInfoSliceType &
   ConversationSliceType &
-   InboxSliceType;
+  InboxSliceType &
+  UpdateProfileSliceType;

@@ -3,13 +3,13 @@ import axios from 'axios';
 
 interface Props {
   token: string;
-  receiver: string;
+  receiverId: string;
   message: string;
   messageType: string;
 }
 const sendMessage = async ({
   token,
-  receiver,
+  receiverId,
   message,
   messageType,
 }: Props) => {
@@ -17,7 +17,7 @@ const sendMessage = async ({
     const res = await axios.post(
       Backend.sendMessageURL,
       {
-        receiver,
+        receiverId,
         message,
         messageType,
       },

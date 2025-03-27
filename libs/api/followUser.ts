@@ -2,14 +2,14 @@ import { Backend } from '@/config';
 import axios from 'axios';
 
 interface Props {
-  userName: string;
+  userId: string;
   token: string;
 }
-const followUser = async ({ token, userName }: Props) => {
+const followUser = async ({ token, userId }: Props) => {
   try {
     const res = await axios.put(
       Backend.followUserURL,
-      { userName },
+      { userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
     return res.data

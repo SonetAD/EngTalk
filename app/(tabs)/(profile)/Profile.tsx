@@ -11,9 +11,9 @@ import { ActivityIndicator } from 'react-native';
 import { Color } from '@/constants/constants';
 
 const Profile = () => {
-  const { userName, userBites, isLoading } = useCentralStore(
+  const {  userBites,userId, isLoading } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       userBites: state.userBites,
       isLoading: state.voiceBiteStatus.isLoading,
     }))
@@ -34,7 +34,7 @@ const Profile = () => {
       currendPageRef.current++;
 
       const res = await fetchUserBite({
-        userName,
+        userId,
         page: currendPageRef.current,
         limit: 10,
       });
@@ -57,7 +57,7 @@ const Profile = () => {
       currendPageRef.current = 1;
       setRefreshing(true);
       const res = await fetchUserBite({
-        userName,
+        userId,
         page: 1,
         limit: 10,
       });

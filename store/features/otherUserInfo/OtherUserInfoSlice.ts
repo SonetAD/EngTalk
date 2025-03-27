@@ -7,6 +7,7 @@ import getUserInfo from '@/libs/api/userInfo';
 import fetchUserBite from '@/libs/api/fetchUserBite';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const createOtherUserInfoSlice: StateCreator<
   OtherUserInfoSliceType &
@@ -14,15 +15,17 @@ const createOtherUserInfoSlice: StateCreator<
     UserStatSliceType &
     VoiceBiteSliceType &
     ConversationSliceType &
-    InboxSliceType,
+    InboxSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   OtherUserInfoSliceType
 > = (set, get) => ({
   otherUser: {
+    userId: '',
     userName: '',
     name: '',
-    gender:'',
+    gender: '',
     avatar: {
       default: true,
       src: '',
@@ -44,20 +47,22 @@ const createOtherUserInfoSlice: StateCreator<
     error: '',
   },
 
-  setOtherUser: async (userName: string) => {
+  setOtherUser: async (userId: string) => {
     try {
       const [otherUserInfo, otherUserVoiceBites] = await Promise.all([
-        getUserInfo(userName),
-        fetchUserBite({ userName, page: 1, limit: 10 }),
+        getUserInfo(userId),
+        fetchUserBite({ userId, page: 1, limit: 10 }),
       ]);
       set((state) => {
         state.otherUser = otherUserInfo.user;
+        state.otherUser.userId = userId;
         state.otherUserInfoStatus.isLoading = false;
         state.otherUserInfoStatus.isError = false;
         state.otherUserInfoStatus.error = '';
         state.otherUser.otherUserBites = otherUserVoiceBites;
       });
     } catch (error: any) {
+      console.log(error);
       set((state) => {
         state.otherUserInfoStatus.isLoading = false;
         state.otherUserInfoStatus.isError = true;

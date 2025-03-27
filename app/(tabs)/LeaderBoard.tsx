@@ -12,9 +12,9 @@ import LeaderboardCard from '@/components/LeaderBoardCard';
 import { router } from 'expo-router';
 
 const LeaderBoard = () => {
-  const { token, userName, setOtherUser } = useCentralStore(
+  const { token, userId, setOtherUser } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       token: state.user.token,
       setOtherUser: state.setOtherUser,
     }))
@@ -54,11 +54,11 @@ const LeaderBoard = () => {
     setIsRefreshing(false);
   };
 
-  const navigateToOtherProfile = (otherUserName: string) => {
-    if (userName === otherUserName) {
+  const navigateToOtherProfile = (otherUserId: string) => {
+    if (userId === otherUserId) {
       router.navigate('/Profile');
     } else {
-      setOtherUser(otherUserName);
+      setOtherUser(otherUserId);
       router.push('/OtherProfile');
     }
   };
@@ -80,7 +80,7 @@ const LeaderBoard = () => {
             avatar={item?.avatar}
             rank={index + 1}
             name={item?.name}
-            username={item?.userName}
+            userId={item?._id}
             totalTrophy={item?.totalTrophy}
             viewProfile={navigateToOtherProfile}
           />

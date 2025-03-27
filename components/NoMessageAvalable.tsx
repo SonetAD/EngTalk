@@ -9,13 +9,13 @@ import { router } from 'expo-router';
 
 const NoMessageAvalable = () => {
   const {
-    otherChatParticipantUserName,
+    otherChatParticipantUserId,
     otherChatParticipantName,
     otherChatParticipantAvatar,
     setOtherUser,
   } = useCentralStore(
     useShallow((state) => ({
-      otherChatParticipantUserName: state.otherChatParticipant.userName,
+      otherChatParticipantUserId: state.otherChatParticipant.userId,
       otherChatParticipantName: state.otherChatParticipant.name,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
       setOtherUser: state.setOtherUser,
@@ -23,7 +23,7 @@ const NoMessageAvalable = () => {
   );
 
   const viewProfile = () => {
-    setOtherUser(otherChatParticipantUserName);
+    setOtherUser(otherChatParticipantUserId);
     router.navigate('/OtherProfile');
   };
   return (

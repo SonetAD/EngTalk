@@ -30,7 +30,7 @@ const MessageInputBox = () => {
   useEffect(() => {
     if (newMessage) {
       NotificationSocket.emit('message', {
-        otherUserName: otherChatParticipant.userName,
+        userId: otherChatParticipant.userId,
         message: newMessage,
       });
     }
@@ -42,7 +42,7 @@ const MessageInputBox = () => {
         setIsSending(true);
         const newMessage = await sendMessage({
           token,
-          receiver: otherChatParticipant.userName,
+          receiverId: otherChatParticipant.userId,
           message,
           messageType: 'text',
         });

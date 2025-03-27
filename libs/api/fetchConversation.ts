@@ -3,7 +3,7 @@ import { Backend } from '@/config';
 
 interface Props {
   token: string;
-  otherUserName: string;
+  userId: string;
   page: number;
   limit: number;
 }
@@ -12,7 +12,7 @@ const fetchConversation = async (data: Props) => {
   try {
     const res = await axios.get(Backend.conversationURL, {
       params: {
-        receiver: data.otherUserName,
+        receiverId: data.userId,
         page: data.page,
         limit: data.limit,
       },

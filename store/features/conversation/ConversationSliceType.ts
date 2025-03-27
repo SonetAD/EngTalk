@@ -1,5 +1,5 @@
 type User = {
-  userName: string;
+  userId: string;
   avatar: {
     default: boolean;
     src: string;
@@ -31,7 +31,7 @@ type Conversation = {
 };
 
 type ConversationAction = {
-  getConversation: (otherUserName: string) => Promise<void>;
+  getConversation: (otherUserId: string) => Promise<void>;
 };
 
 export type ConversationSliceType = Conversation & ConversationAction;

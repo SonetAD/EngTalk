@@ -9,17 +9,17 @@ import { NotificationSocket } from '@/libs/Socket';
 import useCentralStore from '@/store/store/Store';
 
 const OnlineNow = () => {
-  const userName = useCentralStore((state) => state.user.userInfo.userName);
+  const userId = useCentralStore((state) => state.user.userInfo.userId);
   const [onlineCount, setOnlineCount] = useState(0);
 
   useEffect(() => {
-    if (userName) {
+    if (userId) {
       NotificationSocket.on('activeUserCount', (activeUser) => {
         setOnlineCount(activeUser);
       });
-      NotificationSocket.emit('newUser', userName);
+      NotificationSocket.emit('newUser', userId);
     }
-  }, [userName]);
+  }, [userId]);
 
   return (
     <View style={styles.onlineContainer}>

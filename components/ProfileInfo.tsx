@@ -121,12 +121,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 12,
   },
-  gender:{
-    color:'#FFC0CB',
+  gender: {
+    color: '#FFC0CB',
     fontFamily: Font.pSemiBold,
     marginHorizontal: 10,
     fontSize: 12,
-
   },
   voiceBites: {
     color: Color.white,

@@ -14,7 +14,7 @@ interface Message {
   sender: {
     avatar: { src: string; default: boolean };
     name: string;
-    userName: string;
+    _id:string;
   };
   timestamp: string;
 }
@@ -24,14 +24,14 @@ interface Props {
 }
 
 const MessageBubble = ({ message }: Props) => {
-  const { userName, setOtherUser } = useCentralStore(
+  const { userId, setOtherUser } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       setOtherUser: state.setOtherUser,
     }))
   );
 
-  const isMe = message.sender.userName === userName;
+  const isMe = message.sender._id === userId;
   const viewProfile = (otherUserName: string) => {
     setOtherUser(otherUserName);
     router.push('/OtherProfile');
@@ -42,8 +42,11 @@ const MessageBubble = ({ message }: Props) => {
       style={[styles.container, isMe ? styles.rightAlign : styles.leftAlign]}
     >
       {!isMe && (
-        <Pressable onPress={() => viewProfile(message.sender.userName)}>
-          <CustomAvatar avatar={message.sender.avatar} avatarStyle={styles.avatar} />
+        <Pressable onPress={() => viewProfile(message.sender._id)}>
+          <CustomAvatar
+            avatar={message.sender.avatar}
+            avatarStyle={styles.avatar}
+          />
         </Pressable>
       )}
 

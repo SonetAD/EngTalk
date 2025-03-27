@@ -6,6 +6,7 @@ import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceTyp
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const createAuthSlice: StateCreator<
   AuthSliceType &
@@ -13,7 +14,8 @@ const createAuthSlice: StateCreator<
     VoiceBiteSliceType &
     OtherUserInfoSliceType &
     ConversationSliceType &
-    InboxSliceType,
+    InboxSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   AuthSliceType
@@ -21,9 +23,10 @@ const createAuthSlice: StateCreator<
   user: {
     token: '',
     userInfo: {
+      userId: '',
       userName: '',
       name: '',
-      email:'',
+      email: '',
       gender: '',
       avatar: {
         default: false,
@@ -44,9 +47,10 @@ const createAuthSlice: StateCreator<
       set((state) => {
         state.user.token = res.token;
         state.user.userInfo = {
+          userId: res.user.id,
           userName: res.user.userName,
           name: res.user.name,
-          email:res.user.email,
+          email: res.user.email,
           gender: res.user.gender,
           avatar: {
             default: res.user.avatar.default,
@@ -66,7 +70,7 @@ const createAuthSlice: StateCreator<
         state.user.userInfo = {
           userName: '',
           name: '',
-          email:'',
+          email: '',
           gender: '',
           avatar: {
             default: true,

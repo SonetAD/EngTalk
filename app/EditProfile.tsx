@@ -19,22 +19,31 @@ import { Color, Font } from '@/constants/constants';
 import * as ImagePicker from 'expo-image-picker';
 
 const EditProfile = () => {
-  const { name, userName, email, avatar } = useCentralStore(
+  const {
+    name,
+    userName,
+    email,
+    avatar,
+    updateUserName,
+    updateName,
+    updateEmail,
+    updateProfileAvatar,
+    updatePassword,
+    setUpdateProfile,
+  } = useCentralStore(
     useShallow((state) => ({
       name: state.user.userInfo.name,
       userName: state.user.userInfo.userName,
       email: state.user.userInfo.email,
       avatar: state.user.userInfo.avatar,
+      updateUserName: state.updateProfile.userName,
+      updateName: state.updateProfile.name,
+      updateEmail: state.updateProfile.email,
+      updateProfileAvatar: state.updateProfile.avatar,
+      updatePassword: state.updateProfile.password,
+      setUpdateProfile: state.setUpdateProfile,
     }))
   );
-
-  const [formData, setFormData] = useState({
-    userName: '',
-    name: '',
-    email: '',
-    password: '',
-    image: '',
-  });
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -45,7 +54,7 @@ const EditProfile = () => {
     });
 
     if (!result.canceled) {
-      setFormData({ ...formData, image: result.assets[0].uri });
+      setUpdateProfile({ avatar: result.assets[0].uri });
     }
   };
 
@@ -65,8 +74,8 @@ const EditProfile = () => {
               <View style={styles.headerContainer}>
                 <Pressable onPress={pickImage}>
                   <CustomAvatar
-                    avatar={formData.image ? formData.image : avatar}
-                    customSrc={formData.image  ? true : false}
+                    avatar={updateProfileAvatar ? updateProfileAvatar : avatar}
+                    customSrc={updateProfileAvatar ? true : false}
                   />
                 </Pressable>
               </View>
@@ -74,39 +83,31 @@ const EditProfile = () => {
               <View style={styles.formContainer}>
                 <Text style={styles.label}>Name</Text>
                 <FormField
-                  value={formData.name}
+                  value={updateName || ''}
                   placeholder={name}
-                  onChangeText={(text) =>
-                    setFormData({ ...formData, name: text })
-                  }
+                  onChangeText={(text) => setUpdateProfile({ name: text })}
                 />
 
                 <Text style={styles.label}>Username</Text>
                 <FormField
-                  value={formData.userName}
+                  value={updateUserName || ''}
                   placeholder={userName}
-                  onChangeText={(text) =>
-                    setFormData({ ...formData, userName: text })
-                  }
+                  onChangeText={(text) => setUpdateProfile({ userName: text })}
                 />
 
                 <Text style={styles.label}>Email</Text>
                 <FormField
-                  value={formData.email}
+                  value={updateEmail || ''}
                   placeholder={email}
-                  onChangeText={(text) =>
-                    setFormData({ ...formData, email: text })
-                  }
+                  onChangeText={(text) => setUpdateProfile({ email: text })}
                   keyboardType='email-address'
                 />
 
                 <Text style={styles.label}>Password</Text>
                 <FormField
-                  value={formData.password}
+                  value={updatePassword || ''}
                   placeholder='Password'
-                  onChangeText={(text) =>
-                    setFormData({ ...formData, password: text })
-                  }
+                  onChangeText={(text) => setUpdateProfile({ password: text })}
                 />
               </View>
             </View>

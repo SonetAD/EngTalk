@@ -1,6 +1,7 @@
 type User = {
   token: string;
   userInfo: {
+    userId:string;
     userName: string;
     name:string;
     email:string;

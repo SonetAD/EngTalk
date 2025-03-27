@@ -4,6 +4,7 @@ import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomAvatar from './CustomAvatar';
 
 interface User {
+  _id:string;
   avatar: { default: boolean; src: string };
   userName: string;
 }
@@ -19,7 +20,7 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.topThree}>The Crowned Trio</Text>
-      <Pressable onPress={() => viewProfile(userList[0].userName)}>
+      <Pressable onPress={() => viewProfile(userList[0]._id)}>
         <CustomAvatar
           avatar={userList[0].avatar}
           avatarStyle={styles.firstPlace}
@@ -27,13 +28,13 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
       </Pressable>
 
       <View style={styles.bottomRow}>
-        <Pressable onPress={() => viewProfile(userList[1].userName)}>
+        <Pressable onPress={() => viewProfile(userList[1]._id)}>
           <CustomAvatar
             avatar={userList[1].avatar}
             avatarStyle={styles.secondPlace}
           />
         </Pressable>
-        <Pressable onPress={() => viewProfile(userList[2].userName)}>
+        <Pressable onPress={() => viewProfile(userList[2]._id)}>
           <CustomAvatar
             avatar={userList[2].avatar}
             avatarStyle={styles.thirdPlace}

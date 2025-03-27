@@ -11,9 +11,10 @@ import { Color } from '@/constants/constants';
 import OtherProfileInfo from '@/components/OtherProfileInfo';
 
 const OtherProfile = () => {
-  const { userName, userBites, isLoading } = useCentralStore(
+  const { userName,userId, userBites, isLoading } = useCentralStore(
     useShallow((state) => ({
       userName: state.otherUser.userName,
+      userId: state.otherUser.userId,
       isLoading: state.otherUserInfoStatus.isLoading,
       userBites: state.otherUser.otherUserBites,
     }))
@@ -34,7 +35,7 @@ const OtherProfile = () => {
       currendPageRef.current++;
 
       const res = await fetchUserBite({
-        userName,
+        userId,
         page: currendPageRef.current,
         limit: 10,
       });
@@ -60,7 +61,7 @@ const OtherProfile = () => {
       currendPageRef.current = 1;
       setRefreshing(true);
       const res = await fetchUserBite({
-        userName,
+        userId,
         page: 1,
         limit: 10,
       });

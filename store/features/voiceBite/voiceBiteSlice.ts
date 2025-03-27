@@ -7,6 +7,7 @@ import fetchAllBites from '@/libs/api/fetchAllBite';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const createVoiceBiteSlice: StateCreator<
   VoiceBiteSliceType &
@@ -14,7 +15,8 @@ const createVoiceBiteSlice: StateCreator<
     UserStatSliceType &
     OtherUserInfoSliceType &
     ConversationSliceType &
-    InboxSliceType,
+    InboxSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   VoiceBiteSliceType
@@ -39,7 +41,7 @@ const createVoiceBiteSlice: StateCreator<
     try {
       const [userBites, allBites] = await Promise.all([
         fetchUserBite({
-          userName: get().user.userInfo.userName,
+          userId: get().user.userInfo.userId,
           page: 1,
           limit: 10,
         }),

@@ -25,8 +25,11 @@ const uploadBite = async (data: Props) => {
         'Content-Type': 'multipart/form-data',
       },
     };
-    const res = await axios.post(Backend.uploadPost, form, config);
-    return res.data;
+    if ([...form.entries()].length > 0) {
+      const res = await axios.post(Backend.uploadPost, form, config);
+      return res.data;
+    }
+    return {};
   } catch (err: any) {
     console.log(err.response?.data);
     throw new Error(err?.message);

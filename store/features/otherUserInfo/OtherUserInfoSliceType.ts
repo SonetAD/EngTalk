@@ -6,6 +6,7 @@ type VoiceBite = {
 
 type User = {
   userName: string;
+  userId:string;
   name: string;
   gender: string;
   avatar: {
@@ -32,7 +33,7 @@ type OtherUserInfoState = {
 };
 
 type OtherUserInfoAction = {
-  setOtherUser: (userName: string) => void;
+  setOtherUser: (userId: string) => void;
 };
 
 export type OtherUserInfoSliceType = OtherUserInfoState & OtherUserInfoAction;

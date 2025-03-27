@@ -6,6 +6,7 @@ import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceTyp
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 
 const createUserStatSlice: StateCreator<
   UserStatSliceType &
@@ -13,7 +14,8 @@ const createUserStatSlice: StateCreator<
     VoiceBiteSliceType &
     OtherUserInfoSliceType &
     ConversationSliceType &
-    InboxSliceType,
+    InboxSliceType &
+    UpdateProfileSliceType,
   [['zustand/immer', never]],
   [],
   UserStatSliceType

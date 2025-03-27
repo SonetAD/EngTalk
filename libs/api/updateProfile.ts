@@ -39,8 +39,11 @@ const updateProfile = async (data: Props) => {
       },
     };
 
-    const res = await axios.post(Backend.updateProfileURL, form, config);
-    return res.data;
+    if ([...form.entries()].length > 0) {
+      const res = await axios.put(Backend.updateProfileURL, form, config);
+      return res.data;
+    }
+    return {};
   } catch (err: any) {
     console.error(err.response?.data || err.message);
     throw new Error(err?.message);

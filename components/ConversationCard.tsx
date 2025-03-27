@@ -7,7 +7,7 @@ import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
 
 type User = {
-  userName: string;
+  _id: string;
   name: string;
   avatar: {
     default: boolean;
@@ -28,19 +28,18 @@ interface Props {
 }
 
 const ConversationCard = ({ conversation }: Props) => {
-  const { userName, getConversation } = useCentralStore(
+  const { userId, getConversation } = useCentralStore(
     useShallow((state) => ({
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       getConversation: state.getConversation,
     }))
   );
 
   const otherUser: any = conversation.participants.find(
-    (user) => user.userName !== userName
+    (user) => user._id !== userId
   );
 
-  const isMessageFromUser =
-    conversation.lastMessage.sender.userName === userName;
+  const isMessageFromUser = conversation.lastMessage.sender._id === userId;
   const formattedMessage = isMessageFromUser
     ? `You: ${conversation.lastMessage.message}`
     : conversation.lastMessage.message;
@@ -54,7 +53,7 @@ const ConversationCard = ({ conversation }: Props) => {
         error: '',
       },
     }));
-    getConversation(otherUser.userName);
+    getConversation(otherUser._id);
     router.push('/Chat');
   };
 

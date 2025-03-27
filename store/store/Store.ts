@@ -8,6 +8,7 @@ import createVoiceBiteSlice from '@/store/features/voiceBite/voiceBiteSlice';
 import createOtherUserInfoSlice from '@/store/features/otherUserInfo/OtherUserInfoSlice';
 import createConversationSlice from '@/store/features/conversation/ConversationSlice';
 import createInboxSlice from '../features/inbox/InboxSlice';
+import createUpdateProfile from '@/store/features/updateProfile/updateProfileSlice';
 
 const useCentralStore = create<StoreType>()(
   immer((...a) => ({
@@ -17,6 +18,7 @@ const useCentralStore = create<StoreType>()(
     ...createOtherUserInfoSlice(...a),
     ...createConversationSlice(...a),
     ...createInboxSlice(...a),
+    ...createUpdateProfile(...a),
   }))
 );
 

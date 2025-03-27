@@ -27,7 +27,7 @@ const Chat = () => {
     setReadStatus,
     totalConversationPages,
     isLoading,
-    otherChatParticipantUserName,
+    otherChatParticipantUserId,
   } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
@@ -36,21 +36,21 @@ const Chat = () => {
       conversationId: state.conversationId,
       isLoading: state.conversationStatus.isLoading,
       totalConversationPages: state.totalConversationPages,
-      otherChatParticipantUserName: state.otherChatParticipant.userName,
+      otherChatParticipantUserId: state.otherChatParticipant.userId,
     }))
   );
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    NotificationSocket.on('message', ({ userName, message }) => {
-      if (userName === otherChatParticipantUserName) {
+    NotificationSocket.on('message', ({ userId, message }) => {
+      if (userId === otherChatParticipantUserId) {
         useCentralStore.setState((prev) => ({
           messages: [message, ...prev.messages],
         }));
       }
     });
-  }, [otherChatParticipantUserName]);
+  }, [otherChatParticipantUserId]);
 
   useEffect(() => {
     if (conversationId) {
@@ -65,7 +65,7 @@ const Chat = () => {
 
       const res = await fetchConversation({
         token,
-        otherUserName: otherChatParticipantUserName,
+        userId: otherChatParticipantUserId,
         page: currendPageRef.current,
         limit: 15,
       });
@@ -77,7 +77,7 @@ const Chat = () => {
       }
       setLoadingMore(false);
     }
-  }, [token, otherChatParticipantUserName, totalConversationPages]);
+  }, [token, otherChatParticipantUserId, totalConversationPages]);
 
   return (
     <FullScreenView>

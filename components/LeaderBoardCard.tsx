@@ -7,14 +7,14 @@ import CustomAvatar from './CustomAvatar';
 interface Props {
   rank: number;
   avatar: { default: boolean; src: string };
-  username: string;
+  userId: string;
   name: string;
   totalTrophy: number;
-  viewProfile: (otherUserName: string) => void;
+  viewProfile: (otherUserId: string) => void;
 }
 
 const LeaderboardCard = ({
-  username,
+  userId,
   rank,
   avatar,
   name,
@@ -26,7 +26,7 @@ const LeaderboardCard = ({
       <Text style={styles.rank}>{rank}</Text>
 
       <View style={styles.avatarWrapper}>
-        <Pressable onPress={() => viewProfile(username)}>
+        <Pressable onPress={() => viewProfile(userId)}>
           <CustomAvatar
             avatar={avatar}
             avatarStyle={styles.avatar}
