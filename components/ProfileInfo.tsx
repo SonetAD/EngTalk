@@ -12,7 +12,7 @@ import capitalizeFirstLetter from './capitalizeFirstLetter';
 const ProfileInfo = () => {
   const {
     name,
-    userName,
+    userId,
     gender,
     avatar,
     followers,
@@ -25,7 +25,7 @@ const ProfileInfo = () => {
   } = useCentralStore(
     useShallow((state) => ({
       name: state.user.userInfo.name,
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       gender: state.user.userInfo.gender,
       avatar: state.user.userInfo.avatar,
       followers: state.user.userInfo.followers,
@@ -39,9 +39,10 @@ const ProfileInfo = () => {
   );
 
   useEffect(() => {
-    if (userName) {
-      NotificationSocket.on('follow', async (otherUserName) => {
-        const updatedUserInfo = await getUserInfo(userName);
+    if (userId) {
+      NotificationSocket.on('follow', async (otherUserId) => {
+        console.log('new follow');
+        const updatedUserInfo = await getUserInfo(userId);
         useCentralStore.setState((prev) => ({
           user: {
             ...prev.user,
@@ -54,12 +55,15 @@ const ProfileInfo = () => {
         }));
       });
     }
-  }, [userName]);
+  }, [userId]);
 
   return (
     <View>
       <View style={styles.info}>
-        <CustomAvatar avatar={avatar} />
+        <CustomAvatar
+          avatar={avatar}
+          gender={gender}
+        />
         <View>
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>

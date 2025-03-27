@@ -1,10 +1,7 @@
 type User = {
   userName: string;
   name: string;
-  avatar: {
-    default: boolean;
-    src: string;
-  };
+  avatar:string;
 };
 type SingleConversation = {
   _id: string;

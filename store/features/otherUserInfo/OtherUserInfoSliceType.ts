@@ -9,10 +9,7 @@ type User = {
   userId:string;
   name: string;
   gender: string;
-  avatar: {
-    default: boolean;
-    src: string;
-  };
+  avatar:string;
   followers: string[];
   following: string[];
   level: number;

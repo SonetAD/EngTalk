@@ -8,21 +8,21 @@ import { router } from 'expo-router';
 
 const ChatHeaderComponent = () => {
   const {
-    otherChatParticipantUserName,
+    otherChatParticipantUserId,
     otherChatParticipantName,
     otherChatParticipantAvatar,
     setOtherUser,
   } = useCentralStore(
     useShallow((state) => ({
       otherChatParticipantName: state.otherChatParticipant.name,
-      otherChatParticipantUserName: state.otherChatParticipant.userName,
+      otherChatParticipantUserId: state.otherChatParticipant.userId,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
       setOtherUser: state.setOtherUser,
     }))
   );
 
   const viewProfile = () => {
-    setOtherUser(otherChatParticipantUserName);
+    setOtherUser(otherChatParticipantUserId);
     router.push('/OtherProfile');
   };
   return (

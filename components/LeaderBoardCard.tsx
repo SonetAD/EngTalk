@@ -6,7 +6,8 @@ import CustomAvatar from './CustomAvatar';
 
 interface Props {
   rank: number;
-  avatar: { default: boolean; src: string };
+  avatar: string;
+  gender: string;
   userId: string;
   name: string;
   totalTrophy: number;
@@ -17,6 +18,7 @@ const LeaderboardCard = ({
   userId,
   rank,
   avatar,
+  gender,
   name,
   totalTrophy,
   viewProfile,
@@ -29,6 +31,7 @@ const LeaderboardCard = ({
         <Pressable onPress={() => viewProfile(userId)}>
           <CustomAvatar
             avatar={avatar}
+            gender={gender}
             avatarStyle={styles.avatar}
           />
         </Pressable>

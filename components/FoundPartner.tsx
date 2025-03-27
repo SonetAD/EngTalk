@@ -25,6 +25,7 @@ const FoundPartner = ({
 }: Props) => {
   const [isAccepted, setIsAccepted] = useState(false);
 
+  console.log(avatar);
   return (
     <View style={styles.container}>
       <CustomAvatar

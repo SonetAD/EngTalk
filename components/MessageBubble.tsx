@@ -14,7 +14,7 @@ interface Message {
   sender: {
     avatar: { src: string; default: boolean };
     name: string;
-    _id:string;
+    _id: string;
   };
   timestamp: string;
 }

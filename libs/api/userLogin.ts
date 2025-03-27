@@ -8,7 +8,7 @@ interface Props {
 }
 const userLogin = async (userData: Props) => {
   try {
-    const res = await axios.post(Backend.signinURL, userData, {});
+    const res = await axios.post(Backend.signinURL, userData);
     return res.data;
   } catch (err: any) {
     if (err?.response?.data?.errors?.validation) {

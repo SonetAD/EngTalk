@@ -21,10 +21,10 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
 const Call = () => {
-  const { token, userName, gender, setUserStat } = useCentralStore(
+  const { token, userId, gender, setUserStat } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       gender: state.user.userInfo.gender,
       setUserStat: state.setUserStat,
     }))
@@ -68,7 +68,7 @@ const Call = () => {
   }, [skipCount]);
 
   useEffect(() => {
-    Socket.emit('join', { userName, gender });
+    Socket.emit('join', { userId, gender });
 
     const handleIceCandidate = async ({ candidate }: any) => {
       if (candidate) {
@@ -142,16 +142,16 @@ const Call = () => {
   }, []);
   const searchPartner = useCallback(() => {
     findMatchIntervalRef.current = setInterval(() => {
-      Socket.emit('findMatch', { userName, preferredGender: 'none' });
+      Socket.emit('findMatch', { userId, preferredGender: 'none' });
     }, 500);
 
-    const matchHandler = async ({ matchedUserName, matchedSocketId }: any) => {
+    const matchHandler = async ({ matcheduserId, matchedSocketId }: any) => {
       if (findMatchIntervalRef.current) {
         clearInterval(findMatchIntervalRef.current);
         findMatchIntervalRef.current = null;
       }
 
-      fetchUser(matchedUserName, matchedSocketId);
+      fetchUser(matcheduserId, matchedSocketId);
     };
 
     Socket.on('matchFound', matchHandler);
@@ -177,13 +177,10 @@ const Call = () => {
     }
   };
 
-  const fetchUser = async (
-    matchedUserName: string,
-    matchedSocketId: string
-  ) => {
+  const fetchUser = async (matcheduserId: string, matchedSocketId: string) => {
     try {
-      if (matchedUserName) {
-        const user = await getUserInfo(matchedUserName);
+      if (matcheduserId) {
+        const user = await getUserInfo(matcheduserId);
         user.targetSocketId = matchedSocketId;
         setMatchedUserData(user);
       }
@@ -253,7 +250,7 @@ const Call = () => {
   return (
     <FullScreenView>
       {!matchedUserData && <SearchingPartner onEnd={stopSearching} />}
-      {matchedUserData?.user?.userName && !callAccepted && (
+      {matchedUserData?.user?._id && !callAccepted && (
         <FoundPartner
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}

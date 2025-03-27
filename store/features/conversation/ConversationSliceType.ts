@@ -1,9 +1,6 @@
 type User = {
   userId: string;
-  avatar: {
-    default: boolean;
-    src: string;
-  };
+  avatar:string;
   name: string;
 };
 

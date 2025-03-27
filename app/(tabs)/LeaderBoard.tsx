@@ -81,6 +81,7 @@ const LeaderBoard = () => {
             rank={index + 1}
             name={item?.name}
             userId={item?._id}
+            gender={item?.gender}
             totalTrophy={item?.totalTrophy}
             viewProfile={navigateToOtherProfile}
           />

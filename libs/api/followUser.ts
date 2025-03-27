@@ -12,7 +12,7 @@ const followUser = async ({ token, userId }: Props) => {
       { userId },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    return res.data
+    return res.data;
   } catch (err: any) {
     const errorMessage =
       err?.response?.data?.errors?.validation?.msg || 'Something went wrong!';

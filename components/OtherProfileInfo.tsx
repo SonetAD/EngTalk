@@ -15,10 +15,9 @@ import capitalizeFirstLetter from './capitalizeFirstLetter';
 const OtherProfileInfo = () => {
   const {
     name,
-    userName,
+    userId,
     otherUserId,
     gender,
-    otherUserName,
     token,
     avatar,
     followers,
@@ -31,9 +30,8 @@ const OtherProfileInfo = () => {
   } = useCentralStore(
     useShallow((state) => ({
       name: state.otherUser.name,
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       otherUserId: state.otherUser.userId,
-      otherUserName: state.otherUser.userName,
       gender: state.otherUser.gender,
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
@@ -51,14 +49,14 @@ const OtherProfileInfo = () => {
   const [followStatus, setFollowStatus] = useState(false);
 
   useEffect(() => {
-    if (userName) {
-      if (followers.includes(userName)) {
+    if (userId) {
+      if (followers.includes(userId)) {
         setFollowStatus(true);
       } else {
         setFollowStatus(false);
       }
     }
-  }, [followers, userName]);
+  }, [followers, userId]);
 
   const followOtherUser = async () => {
     try {
@@ -94,7 +92,7 @@ const OtherProfileInfo = () => {
         error: '',
       },
     }));
-    getConversation(otherUserName);
+    getConversation(otherUserId);
     router.push('/Chat');
   };
 

@@ -28,10 +28,7 @@ const createAuthSlice: StateCreator<
       name: '',
       email: '',
       gender: '',
-      avatar: {
-        default: false,
-        src: '',
-      },
+      avatar:'',
       followers: [],
       following: [],
     },
@@ -52,10 +49,7 @@ const createAuthSlice: StateCreator<
           name: res.user.name,
           email: res.user.email,
           gender: res.user.gender,
-          avatar: {
-            default: res.user.avatar.default,
-            src: res.user.avatar.src,
-          },
+          avatar:res.user.avatar,
           followers: res.user.followers,
           following: res.user.following,
         };
@@ -72,10 +66,7 @@ const createAuthSlice: StateCreator<
           name: '',
           email: '',
           gender: '',
-          avatar: {
-            default: true,
-            src: '',
-          },
+          avatar:'',
           followers: [],
           following: [],
         };
