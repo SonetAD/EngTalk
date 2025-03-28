@@ -5,14 +5,16 @@ import { ImageBlurHash } from '@/constants/constants';
 import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface Props {
-  avatar: string;
-  gender: string;
+  avatar: {
+    src: string;
+    stockAvatar: string;
+  };
   avatarStyle?: {};
   customSrc?: boolean;
 }
 
-const CustomAvatar = ({ avatar, gender, avatarStyle, customSrc }: Props) => {
-  const avatarImageSrc = getAvatarUrl({ avatar, gender });
+const CustomAvatar = ({ avatar, avatarStyle, customSrc }: Props) => {
+  const avatarImageSrc = getAvatarUrl(avatar);
   return (
     <Image
       source={customSrc ? avatar : avatarImageSrc}

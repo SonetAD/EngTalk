@@ -26,7 +26,10 @@ const createOtherUserInfoSlice: StateCreator<
     userName: '',
     name: '',
     gender: '',
-    avatar:'',
+    avatar:{
+      src:'',
+      stockAvatar:'',
+    },
     followers: [],
     following: [],
     level: 0,

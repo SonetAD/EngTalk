@@ -6,7 +6,10 @@ type User = {
     name:string;
     email:string;
     gender: string;
-    avatar:string;
+    avatar:{
+      src:string;
+      stockAvatar:string;
+    },
     followers: string[];
     following: string[];
   };

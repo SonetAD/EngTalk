@@ -1,6 +1,9 @@
 type User = {
   userId: string;
-  avatar:string;
+  avatar:{
+    src:string;
+    stockAvatar:string;
+  };
   name: string;
 };
 

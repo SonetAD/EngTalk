@@ -2,7 +2,10 @@ type User = {
   userName?: string;
   name?: string;
   email?: string;
-  avatar?: string;
+  avatar?: {
+    src: string;
+    stockAvatar: string;
+  };
   password?: string;
 };
 

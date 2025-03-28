@@ -23,7 +23,10 @@ const createUpdateProfile: StateCreator<
     userName: '',
     name: '',
     email: '',
-    avatar: '',
+    avatar:{
+      src:'',
+      stockAvatar:'',
+    },
     password: '',
   },
   setUpdateProfile: (userInfo) => {

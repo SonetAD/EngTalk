@@ -1,15 +1,13 @@
 import { Backend } from '@/config';
 
 interface Props {
-  avatar: string;
-  gender: string;
+  src: string;
+  stockAvatar: string;
 }
-const getAvatarUrl = ({ avatar, gender }: Props) => {
-  const defaultAvatar =
-    gender === 'male' ? 'avatar_male.png' : 'avatar_female.png';
-  const avatarImageSrc = avatar
-    ? `${Backend.baseURL}/public/avatars/${avatar}`
-    : `${Backend.baseURL}/default/avatars/${defaultAvatar}`;
+const getAvatarUrl = ({ src, stockAvatar }: Props) => {
+  const avatarImageSrc = src
+    ? `${Backend.baseURL}/public/avatars/${src}`
+    : `${Backend.baseURL}/default/avatars/${stockAvatar}`;
   return avatarImageSrc;
 };
 

@@ -28,7 +28,10 @@ const createAuthSlice: StateCreator<
       name: '',
       email: '',
       gender: '',
-      avatar:'',
+      avatar:{
+        src:'',
+        stockAvatar:'',
+      },
       followers: [],
       following: [],
     },

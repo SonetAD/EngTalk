@@ -11,7 +11,10 @@ import { UpdateProfileSliceType } from '@/store/features/updateProfile/updatePro
 
 const defaultUser = {
   userId: '',
-  avatar:'',
+  avatar:{
+    src:'',
+    stockAvatar:'',
+  },
   name: '',
 };
 
