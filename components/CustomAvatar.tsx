@@ -17,7 +17,7 @@ const CustomAvatar = ({ avatar, avatarStyle, customSrc }: Props) => {
   const avatarImageSrc = getAvatarUrl(avatar);
   return (
     <Image
-      source={customSrc ? avatar : avatarImageSrc}
+      source={customSrc ? avatar.src : avatarImageSrc}
       placeholder={ImageBlurHash}
       contentFit='cover'
       transition={1000}

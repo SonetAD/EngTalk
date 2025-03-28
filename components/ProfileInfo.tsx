@@ -3,11 +3,15 @@ import { Color, DeviceWidth, Font } from '@/constants/constants';
 import ProfilePageStat from '@/components/ProfilePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { NotificationSocket } from '@/libs/Socket';
 import getUserInfo from '@/libs/api/userInfo';
 import CustomAvatar from './CustomAvatar';
 import capitalizeFirstLetter from './capitalizeFirstLetter';
+import CustomButton from './CustomButton';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import RecordVoiceBites from './RecordVoiceBites';
+import { router } from 'expo-router';
 
 const ProfileInfo = () => {
   const {
@@ -41,7 +45,6 @@ const ProfileInfo = () => {
   useEffect(() => {
     if (userId) {
       NotificationSocket.on('follow', async (otherUserId) => {
-        console.log('new follow');
         const updatedUserInfo = await getUserInfo(userId);
         useCentralStore.setState((prev) => ({
           user: {
@@ -57,13 +60,20 @@ const ProfileInfo = () => {
     }
   }, [userId]);
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  const recordPopUp = useCallback(async () => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const editProfile = () => {
+    router.push('/EditProfile');
+  };
+
   return (
     <View>
       <View style={styles.info}>
-        <CustomAvatar
-          avatar={avatar}
-          gender={gender}
-        />
+        <CustomAvatar avatar={avatar} />
         <View>
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
@@ -80,6 +90,21 @@ const ProfileInfo = () => {
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={styles.location}>Bangladesh</Text>
+      <View style={styles.btnGroup}>
+        <CustomButton
+          containerStyle={styles.btn}
+          text='Add Bite'
+          handlePress={recordPopUp}
+        />
+        <CustomButton
+          containerStyle={[styles.btn, styles.noBgBtn]}
+          textStyle={{ color: Color.secondary.default }}
+          text='Edit Profile'
+          feedBackOff={true}
+          handlePress={editProfile}
+        />
+      </View>
+
       <ProfilePageStat
         goldCoin={totalGoldCoin}
         trophy={totalTrophy}
@@ -87,6 +112,7 @@ const ProfileInfo = () => {
         talkTime={talkTime}
       />
       <Text style={styles.voiceBites}>Voice Bites</Text>
+      <RecordVoiceBites ref={bottomSheetModalRef} />
     </View>
   );
 };
@@ -137,5 +163,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 10,
     fontSize: 12,
+  },
+  btnGroup: {
+    flexDirection: 'row',
+    marginHorizontal: 5,
+    marginVertical: 10,
+    gap: 5,
+  },
+  btn: {
+    width: '45%',
+    borderWidth: 1,
+    borderColor: Color.secondary.default,
+  },
+  noBgBtn: {
+    backgroundColor: Color.black.twoHundred,
   },
 });

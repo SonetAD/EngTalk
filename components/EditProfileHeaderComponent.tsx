@@ -15,18 +15,29 @@ import { router } from 'expo-router';
 import LocalStore from '@/libs/localStore';
 
 const EditProfileHeaderComponent = () => {
-  const { token, userName, name, avatar, email, password, setUser } =
-    useCentralStore(
-      useShallow((state) => ({
-        token: state.user.token,
-        userName: state.updateProfile.userName,
-        name: state.updateProfile.name,
-        email: state.updateProfile.email,
-        avatar: state.updateProfile.avatar,
-        password: state.updateProfile.password,
-        setUser: state.setUser,
-      }))
-    );
+  const {
+    token,
+    userId,
+    userName,
+    name,
+    avatar,
+    email,
+    password,
+    setUpdateProfile,
+    setUser,
+  } = useCentralStore(
+    useShallow((state) => ({
+      token: state.user.token,
+      userId: state.user.userInfo.userId,
+      userName: state.updateProfile.userName,
+      name: state.updateProfile.name,
+      email: state.updateProfile.email,
+      avatar: state.updateProfile.avatar,
+      password: state.updateProfile.password,
+      setUpdateProfile: state.setUpdateProfile,
+      setUser: state.setUser,
+    }))
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -35,13 +46,13 @@ const EditProfileHeaderComponent = () => {
       setLoading(true);
       await updateProfile({
         token,
+        userId,
         userName,
         name,
         email,
         avatar,
         password,
       });
-      setLoading(false);
 
       if (userName) {
         LocalStore.set('userName', userName);
@@ -49,8 +60,20 @@ const EditProfileHeaderComponent = () => {
       if (password) {
         LocalStore.set('passWord', password);
       }
+      setUpdateProfile({
+        userName: '',
+        name: '',
+        email: '',
+        avatar: {
+          src: '',
+          stockAvatar: '',
+        },
+        password: '',
+      });
 
-      router.navigate('/Home');
+      setLoading(false);
+
+      router.navigate('/Profile');
     } catch (err) {
       console.log(err);
     }

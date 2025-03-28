@@ -49,12 +49,17 @@ const EditProfile = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
     if (!result.canceled) {
-      setUpdateProfile({ avatar: result.assets[0].uri });
+      setUpdateProfile({
+        avatar: {
+          src: result.assets[0].uri,
+          stockAvatar: '',
+        },
+      });
     }
   };
 
@@ -74,8 +79,10 @@ const EditProfile = () => {
               <View style={styles.headerContainer}>
                 <Pressable onPress={pickImage}>
                   <CustomAvatar
-                    avatar={updateProfileAvatar ? updateProfileAvatar : avatar}
-                    customSrc={updateProfileAvatar ? true : false}
+                    avatar={
+                      updateProfileAvatar?.src ? updateProfileAvatar : avatar
+                    }
+                    customSrc={updateProfileAvatar?.src ? true : false}
                   />
                 </Pressable>
               </View>

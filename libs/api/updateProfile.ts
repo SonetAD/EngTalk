@@ -3,11 +3,15 @@ import { Backend } from '@/config';
 
 interface Props {
   token: string;
+  userId:string;
   userName?: string;
   name?: string;
   email?: string;
   password?: string;
-  avatar?: string;
+  avatar?: {
+    src: string;
+    stockAvatar: string;
+  };
 }
 
 const updateProfile = async (data: Props) => {
@@ -19,15 +23,15 @@ const updateProfile = async (data: Props) => {
     if (data.email) form.append('email', data.email);
     if (data.password) form.append('password', data.password);
 
-    if (data.avatar) {
-      const extension = data.avatar.split('.').pop()?.toLowerCase();
-      const fileName = `${data.userName}_profile_picture`;
+    if (data?.avatar?.src) {
+      const extension = data?.avatar?.src.split('.').pop()?.toLowerCase();
+      const fileName = `${data.userId}_profile_picture`;
 
       if (extension) {
         form.append('avatar', {
           name: `${fileName}.${extension}`,
           type: `image/${extension}`,
-          uri: data.avatar,
+          uri: data.avatar.src,
         });
       }
     }
@@ -45,7 +49,7 @@ const updateProfile = async (data: Props) => {
     }
     return {};
   } catch (err: any) {
-    console.error(err.response?.data || err.message);
+    console.log(err);
     throw new Error(err?.message);
   }
 };
