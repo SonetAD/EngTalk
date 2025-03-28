@@ -6,6 +6,7 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { CallSliceType } from '@/store/features/call/callSliceType';
 
 const createUpdateProfile: StateCreator<
   UpdateProfileSliceType &
@@ -14,7 +15,8 @@ const createUpdateProfile: StateCreator<
     VoiceBiteSliceType &
     OtherUserInfoSliceType &
     ConversationSliceType &
-    InboxSliceType,
+    InboxSliceType &
+    CallSliceType,
   [['zustand/immer', never]],
   [],
   UpdateProfileSliceType
@@ -23,9 +25,9 @@ const createUpdateProfile: StateCreator<
     userName: '',
     name: '',
     email: '',
-    avatar:{
-      src:'',
-      stockAvatar:'',
+    avatar: {
+      src: '',
+      stockAvatar: '',
     },
     password: '',
   },

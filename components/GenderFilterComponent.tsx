@@ -1,51 +1,107 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Animated, { FadeInUp, BounceIn, Easing } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import Font from '@/constants/font';
 import Color from '@/constants/color';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 const GenderFilterComponent = () => {
+  const { filteredGender, setCallInfo, totalGoldCoin } = useCentralStore(
+    useShallow((state) => ({
+      filteredGender: state.call.filteredGender,
+      setCallInfo: state.setCallInfo,
+      totalGoldCoin: state.userStat.totalGoldCoin,
+    }))
+  );
+
+  const selectGender = (gender: string) => {
+    if (totalGoldCoin >= 5) {
+      setCallInfo({
+        filteredGender: gender,
+      });
+    }
+  };
+
   return (
     <Animated.View
       entering={FadeInUp.duration(700)}
       style={styles.statsContainer}
     >
-      <Animated.View
-        entering={BounceIn.delay(300)}
-        style={styles.statBox}
-      >
-        <Ionicons
-          name='male-female-outline'
-          size={30}
-          color={Color.secondary.twoHundred}
-        />
-        <Text style={styles.genderTxt}>All</Text>
-      </Animated.View>
+      <Pressable onPress={() => selectGender('any')}>
+        <Animated.View
+          entering={BounceIn.delay(300)}
+          style={styles.statBox}
+        >
+          <Ionicons
+            name='male-female-outline'
+            size={30}
+            color={
+              filteredGender === 'any'
+                ? Color.secondary.default
+                : Color.gray.oneHundred
+            }
+          />
+          <Text
+            style={[
+              styles.genderTxt,
+              filteredGender === 'any' && styles.selectedText,
+            ]}
+          >
+            Any
+          </Text>
+        </Animated.View>
+      </Pressable>
 
-      <Animated.View
-        entering={BounceIn.delay(500)}
-        style={styles.statBox}
-      >
-        <Ionicons
-          name='male'
-          size={30}
-          color={Color.gray.oneHundred}
-        />
-        <Text style={styles.genderTxt}>Male</Text>
-      </Animated.View>
-
-      <Animated.View
-        entering={BounceIn.delay(700)}
-        style={styles.statBox}
-      >
-        <Ionicons
-          name='female'
-          size={30}
-          color={Color.gray.oneHundred}
-        />
-        <Text style={styles.genderTxt}>Female</Text>
-      </Animated.View>
+      <Pressable onPress={() => selectGender('female')}>
+        <Animated.View
+          entering={BounceIn.delay(700)}
+          style={styles.statBox}
+        >
+          <Ionicons
+            name='female'
+            size={30}
+            color={
+              filteredGender === 'female'
+                ? Color.secondary.default
+                : Color.gray.oneHundred
+            }
+          />
+          <Text
+            style={[
+              styles.genderTxt,
+              filteredGender === 'female' && styles.selectedText,
+            ]}
+          >
+            Female
+          </Text>
+        </Animated.View>
+      </Pressable>
+      <Pressable onPress={() => selectGender('male')}>
+        <Animated.View
+          entering={BounceIn.delay(500)}
+          style={styles.statBox}
+        >
+          <Ionicons
+            name='male'
+            size={30}
+            color={
+              filteredGender === 'male'
+                ? Color.secondary.default
+                : Color.gray.oneHundred
+            }
+          />
+          <Text
+            style={[
+              styles.genderTxt,
+              filteredGender === 'male' && styles.selectedText,
+            ]}
+          >
+            Male
+          </Text>
+        </Animated.View>
+      </Pressable>
     </Animated.View>
   );
 };
@@ -68,8 +124,12 @@ const styles = StyleSheet.create({
   },
   genderTxt: {
     fontSize: 12,
-    fontFamily: Font.pSemiBold,
-    color: Color.white,
+    fontFamily: Font.pRegular,
+    color: Color.gray.oneHundred,
     marginTop: 5,
+  },
+  selectedText: {
+    fontFamily: Font.pBold,
+    color: Color.white,
   },
 });

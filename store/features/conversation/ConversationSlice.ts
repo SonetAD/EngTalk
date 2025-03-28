@@ -8,12 +8,13 @@ import fetchConversation from '@/libs/api/fetchConversation';
 import getUserInfo from '@/libs/api/userInfo';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { CallSliceType } from '@/store/features/call/callSliceType';
 
 const defaultUser = {
   userId: '',
-  avatar:{
-    src:'',
-    stockAvatar:'',
+  avatar: {
+    src: '',
+    stockAvatar: '',
   },
   name: '',
 };
@@ -32,7 +33,8 @@ const createConversationSlice: StateCreator<
     UserStatSliceType &
     OtherUserInfoSliceType &
     InboxSliceType &
-    UpdateProfileSliceType,
+    UpdateProfileSliceType &
+    CallSliceType,
   [['zustand/immer', never]],
   [],
   ConversationSliceType
@@ -52,7 +54,7 @@ const createConversationSlice: StateCreator<
     try {
       const res = await fetchConversation({
         token: get().user.token,
-        userId:otherUserId,
+        userId: otherUserId,
         page: 1,
         limit: 15,
       });

@@ -5,6 +5,7 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { CallSliceType } from '@/store/features/call/callSliceType';
 
 export type StoreType = AuthSliceType &
   UserStatSliceType &
@@ -12,4 +13,5 @@ export type StoreType = AuthSliceType &
   OtherUserInfoSliceType &
   ConversationSliceType &
   InboxSliceType &
-  UpdateProfileSliceType;
+  UpdateProfileSliceType &
+  CallSliceType;

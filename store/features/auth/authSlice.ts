@@ -7,6 +7,7 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { CallSliceType } from '@/store/features/call/callSliceType';
 
 const createAuthSlice: StateCreator<
   AuthSliceType &
@@ -15,7 +16,8 @@ const createAuthSlice: StateCreator<
     OtherUserInfoSliceType &
     ConversationSliceType &
     InboxSliceType &
-    UpdateProfileSliceType,
+    UpdateProfileSliceType &
+    CallSliceType,
   [['zustand/immer', never]],
   [],
   AuthSliceType
@@ -28,9 +30,9 @@ const createAuthSlice: StateCreator<
       name: '',
       email: '',
       gender: '',
-      avatar:{
-        src:'',
-        stockAvatar:'',
+      avatar: {
+        src: '',
+        stockAvatar: '',
       },
       followers: [],
       following: [],
@@ -52,7 +54,7 @@ const createAuthSlice: StateCreator<
           name: res.user.name,
           email: res.user.email,
           gender: res.user.gender,
-          avatar:res.user.avatar,
+          avatar: res.user.avatar,
           followers: res.user.followers,
           following: res.user.following,
         };
@@ -69,7 +71,7 @@ const createAuthSlice: StateCreator<
           name: '',
           email: '',
           gender: '',
-          avatar:'',
+          avatar: '',
           followers: [],
           following: [],
         };

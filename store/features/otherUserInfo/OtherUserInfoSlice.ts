@@ -8,6 +8,7 @@ import fetchUserBite from '@/libs/api/fetchUserBite';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { CallSliceType } from '@/store/features/call/callSliceType';
 
 const createOtherUserInfoSlice: StateCreator<
   OtherUserInfoSliceType &
@@ -16,7 +17,8 @@ const createOtherUserInfoSlice: StateCreator<
     VoiceBiteSliceType &
     ConversationSliceType &
     InboxSliceType &
-    UpdateProfileSliceType,
+    UpdateProfileSliceType &
+    CallSliceType,
   [['zustand/immer', never]],
   [],
   OtherUserInfoSliceType
@@ -26,9 +28,9 @@ const createOtherUserInfoSlice: StateCreator<
     userName: '',
     name: '',
     gender: '',
-    avatar:{
-      src:'',
-      stockAvatar:'',
+    avatar: {
+      src: '',
+      stockAvatar: '',
     },
     followers: [],
     following: [],
