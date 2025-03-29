@@ -6,6 +6,7 @@ import Font from '@/constants/font';
 import Color from '@/constants/color';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import * as Haptics from 'expo-haptics';
 
 const GenderFilterComponent = () => {
   const { filteredGender, setCallInfo, totalGoldCoin } = useCentralStore(
@@ -18,6 +19,7 @@ const GenderFilterComponent = () => {
 
   const selectGender = (gender: string) => {
     if (totalGoldCoin >= 5) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setCallInfo({
         filteredGender: gender,
       });

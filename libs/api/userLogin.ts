@@ -11,6 +11,7 @@ const userLogin = async (userData: Props) => {
     const res = await axios.post(Backend.signinURL, userData);
     return res.data;
   } catch (err: any) {
+    console.log(err?.response?.data);
     if (err?.response?.data?.errors?.validation) {
       LocalStore.clearAll();
     }

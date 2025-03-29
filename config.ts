@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const Backend = {
-  baseURL: 'https://qcgs8t75-3000.asse.devtunnels.ms',
+  baseURL: 'http://10.120.253.25:3000',
   get signinURL() {
     return `${this.baseURL}/user/signin`;
   },
@@ -16,6 +16,9 @@ export const Backend = {
   },
   get statURL() {
     return `${this.baseURL}/stat`;
+  },
+  get premiumCallURL() {
+    return `${this.baseURL}/stat/premiumcall`;
   },
 
   get userPost() {

@@ -1,21 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Color from '@/constants/color';
 import Font from '@/constants/font';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import useGoldCoin from '@/libs/api/useGoldCoin';
 
 interface Props {
-    timerRef: React.MutableRefObject<number>;
+  timerRef: React.MutableRefObject<number>;
 }
-const LiveTimer = ({timerRef}:Props) => {
+const LiveTimer = ({ timerRef }: Props) => {
+  const { filteredGender, token } = useCentralStore(
+    useShallow((state) => ({
+      filteredGender: state.call.filteredGender,
+      token: state.user.token,
+    }))
+  );
   const [seconds, setSeconds] = useState(0);
+  const spendGoldCoinRef = useRef(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = setInterval( () => {
       setSeconds((prev) => {
-          timerRef.current = prev
-        return prev+1
+        timerRef.current = prev;
+        return prev + 1;
       });
+      if (filteredGender === 'male' || filteredGender === 'female') {
+        if (timerRef.current >= 60 && !spendGoldCoinRef.current) {
+          spendGoldCoinRef.current = true;
+           useGoldCoin({ token });
+        }
+      }
     }, 1000);
 
     return () => {

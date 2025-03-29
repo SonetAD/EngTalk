@@ -21,14 +21,16 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
 const Call = () => {
-  const { token, userId, gender, setUserStat } = useCentralStore(
-    useShallow((state) => ({
-      token: state.user.token,
-      userId: state.user.userInfo.userId,
-      gender: state.user.userInfo.gender,
-      setUserStat: state.setUserStat,
-    }))
-  );
+  const { token, userId, gender, filteredGender, setUserStat } =
+    useCentralStore(
+      useShallow((state) => ({
+        token: state.user.token,
+        userId: state.user.userInfo.userId,
+        gender: state.user.userInfo.gender,
+        filteredGender: state.call.filteredGender,
+        setUserStat: state.setUserStat,
+      }))
+    );
 
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState(false);
@@ -142,7 +144,7 @@ const Call = () => {
   }, []);
   const searchPartner = useCallback(() => {
     findMatchIntervalRef.current = setInterval(() => {
-      Socket.emit('findMatch', { userId, preferredGender: 'none' });
+      Socket.emit('findMatch', { userId, preferredGender: filteredGender });
     }, 500);
 
     const matchHandler = async ({ matcheduserId, matchedSocketId }: any) => {
