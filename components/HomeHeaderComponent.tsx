@@ -12,8 +12,7 @@ import Animated, {
 interface Props {
   hasUnreadMessage: boolean;
 }
-const HomeHeaderComponent = ({hasUnreadMessage}:Props) => {
-
+const HomeHeaderComponent = ({ hasUnreadMessage }: Props) => {
   const openInbox = () => {
     router.navigate('/Inbox');
   };
@@ -39,18 +38,22 @@ const HomeHeaderComponent = ({hasUnreadMessage}:Props) => {
         eng<Text style={[styles.eng, styles.talk]}>talk</Text>
       </Text>
 
-      <Pressable
-        onPress={openInbox}
-        style={styles.iconWrapper}
-      >
-        {/* Message Icon */}
-        <CustomBrightIcon name='chatbubble-ellipses-outline' />
+      <View style={styles.iconGroup}>
+        <Pressable onPress={() => router.navigate('/SearchUser')}>
+          <CustomBrightIcon name='search-outline' />
+        </Pressable>
+        <Pressable
+          onPress={openInbox}
+          style={styles.iconWrapper}
+        >
+          <CustomBrightIcon name='chatbubble-ellipses-outline' />
 
-        {/* Animated Red Dot */}
-        {hasUnreadMessage && (
-          <Animated.View style={[styles.redDot, animatedDotStyle]} />
-        )}
-      </Pressable>
+          {/* Animated Red Dot */}
+          {hasUnreadMessage && (
+            <Animated.View style={[styles.redDot, animatedDotStyle]} />
+          )}
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -86,5 +89,9 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: Color.red,
     borderRadius: 5,
+  },
+  iconGroup: {
+    flexDirection: 'row',
+    gap: 10,
   },
 });

@@ -23,7 +23,7 @@ const NoMessageAvalable = () => {
   );
 
   const viewProfile = () => {
-    setOtherUser(otherChatParticipantUserId);
+    setOtherUser({userId:otherChatParticipantUserId, goBackRoute: '/Chat'});
     router.navigate('/OtherProfile');
   };
   return (

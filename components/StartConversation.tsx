@@ -1,11 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useRef, useState } from 'react';
-import {
-  Color,
-  DeviceHeight,
-  DeviceWidth,
-  Font,
-} from '@/constants/constants';
+import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import { RTCView, MediaStream } from 'react-native-webrtc';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -13,10 +8,14 @@ import * as Haptics from 'expo-haptics';
 import CustomButton from '@/components/CustomButton';
 import LiveTimer from './liveTimer';
 import CustomAvatar from './CustomAvatar';
+import { router } from 'expo-router';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 interface Props {
+  userId: string;
   name: string;
-  avatar: { src: string; default: boolean };
+  avatar: { src: string; stockAvatar: string };
   level: number;
   onEnd: () => void;
   remoteStream: MediaStream;
@@ -27,6 +26,7 @@ interface Props {
 }
 
 const StartConversation = ({
+  userId,
   name,
   avatar,
   level,
@@ -37,13 +37,27 @@ const StartConversation = ({
   matchedUserData,
   timerRef,
 }: Props) => {
+  const {setOtherUser}=useCentralStore(useShallow((state)=>({
+    setOtherUser:state.setOtherUser
+  })))
   const [isMuted, setIsMuted] = useState(false);
   const [isLoudSpeakerOn, setIsLoudSpeakerOn] = useState(false);
+
+  const viewProfile = (otherUserName: string) => {
+    setOtherUser(otherUserName);
+    router.push('/OtherProfile');
+  };
 
   return (
     <View style={styles.container}>
       <LiveTimer timerRef={timerRef} />
-      <CustomAvatar avatar={avatar} avatarStyle={styles.avatar} />
+      <Pressable onPress={() => viewProfile(userId)}>
+        <CustomAvatar
+          avatar={avatar}
+          avatarStyle={styles.avatar}
+        />
+      </Pressable>
+
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>
 

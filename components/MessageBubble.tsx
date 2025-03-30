@@ -33,7 +33,7 @@ const MessageBubble = ({ message }: Props) => {
 
   const isMe = message.sender._id === userId;
   const viewProfile = (otherUserName: string) => {
-    setOtherUser(otherUserName);
+    setOtherUser({userId:message.sender._id, goBackRoute: '/Chat'});
     router.push('/OtherProfile');
   };
 

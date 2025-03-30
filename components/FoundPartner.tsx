@@ -1,12 +1,22 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { act, useState } from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomButton from '@/components/CustomButton';
 import CustomAvatar from './CustomAvatar';
+import { useShallow } from 'zustand/react/shallow';
+import useCentralStore from '@/store/store/Store';
+import { router } from 'expo-router';
 
 interface Props {
+  userId: string;
   name: string;
-  avatar: { src: string; default: boolean };
+  avatar: { src: string; stockAvatar: string };
   level: number;
   onSkip: () => void;
   onEnd: () => void;
@@ -15,6 +25,7 @@ interface Props {
 }
 
 const FoundPartner = ({
+  userId,
   name,
   avatar,
   level,
@@ -23,15 +34,28 @@ const FoundPartner = ({
   onEnd,
   isLoading,
 }: Props) => {
+  const { setOtherUser } = useCentralStore(
+    useShallow((state) => ({
+      setOtherUser: state.setOtherUser,
+    }))
+  );
+
   const [isAccepted, setIsAccepted] = useState(false);
+  const viewProfile = (otherUserName: string) => {
+    setOtherUser(otherUserName);
+    router.push('/OtherProfile');
+  };
 
   console.log(avatar);
   return (
     <View style={styles.container}>
-      <CustomAvatar
-        avatar={avatar}
-        avatarStyle={styles.avatar}
-      />
+      <Pressable onPress={() => viewProfile(userId)}>
+        <CustomAvatar
+          avatar={avatar}
+          avatarStyle={styles.avatar}
+        />
+      </Pressable>
+
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>
       {isAccepted && (

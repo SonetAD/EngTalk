@@ -8,6 +8,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import ChatHeaderComponent from '@/components/ChatHeaderComponent';
 import InboxHeaderComponent from '@/components/InboxHeaderComponent';
 import EditProfileHeaderComponent from '@/components/EditProfileHeaderComponent';
+import FullScreenAvatarHeaderComponent from '@/components/FullScreenAvatarHeaderComponent';
+import SearchUserHeaderComponent from '@/components/SearchUserHeaderComponent';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -60,6 +62,20 @@ const RootLayout = () => {
             name='EditProfile'
             options={{
               header: EditProfileHeaderComponent,
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name='FullScreenAvatar'
+            options={{
+              header: FullScreenAvatarHeaderComponent,
+              headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name='SearchUser'
+            options={{
+              header: SearchUserHeaderComponent,
               headerShown: true,
             }}
           />

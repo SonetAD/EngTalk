@@ -80,7 +80,13 @@ const EditProfileHeaderComponent = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.inbox}>edit profile</Text>
+      <View style={styles.editProfileWrapper}>
+        <Pressable onPress={() => router.back()}>
+          <CustomBrightIcon name='arrow-back-outline' />
+        </Pressable>
+        <Text style={styles.editProfile}>edit profile</Text>
+      </View>
+
       <Pressable onPress={saveUpdate}>
         {loading ? (
           <ActivityIndicator
@@ -106,7 +112,12 @@ const styles = StyleSheet.create({
     paddingTop: (DeviceHeight * 0.1) / 2,
     paddingHorizontal: 20,
   },
-  inbox: {
+  editProfileWrapper: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+
+  editProfile: {
     color: Color.white,
     fontSize: 20,
     fontFamily: Font.pSemiBold,

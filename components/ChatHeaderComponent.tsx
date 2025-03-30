@@ -5,6 +5,7 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
+import CustomBrightIcon from './CustomBrightIcon';
 
 const ChatHeaderComponent = () => {
   const {
@@ -22,12 +23,15 @@ const ChatHeaderComponent = () => {
   );
 
   const viewProfile = () => {
-    setOtherUser(otherChatParticipantUserId);
+    setOtherUser({ userId: otherChatParticipantUserId, goBackRoute: '/Chat' });
     router.push('/OtherProfile');
   };
   return (
     <Pressable onPress={viewProfile}>
       <View style={styles.container}>
+        <Pressable onPress={() => router.replace('/Inbox')}>
+          <CustomBrightIcon name='arrow-back-outline' />
+        </Pressable>
         <CustomAvatar
           avatar={otherChatParticipantAvatar}
           avatarStyle={styles.avatar}

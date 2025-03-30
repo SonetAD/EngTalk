@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Color, DeviceWidth, Font } from '@/constants/constants';
 import ProfilePageStat from '@/components/ProfilePageStat';
 import useCentralStore from '@/store/store/Store';
@@ -73,7 +73,15 @@ const ProfileInfo = () => {
   return (
     <View>
       <View style={styles.info}>
-        <CustomAvatar avatar={avatar} />
+        <Pressable onPress={() => router.push({
+          pathname: '/FullScreenAvatar',
+          params:{
+            src:avatar.src,
+            stockAvatar:avatar.stockAvatar
+          }
+        })}>
+          <CustomAvatar avatar={avatar} />
+        </Pressable>
         <View>
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>

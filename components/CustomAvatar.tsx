@@ -6,8 +6,8 @@ import getAvatarUrl from '@/libs/getAvatarUrl';
 
 interface Props {
   avatar: {
-    src: string;
-    stockAvatar: string;
+    src: any;
+    stockAvatar: any;
   };
   avatarStyle?: {};
   customSrc?: boolean;

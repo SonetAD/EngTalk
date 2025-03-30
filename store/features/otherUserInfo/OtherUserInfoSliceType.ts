@@ -6,12 +6,12 @@ type VoiceBite = {
 
 type User = {
   userName: string;
-  userId:string;
+  userId: string;
   name: string;
   gender: string;
-  avatar:{
-    src:string;
-    stockAvatar:string;
+  avatar: {
+    src: string;
+    stockAvatar: string;
   };
   followers: string[];
   following: string[];
@@ -29,11 +29,16 @@ type OtherUserInfoStatus = {
 
 type OtherUserInfoState = {
   otherUser: User;
+  otherUserGoBackRoute: any;
   otherUserInfoStatus: OtherUserInfoStatus;
 };
 
+type Props = {
+  userId: string;
+  goBackRoute: any;
+};
 type OtherUserInfoAction = {
-  setOtherUser: (userId: string) => void;
+  setOtherUser: ({ userId, goBackRoute }: Props) => void;
 };
 
 export type OtherUserInfoSliceType = OtherUserInfoState & OtherUserInfoAction;

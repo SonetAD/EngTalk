@@ -10,6 +10,7 @@ import createConversationSlice from '@/store/features/conversation/ConversationS
 import createInboxSlice from '../features/inbox/InboxSlice';
 import createUpdateProfile from '@/store/features/updateProfile/updateProfileSlice';
 import createCallSlice from '@/store/features/call/callSlice';
+import createSearchUserSlice from '@/store/features/SearchUser/SearchUserSlice';
 
 const useCentralStore = create<StoreType>()(
   immer((...a) => ({
@@ -21,6 +22,7 @@ const useCentralStore = create<StoreType>()(
     ...createInboxSlice(...a),
     ...createUpdateProfile(...a),
     ...createCallSlice(...a),
+    ...createSearchUserSlice(...a),
   }))
 );
 

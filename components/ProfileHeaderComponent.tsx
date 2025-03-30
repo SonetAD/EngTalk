@@ -4,6 +4,8 @@ import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomBrightIcon from './CustomBrightIcon';
 import { Pressable } from 'react-native-gesture-handler';
 import { router } from 'expo-router';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 interface Props {
   userName: string;
@@ -11,12 +13,24 @@ interface Props {
 }
 
 const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
-  const editProfile=()=>{
+  const { otherUserGoBackRoute } = useCentralStore(
+    useShallow((state) => ({
+      otherUserGoBackRoute: state.otherUserGoBackRoute,
+    }))
+  );
+  const editProfile = () => {
     router.push('/EditProfile');
-  }
+  };
   return (
     <View style={styles.container}>
-      <Text style={styles.userName}>{userName}</Text>
+      <View style={styles.profileWrapper}>
+        {otherUser && (
+          <Pressable onPress={() => router.replace(otherUserGoBackRoute)}>
+            <CustomBrightIcon name='arrow-back-outline' />
+          </Pressable>
+        )}
+        <Text style={styles.userName}>{userName}</Text>
+      </View>
       {!otherUser && (
         <Pressable onPress={editProfile}>
           <CustomBrightIcon name='settings-outline' />
@@ -41,5 +55,9 @@ const styles = StyleSheet.create({
     color: Color.white,
     fontSize: 20,
     fontFamily: Font.pSemiBold,
+  },
+  profileWrapper: {
+    flexDirection: 'row',
+    gap: 10,
   },
 });

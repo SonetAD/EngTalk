@@ -9,6 +9,7 @@ import { ConversationSliceType } from '@/store/features/conversation/Conversatio
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 
 const createOtherUserInfoSlice: StateCreator<
   OtherUserInfoSliceType &
@@ -18,7 +19,8 @@ const createOtherUserInfoSlice: StateCreator<
     ConversationSliceType &
     InboxSliceType &
     UpdateProfileSliceType &
-    CallSliceType,
+    CallSliceType &
+    SearchUserSliceType,
   [['zustand/immer', never]],
   [],
   OtherUserInfoSliceType
@@ -48,8 +50,9 @@ const createOtherUserInfoSlice: StateCreator<
     isError: false,
     error: '',
   },
+  otherUserGoBackRoute: '',
 
-  setOtherUser: async (userId: string) => {
+  setOtherUser: async ({ userId, goBackRoute }) => {
     try {
       const [otherUserInfo, otherUserVoiceBites] = await Promise.all([
         getUserInfo(userId),
@@ -57,6 +60,7 @@ const createOtherUserInfoSlice: StateCreator<
       ]);
       set((state) => {
         state.otherUser = otherUserInfo.user;
+        state.otherUserGoBackRoute = goBackRoute;
         state.otherUser.userId = userId;
         state.otherUserInfoStatus.isLoading = false;
         state.otherUserInfoStatus.isError = false;

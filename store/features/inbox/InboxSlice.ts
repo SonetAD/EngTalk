@@ -8,6 +8,7 @@ import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import fetchInbox from '@/libs/api/fetchInbox';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 
 const defaultUser = {
   userName: '',
@@ -32,7 +33,8 @@ const createInboxSlice: StateCreator<
     UserStatSliceType &
     OtherUserInfoSliceType &
     UpdateProfileSliceType &
-    CallSliceType,
+    CallSliceType &
+    SearchUserSliceType,
   [['zustand/immer', never]],
   [],
   InboxSliceType

@@ -58,7 +58,7 @@ const LeaderBoard = () => {
     if (userId === otherUserId) {
       router.navigate('/Profile');
     } else {
-      setOtherUser(otherUserId);
+      setOtherUser({ userId: otherUserId, goBackRoute: '/LeaderBoard' });
       router.push('/OtherProfile');
     }
   };

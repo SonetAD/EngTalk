@@ -8,6 +8,7 @@ import { ConversationSliceType } from '@/store/features/conversation/Conversatio
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 
 const createAuthSlice: StateCreator<
   AuthSliceType &
@@ -17,7 +18,8 @@ const createAuthSlice: StateCreator<
     ConversationSliceType &
     InboxSliceType &
     UpdateProfileSliceType &
-    CallSliceType,
+    CallSliceType &
+    SearchUserSliceType,
   [['zustand/immer', never]],
   [],
   AuthSliceType

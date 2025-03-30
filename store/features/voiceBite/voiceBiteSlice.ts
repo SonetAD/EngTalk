@@ -9,6 +9,7 @@ import { ConversationSliceType } from '@/store/features/conversation/Conversatio
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 
 const createVoiceBiteSlice: StateCreator<
   VoiceBiteSliceType &
@@ -18,7 +19,8 @@ const createVoiceBiteSlice: StateCreator<
     ConversationSliceType &
     InboxSliceType &
     UpdateProfileSliceType &
-    CallSliceType,
+    CallSliceType &
+    SearchUserSliceType,
   [['zustand/immer', never]],
   [],
   VoiceBiteSliceType

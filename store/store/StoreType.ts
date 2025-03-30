@@ -5,13 +5,17 @@ import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUser
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+``
 
-export type StoreType = AuthSliceType &
+export type StoreType =
+AuthSliceType &
   UserStatSliceType &
   VoiceBiteSliceType &
   OtherUserInfoSliceType &
   ConversationSliceType &
   InboxSliceType &
   UpdateProfileSliceType &
-  CallSliceType;
+  CallSliceType &
+  SearchUserSliceType

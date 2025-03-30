@@ -93,7 +93,9 @@ const Chat = () => {
             ) : (
               <FlashList
                 data={messages}
-                renderItem={({ item }) => <MessageBubble message={item} />}
+                renderItem={({ item }: { item: any }) => (
+                  <MessageBubble message={item} />
+                )}
                 estimatedItemSize={60}
                 contentContainerStyle={styles.listContent}
                 keyboardShouldPersistTaps='handled'

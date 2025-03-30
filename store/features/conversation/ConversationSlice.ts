@@ -9,6 +9,7 @@ import getUserInfo from '@/libs/api/userInfo';
 import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
+import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 
 const defaultUser = {
   userId: '',
@@ -34,7 +35,8 @@ const createConversationSlice: StateCreator<
     OtherUserInfoSliceType &
     InboxSliceType &
     UpdateProfileSliceType &
-    CallSliceType,
+    CallSliceType &
+    SearchUserSliceType,
   [['zustand/immer', never]],
   [],
   ConversationSliceType

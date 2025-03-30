@@ -27,29 +27,29 @@ const LeaderboardCard = ({
   viewProfile,
 }: Props) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.rank}>{rank}</Text>
+    <Pressable onPress={() => viewProfile(userId)}>
+      <View style={styles.container}>
+        <Text style={styles.rank}>{rank}</Text>
 
-      <View style={styles.avatarWrapper}>
-        <Pressable onPress={() => viewProfile(userId)}>
+        <View style={styles.avatarWrapper}>
           <CustomAvatar
             avatar={avatar}
             avatarStyle={styles.avatar}
           />
-        </Pressable>
-      </View>
+        </View>
 
-      <Text style={styles.username}>{name}</Text>
+        <Text style={styles.username}>{name}</Text>
 
-      <View style={styles.trophyContainer}>
-        <Text style={styles.trophyCount}>{totalTrophy}</Text>
-        <Ionicons
-          name='trophy'
-          size={20}
-          color={Color.secondary.default}
-        />
+        <View style={styles.trophyContainer}>
+          <Text style={styles.trophyCount}>{totalTrophy}</Text>
+          <Ionicons
+            name='trophy'
+            size={20}
+            color={Color.secondary.default}
+          />
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

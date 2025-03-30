@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Color, DeviceWidth, Font } from '@/constants/constants';
 import HomePageStat from './HomePageStat';
 import CustomButton from './CustomButton';
@@ -99,7 +99,16 @@ const OtherProfileInfo = () => {
   return (
     <View>
       <View style={styles.info}>
-        <CustomAvatar avatar={avatar} />
+        <Pressable onPress={() => router.push({
+          pathname: '/FullScreenAvatar',
+          params: {
+            src: avatar.src,
+            stockAvatar: avatar.stockAvatar
+          },
+        })}>
+          <CustomAvatar avatar={avatar} />
+        </Pressable>
+
         <View>
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
