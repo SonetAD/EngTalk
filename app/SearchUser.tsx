@@ -66,7 +66,7 @@ const SearchUser = () => {
             data={searchResult}
             renderItem={({ item }: { item: any }) => (
               <SearchUserResultCard
-                userId={item?._id}
+                otherUserId={item?._id}
                 name={item?.name}
                 avatar={item?.avatar}
               />

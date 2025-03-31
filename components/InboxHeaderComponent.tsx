@@ -14,7 +14,6 @@ const InboxHeaderComponent = () => {
         </Pressable>
         <Text style={styles.inbox}>inbox</Text>
       </View>
-      <CustomBrightIcon name='search-outline' />
     </View>
   );
 };
@@ -25,8 +24,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Color.primary,
     height: DeviceHeight * 0.1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
     paddingTop: (DeviceHeight * 0.1) / 2,
     paddingHorizontal: 20,
   },

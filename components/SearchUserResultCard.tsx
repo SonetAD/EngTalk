@@ -1,25 +1,45 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import CustomAvatar from './CustomAvatar';
 import { Font, Color } from '@/constants/constants';
+import { router } from 'expo-router';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
 
 interface Props {
-  userId: string;
+  otherUserId: string;
   name: string;
   avatar: {
     src: string;
     stockAvatar: string;
   };
 }
-const SearchUserResultCard = ({ userId, name, avatar }: Props) => {
+const SearchUserResultCard = ({ otherUserId, name, avatar }: Props) => {
+  const { userId, setOtherUser } = useCentralStore(
+    useShallow((state) => ({
+      userId: state.user.userInfo.userId,
+      setOtherUser: state.setOtherUser,
+    }))
+  );
+  const viewProfile = (otherUserId: string) => {
+    if (userId === otherUserId) {
+      router.navigate('/Profile');
+    } else {
+      setOtherUser({ userId: otherUserId, goBackRoute: '/SearchUser' });
+      router.push('/OtherProfile');
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <CustomAvatar
-        avatar={avatar}
-        avatarStyle={styles.avatar}
-      />
-      <Text style={styles.name}>{name}</Text>
-    </View>
+    <Pressable onPress={() => viewProfile(otherUserId)}>
+      <View style={styles.container}>
+        <CustomAvatar
+          avatar={avatar}
+          avatarStyle={styles.avatar}
+        />
+        <Text style={styles.name}>{name}</Text>
+      </View>
+    </Pressable>
   );
 };
 
