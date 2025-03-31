@@ -46,7 +46,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#161622"
         }
-      ]
+      ],
+      "react-native-compressor"
     ],
     "experiments": {
       "typedRoutes": true
