@@ -15,10 +15,10 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
 const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
-  const { token, userName, getVoiceBite } = useCentralStore(
+  const { token, userId, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
-      userName: state.user.userInfo.userName,
+      userId: state.user.userInfo.userId,
       getVoiceBite: state.getVoiceBite,
     }))
   );
@@ -78,7 +78,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   const postVoiceBite = async () => {
     try {
       setPostingStatus('Posting...');
-      await uploadBite({ userName, token, file: audioFile });
+      await uploadBite({ userId, token, file: audioFile });
       setPostingStatus('');
       getVoiceBite();
       ref?.current?.dismiss();

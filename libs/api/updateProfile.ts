@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { Backend } from '@/config';
+import { Image } from 'react-native-compressor';
 
 interface Props {
   token: string;
-  userId:string;
+  userId: string;
   userName?: string;
   name?: string;
   email?: string;
@@ -24,14 +25,15 @@ const updateProfile = async (data: Props) => {
     if (data.password) form.append('password', data.password);
 
     if (data?.avatar?.src) {
-      const extension = data?.avatar?.src.split('.').pop()?.toLowerCase();
+      const compressedAvatar = await Image.compress(data.avatar.src);
+      const extension = compressedAvatar?.split('.').pop()?.toLowerCase();
       const fileName = `${data.userId}_profile_picture`;
 
       if (extension) {
         form.append('avatar', {
           name: `${fileName}.${extension}`,
           type: `image/${extension}`,
-          uri: data.avatar.src,
+          uri: compressedAvatar,
         });
       }
     }
