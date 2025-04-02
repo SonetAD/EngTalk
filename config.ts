@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const Backend = {
-  baseURL: 'http://10.120.253.25:3000',
+  baseURL: "http://10.120.218.84:3000",
   get signinURL() {
     return `${this.baseURL}/user/signin`;
   },

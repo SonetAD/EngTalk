@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import { Image } from 'expo-image';
-import { ImageBlurHash } from '@/constants/constants';
+import { Color, ImageBlurHash } from '@/constants/constants';
 import getAvatarUrl from '@/libs/getAvatarUrl';
+import { isLoading } from 'expo-font';
 
 interface Props {
   avatar: {
@@ -14,6 +15,15 @@ interface Props {
 }
 
 const CustomAvatar = ({ avatar, avatarStyle, customSrc }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  if (isLoading)
+    return (
+      <ActivityIndicator
+        color={Color.secondary.default}
+        size='large'
+      />
+    );
+
   const avatarImageSrc = getAvatarUrl(avatar);
   return (
     <Image
@@ -22,6 +32,11 @@ const CustomAvatar = ({ avatar, avatarStyle, customSrc }: Props) => {
       contentFit='cover'
       transition={1000}
       style={[styles.avatar, avatarStyle]}
+      onLoad={() => {
+        if (isLoading) {
+          setIsLoading(false);
+        }
+      }}
     />
   );
 };
