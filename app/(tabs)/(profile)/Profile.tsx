@@ -83,7 +83,7 @@ const Profile = () => {
         username={item?.user?.userName}
         name={item?.user?.name}
         avatar={item?.user?.avatar}
-        fileName={item?.file}
+        file={item?.file}
       />
     ),
     []

@@ -6,8 +6,8 @@ import CustomAvatar from './CustomAvatar';
 interface User {
   _id: string;
   avatar: {
-    src:string;
-    stockAvatar:string;
+    src: string;
+    stockAvatar: string;
   };
   userName: string;
 }
@@ -33,13 +33,13 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
       <View style={styles.bottomRow}>
         <Pressable onPress={() => viewProfile(userList[1]._id)}>
           <CustomAvatar
-            avatar={userList[0].avatar}
+            avatar={userList[1].avatar}
             avatarStyle={styles.secondPlace}
           />
         </Pressable>
         <Pressable onPress={() => viewProfile(userList[2]._id)}>
           <CustomAvatar
-            avatar={userList[0].avatar}
+            avatar={userList[2].avatar}
             avatarStyle={styles.thirdPlace}
           />
         </Pressable>

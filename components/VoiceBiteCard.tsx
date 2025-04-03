@@ -17,10 +17,10 @@ import { Backend } from '@/config';
 import CustomAvatar from './CustomAvatar';
 
 interface Props {
-  avatar: { default: boolean; src: string };
+  avatar: { stockAvatar: string; src: string };
   username: string;
   name: string;
-  fileName: string;
+  file: string;
 }
 
 const gradients = [
@@ -29,13 +29,11 @@ const gradients = [
   [Color.primary, Color.secondary.twoHundred],
 ];
 
-const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
+const VoiceBitesCard = ({ avatar, username, name, file }: Props) => {
   const soundRef = useRef<Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  const audioSource = `${Backend.public}/posts/${fileName}`;
 
   useEffect(() => {
     return () => {
@@ -48,7 +46,7 @@ const VoiceBitesCard = ({ avatar, username, name, fileName }: Props) => {
       if (!isPlaying) {
         setIsBuffering(true);
         const { sound } = await Audio.Sound.createAsync(
-          { uri: audioSource },
+          { uri: file },
           { shouldPlay: true }
         );
         soundRef.current = sound;

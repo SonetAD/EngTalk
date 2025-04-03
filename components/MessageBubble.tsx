@@ -12,7 +12,6 @@ interface Message {
   message: string;
   messageType: string;
   sender: {
-    avatar: { src: string; default: boolean };
     name: string;
     _id: string;
   };
@@ -24,16 +23,17 @@ interface Props {
 }
 
 const MessageBubble = ({ message }: Props) => {
-  const { userId, setOtherUser } = useCentralStore(
+  const { userId, otherChatParticipantAvatar, setOtherUser } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
+      otherChatParticipantAvatar: state.otherChatParticipant.avatar,
       setOtherUser: state.setOtherUser,
     }))
   );
 
   const isMe = message.sender._id === userId;
   const viewProfile = (otherUserName: string) => {
-    setOtherUser({userId:message.sender._id, goBackRoute: '/Chat'});
+    setOtherUser({ userId: message.sender._id, goBackRoute: '/Chat' });
     router.push('/OtherProfile');
   };
 
@@ -44,7 +44,7 @@ const MessageBubble = ({ message }: Props) => {
       {!isMe && (
         <Pressable onPress={() => viewProfile(message.sender._id)}>
           <CustomAvatar
-            avatar={message.sender.avatar}
+            avatar={otherChatParticipantAvatar}
             avatarStyle={styles.avatar}
           />
         </Pressable>
