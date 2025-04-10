@@ -1,7 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const Backend = {
-  baseURL: "http://10.120.218.84:3000",
+  baseURL: 'https://api-engtalk.sonetstudio.org',
+  socketURL: 'wss://api-engtalk.sonetstudio.org',
+
   get signinURL() {
     return `${this.baseURL}/user/signin`;
   },
@@ -42,10 +44,10 @@ export const Backend = {
   },
 
   get instaCall() {
-    return `${this.baseURL}/instaCall`;
+    return `${this.socketURL}/instaCall`;
   },
   get notificationSocket() {
-    return `${this.baseURL}/notification`;
+    return `${this.socketURL}/notification`;
   },
 
   get iceServerURL() {

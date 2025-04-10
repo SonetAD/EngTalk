@@ -49,6 +49,7 @@ const Call = () => {
     (async () => {
       if (!peerConnectionRef.current) {
         const { iceServers } = await getIcServer(token);
+        console.log(iceServers);
 
         peerConnectionRef.current = new RTCPeerConnection({ iceServers });
       }
@@ -90,6 +91,8 @@ const Call = () => {
 
       peerConnectionRef.current?.addEventListener('icecandidate', (event) => {
         if (event.candidate) {
+          console.log('ice candidate comming')
+          console.log(event.candidate)
           Socket.emit('iceCandidate', {
             targetSocketId: from,
             candidate: event.candidate,
