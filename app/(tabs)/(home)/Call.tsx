@@ -49,8 +49,8 @@ const Call = () => {
     (async () => {
       if (!peerConnectionRef.current) {
         const { iceServers } = await getIcServer(token);
-        console.log(iceServers);
 
+        console.log(iceServers);
         peerConnectionRef.current = new RTCPeerConnection({ iceServers });
       }
       const pc = peerConnectionRef.current;
@@ -91,8 +91,6 @@ const Call = () => {
 
       peerConnectionRef.current?.addEventListener('icecandidate', (event) => {
         if (event.candidate) {
-          console.log('ice candidate comming')
-          console.log(event.candidate)
           Socket.emit('iceCandidate', {
             targetSocketId: from,
             candidate: event.candidate,
@@ -196,7 +194,6 @@ const Call = () => {
   };
 
   const initiateCall = async (targetSocketId: string, role: string) => {
-    console.log(role);
     if (!peerConnectionRef.current || role !== 'caller') return;
     const sessionConstraints = {
       mandatory: {
@@ -270,6 +267,7 @@ const Call = () => {
         <StartConversation
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}
+          userId={matchedUserData.user._id}
           avatar={matchedUserData.user.avatar}
           onEnd={endCall}
           remoteStream={remoteStream}

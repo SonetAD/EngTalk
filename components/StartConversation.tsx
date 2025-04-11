@@ -37,21 +37,23 @@ const StartConversation = ({
   matchedUserData,
   timerRef,
 }: Props) => {
-  const {setOtherUser}=useCentralStore(useShallow((state)=>({
-    setOtherUser:state.setOtherUser
-  })))
+  const { setOtherUser } = useCentralStore(
+    useShallow((state) => ({
+      setOtherUser: state.setOtherUser,
+    }))
+  );
   const [isMuted, setIsMuted] = useState(false);
   const [isLoudSpeakerOn, setIsLoudSpeakerOn] = useState(false);
 
-  const viewProfile = (otherUserName: string) => {
-    setOtherUser(otherUserName);
-    router.push('/OtherProfile');
-  };
+  // const viewProfile = (o: string) => {
+  //   setOtherUser(userId);
+  //   router.push('/OtherProfile');
+  // };
 
   return (
     <View style={styles.container}>
       <LiveTimer timerRef={timerRef} />
-      <Pressable onPress={() => viewProfile(userId)}>
+      <Pressable onPress={() => {}}>
         <CustomAvatar
           avatar={avatar}
           avatarStyle={styles.avatar}
