@@ -46,10 +46,9 @@ const FoundPartner = ({
   //   router.push('/OtherProfile');
   // };
 
-  console.log(avatar);
   return (
     <View style={styles.container}>
-      <Pressable onPress={() =>{}}>
+      <Pressable onPress={() => {}}>
         <CustomAvatar
           avatar={avatar}
           avatarStyle={styles.avatar}

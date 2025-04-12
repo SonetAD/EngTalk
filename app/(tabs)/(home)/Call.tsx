@@ -44,19 +44,22 @@ const Call = () => {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const findMatchIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
+  const remoteStreamRef=useRef<MediaStream | null>(null);
 
   useEffect(() => {
     (async () => {
       if (!peerConnectionRef.current) {
         const { iceServers } = await getIcServer(token);
 
-        console.log(iceServers);
         peerConnectionRef.current = new RTCPeerConnection({ iceServers });
       }
       const pc = peerConnectionRef.current;
 
       pc.addEventListener('track', (event) => {
         if (event.streams && event.streams[0]) {
+          console.log('i am remote')
+          console.log(event.streams[0].getAudioTracks());
+          remoteStreamRef.current=event.streams[0];
           setRemoteStream(event.streams[0]);
         }
       });
@@ -68,7 +71,7 @@ const Call = () => {
       peerConnectionRef.current?.close();
       peerConnectionRef.current = null;
     };
-  }, [skipCount]);
+  }, []);
 
   useEffect(() => {
     Socket.emit('join', { userId, gender });
@@ -107,7 +110,7 @@ const Call = () => {
     const handleRejectCall = () => {
       setMatchedUserData(null);
       setCallAccepted(false);
-      setSkipCount((prevCount) => prevCount + 1);
+      // setSkipCount((prevCount) => prevCount + 1);
       setIsLoading(false);
       searchPartner();
     };
@@ -249,6 +252,7 @@ const Call = () => {
     }
   };
 
+
   return (
     <FullScreenView>
       {!matchedUserData && <SearchingPartner onEnd={stopSearching} />}
@@ -263,14 +267,14 @@ const Call = () => {
           isLoading={isLoading}
         />
       )}
-      {matchedUserData && remoteStream && callAccepted && (
+      {matchedUserData && remoteStreamRef.current && callAccepted && (
         <StartConversation
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}
           userId={matchedUserData.user._id}
           avatar={matchedUserData.user.avatar}
           onEnd={endCall}
-          remoteStream={remoteStream}
+          remoteStream={remoteStreamRef.current}
           toggleMute={togleMuteState}
           toggleSpeaker={togleLoudSpeaker}
           matchedUserData={matchedUserData}

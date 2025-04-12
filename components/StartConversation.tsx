@@ -119,7 +119,7 @@ const StartConversation = ({
         containerStyle={styles.btn}
         textStyle={styles.btnText}
       />
-      <RTCView streamURL={remoteStream.toURL()} />
+      <RTCView streamURL={remoteStream.toURL()} style={styles.remoteStream} />
     </View>
   );
 };
@@ -171,4 +171,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
+  remoteStream:{
+    width:0,
+    height:0
+  }
 });
