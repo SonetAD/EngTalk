@@ -21,7 +21,6 @@ interface Props {
   remoteStream: MediaStream;
   toggleMute: () => void;
   toggleSpeaker: (val: boolean) => void;
-  matchedUserData: any;
   timerRef: React.MutableRefObject<number>;
 }
 
@@ -34,7 +33,6 @@ const StartConversation = ({
   remoteStream,
   toggleMute,
   toggleSpeaker,
-  matchedUserData,
   timerRef,
 }: Props) => {
   const { setOtherUser } = useCentralStore(
@@ -45,20 +43,13 @@ const StartConversation = ({
   const [isMuted, setIsMuted] = useState(false);
   const [isLoudSpeakerOn, setIsLoudSpeakerOn] = useState(false);
 
-  // const viewProfile = (o: string) => {
-  //   setOtherUser(userId);
-  //   router.push('/OtherProfile');
-  // };
-
   return (
     <View style={styles.container}>
       <LiveTimer timerRef={timerRef} />
-      <Pressable onPress={() => {}}>
-        <CustomAvatar
-          avatar={avatar}
-          avatarStyle={styles.avatar}
-        />
-      </Pressable>
+      <CustomAvatar
+        avatar={avatar}
+        avatarStyle={styles.avatar}
+      />
 
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>
@@ -119,7 +110,10 @@ const StartConversation = ({
         containerStyle={styles.btn}
         textStyle={styles.btnText}
       />
-      <RTCView streamURL={remoteStream.toURL()} style={styles.remoteStream} />
+      <RTCView
+        streamURL={remoteStream.toURL()}
+        style={styles.remoteStream}
+      />
     </View>
   );
 };
@@ -171,8 +165,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
   },
-  remoteStream:{
-    width:0,
-    height:0
-  }
+  remoteStream: {
+    width: 0,
+    height: 0,
+  },
 });

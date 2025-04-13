@@ -14,7 +14,6 @@ import useCentralStore from '@/store/store/Store';
 import { router } from 'expo-router';
 
 interface Props {
-  // userId: string;
   name: string;
   avatar: { src: string; stockAvatar: string };
   level: number;
@@ -25,7 +24,6 @@ interface Props {
 }
 
 const FoundPartner = ({
-  // userId,
   name,
   avatar,
   level,
@@ -41,19 +39,13 @@ const FoundPartner = ({
   );
 
   const [isAccepted, setIsAccepted] = useState(false);
-  // const viewProfile = (otherUserName: string) => {
-  //   setOtherUser(otherUserName);
-  //   router.push('/OtherProfile');
-  // };
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => {}}>
-        <CustomAvatar
-          avatar={avatar}
-          avatarStyle={styles.avatar}
-        />
-      </Pressable>
+      <CustomAvatar
+        avatar={avatar}
+        avatarStyle={styles.avatar}
+      />
 
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.level}>{`Level ${level}`}</Text>

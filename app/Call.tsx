@@ -272,7 +272,6 @@ const Call = () => {
           remoteStream={remoteStream}
           toggleMute={togleMuteState}
           toggleSpeaker={togleLoudSpeaker}
-          matchedUserData={matchedUserData}
           timerRef={timerRef}
         />
       )}
