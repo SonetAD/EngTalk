@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Animated, {
   Easing,
   useSharedValue,
@@ -8,9 +8,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import { Color } from '@/constants/constants';
-
-const { width: DeviceWidth, height: DeviceHeight } = Dimensions.get('window');
+import { Color, Font, DeviceHeight, DeviceWidth } from '@/constants/constants';
 
 const RippleSearch = () => {
   const rippleScale = useSharedValue(0);
@@ -54,15 +52,18 @@ const RippleSearch = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <Animated.View style={iconStyle}>
-          <Ionicons
-            name='search-circle-outline'
-            size={50}
-            color={Color.secondary.oneHundred}
-          />
-        </Animated.View>
-        <Animated.View style={[styles.ripple, rippleStyle]} />
+      <View style={styles.iconWrapper}>
+        <View style={styles.iconContainer}>
+          <Animated.View style={iconStyle}>
+            <Ionicons
+              name='search-circle-outline'
+              size={50}
+              color={Color.secondary.oneHundred}
+            />
+          </Animated.View>
+          <Animated.View style={[styles.ripple, rippleStyle]} />
+        </View>
+        <Text style={styles.headline}>Finding a Partner...</Text>
       </View>
     </View>
   );
@@ -77,15 +78,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Color.primary,
   },
+  iconWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   iconContainer: {
-    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
     width: 50,
     height: 50,
+    position: 'relative',
   },
   ripple: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 144, 1, 0.3)', // Transparent orange from your palette
+  },
+  headline: {
+    color: Color.white,
+    fontFamily: Font.pSemiBold,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

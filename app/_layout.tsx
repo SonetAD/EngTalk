@@ -52,6 +52,10 @@ const RootLayout = () => {
             }}
           />
           <Stack.Screen
+            name='Call'
+          />
+
+          <Stack.Screen
             name='Inbox'
             options={{
               header: InboxHeaderComponent,

@@ -1,20 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import AnimatedSearch from '@/components/SearchAnimation';
-import { Color, DeviceHeight, Font } from '@/constants/constants';
+import { Color, DeviceHeight } from '@/constants/constants';
 import CustomButton from '@/components/CustomButton';
 
 interface Props {
   onEnd: () => void;
 }
 
-const SearchingPartner = ({ onEnd }:Props) => {
+const SearchingPartner = ({ onEnd }: Props) => {
   return (
     <View style={styles.container}>
       <AnimatedSearch />
-      <Text style={styles.headline}>Finding a Partner...</Text>
+
       <CustomButton
-      text='End'
+        text='End'
         containerStyle={styles.btn}
         handlePress={onEnd}
         textStyle={styles.btnText}
@@ -32,14 +32,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  headline: {
-    color: Color.white,
-    fontFamily: Font.pSemiBold,
-    fontSize: 16,
-    textAlign: 'center',
-    position: 'absolute',
-    top: DeviceHeight * 0.53,
-  },
   btn: {
     position: 'absolute',
     bottom: DeviceHeight * 0.1,
