@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
-import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
+import { DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import CustomAvatar from './CustomAvatar';
 
 interface User {
@@ -44,7 +44,6 @@ const TopThreeUser = ({ userList, viewProfile }: Props) => {
           />
         </Pressable>
       </View>
-      <Text style={styles.topTen}>The Best of the Best 10</Text>
     </View>
   );
 };
@@ -61,12 +60,6 @@ const styles = StyleSheet.create({
     fontFamily: Font.pBold,
     fontSize: 20,
     marginVertical: 20,
-  },
-  topTen: {
-    color: Color.gray.oneHundred,
-    fontFamily: Font.pRegular,
-    fontSize: 14,
-    marginTop: 10,
   },
   bottomRow: {
     flexDirection: 'row',

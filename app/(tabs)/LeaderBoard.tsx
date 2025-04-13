@@ -10,6 +10,8 @@ import CustomLoadingPage from '@/components/CustomLoadingPage';
 import { FlashList } from '@shopify/flash-list';
 import LeaderboardCard from '@/components/LeaderBoardCard';
 import { router } from 'expo-router';
+import MyRank from '@/components/MyRank';
+import { Color, Font } from '@/constants/constants';
 
 const LeaderBoard = () => {
   const { token, userId, setOtherUser } = useCentralStore(
@@ -69,10 +71,14 @@ const LeaderBoard = () => {
     <FullScreenView>
       <FlashList
         ListHeaderComponent={() => (
-          <TopThreeUser
-            userList={leaderBoard.topUsers.slice(0, 3)}
-            viewProfile={navigateToOtherProfile}
-          />
+          <View>
+            <TopThreeUser
+              userList={leaderBoard.topUsers.slice(0, 3)}
+              viewProfile={navigateToOtherProfile}
+            />
+            <MyRank rank={leaderBoard.position} />
+            <Text style={styles.topTen}>The Best of the Best 10</Text>
+          </View>
         )}
         data={leaderBoard.topUsers}
         renderItem={({ item, index }: { item: any; index: number }) => (
@@ -100,5 +106,13 @@ const styles = StyleSheet.create({
   container: {
     marginTop: DeviceHeight * 0.1,
     height: DeviceHeight,
+  },
+  topTen: {
+    color: Color.gray.oneHundred,
+    fontFamily: Font.pRegular,
+    fontSize: 14,
+    marginTop: 10,
+    textAlign: 'center',
+  marginBottom: 10
   },
 });
