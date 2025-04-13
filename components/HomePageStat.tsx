@@ -72,6 +72,7 @@ const HomePageStat = ({ goldCoin, trophy, talkTime, level }: Props) => {
           useGrouping
           enableCompactNotation
           compactToFixed={2}
+          toFixed={2}
           spinningAnimationConfig={{ duration: 500, easing: Easing.bounce }}
         />
       </Animated.View>
