@@ -44,7 +44,6 @@ const Call = () => {
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const findMatchIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
-  const remoteStreamRef=useRef<MediaStream | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -57,9 +56,6 @@ const Call = () => {
 
       pc.addEventListener('track', (event) => {
         if (event.streams && event.streams[0]) {
-          console.log('i am remote')
-          console.log(event.streams[0].getAudioTracks());
-          remoteStreamRef.current=event.streams[0];
           setRemoteStream(event.streams[0]);
         }
       });
@@ -252,7 +248,6 @@ const Call = () => {
     }
   };
 
-
   return (
     <FullScreenView>
       {!matchedUserData && <SearchingPartner onEnd={stopSearching} />}
@@ -267,14 +262,14 @@ const Call = () => {
           isLoading={isLoading}
         />
       )}
-      {matchedUserData && remoteStreamRef.current && callAccepted && (
+      {matchedUserData && remoteStream && callAccepted && (
         <StartConversation
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}
           userId={matchedUserData.user._id}
           avatar={matchedUserData.user.avatar}
           onEnd={endCall}
-          remoteStream={remoteStreamRef.current}
+          remoteStream={remoteStream}
           toggleMute={togleMuteState}
           toggleSpeaker={togleLoudSpeaker}
           matchedUserData={matchedUserData}
