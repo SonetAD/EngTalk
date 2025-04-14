@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
+import { Color, DeviceHeight, Font } from '@/constants/constants';
 import CustomBrightIcon from './CustomBrightIcon';
 import { Pressable } from 'react-native-gesture-handler';
 import { router } from 'expo-router';

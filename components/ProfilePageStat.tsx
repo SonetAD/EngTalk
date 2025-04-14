@@ -88,11 +88,12 @@ const ProfilePageStat = ({ goldCoin, level, talkTime, trophy }: Props) => {
           color='lightblue'
         />
         <AnimatedRollingNumber
-          value={talkTime/3600 || 0}
+          value={talkTime / 3600 || 0}
           textStyle={styles.statText}
           useGrouping
           enableCompactNotation
-          compactToFixed={2}
+          fixedOnlyForCompact={false}
+          compactToFixed={1}
           spinningAnimationConfig={{ duration: 500, easing: Easing.bounce }}
         />
       </Animated.View>

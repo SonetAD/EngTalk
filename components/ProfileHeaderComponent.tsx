@@ -18,8 +18,8 @@ const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
       otherUserGoBackRoute: state.otherUserGoBackRoute,
     }))
   );
-  const editProfile = () => {
-    router.push('/EditProfile');
+  const setting = () => {
+    router.push('/Setting');
   };
   return (
     <View style={styles.container}>
@@ -32,7 +32,7 @@ const ProfileHeaderComponent = ({ userName, otherUser }: Props) => {
         <Text style={styles.userName}>{userName}</Text>
       </View>
       {!otherUser && (
-        <Pressable onPress={editProfile}>
+        <Pressable onPress={setting}>
           <CustomBrightIcon name='settings-outline' />
         </Pressable>
       )}

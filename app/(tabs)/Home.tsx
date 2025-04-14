@@ -43,7 +43,7 @@ const Home = () => {
           <GenderFilterComponent />
 
           <CustomButton
-            text='Find a Partner'
+            text='Find Partner'
             containerStyle={styles.btn}
             handlePress={startCall}
             isLoading={isLoading}

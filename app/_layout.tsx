@@ -10,6 +10,7 @@ import InboxHeaderComponent from '@/components/InboxHeaderComponent';
 import EditProfileHeaderComponent from '@/components/EditProfileHeaderComponent';
 import FullScreenAvatarHeaderComponent from '@/components/FullScreenAvatarHeaderComponent';
 import SearchUserHeaderComponent from '@/components/SearchUserHeaderComponent';
+import SettingHeaderComponent from '@/components/SettingHeaderComponent';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -51,9 +52,7 @@ const RootLayout = () => {
               headerShown: true,
             }}
           />
-          <Stack.Screen
-            name='Call'
-          />
+          <Stack.Screen name='Call' />
 
           <Stack.Screen
             name='Inbox'
@@ -69,6 +68,14 @@ const RootLayout = () => {
               headerShown: true,
             }}
           />
+          <Stack.Screen
+            name='Setting'
+            options={{
+              header: SettingHeaderComponent,
+              headerShown: true,
+            }}
+          />
+
           <Stack.Screen
             name='FullScreenAvatar'
             options={{
