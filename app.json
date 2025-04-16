@@ -47,13 +47,7 @@
           "backgroundColor": "#161622"
         }
       ],
-      "react-native-compressor",
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
-        }
-      ]
+      "react-native-compressor"
     ],
     "experiments": {
       "typedRoutes": true
