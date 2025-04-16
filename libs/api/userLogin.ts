@@ -15,8 +15,6 @@ const userLogin = async (userData: Props) => {
     if (err?.response?.data?.errors?.validation) {
       LocalStore.clearAll();
     }
-    console.log('fuck');
-    console.log(err?.response?.data);
     const errorMessage =
       err?.response?.data?.errors?.validation?.msg || 'Something went wrong!';
     throw new Error(errorMessage);
