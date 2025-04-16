@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 interface Props {
   name: string;
   avatar: { src: string; stockAvatar: string };
+  location: string;
   level: number;
   onSkip: () => void;
   onEnd: () => void;
@@ -26,6 +27,7 @@ interface Props {
 const FoundPartner = ({
   name,
   avatar,
+  location,
   level,
   onSkip,
   onAccept,
@@ -48,7 +50,9 @@ const FoundPartner = ({
       />
 
       <Text style={styles.name}>{name}</Text>
-      <Text style={styles.level}>{`Level ${level}`}</Text>
+      <Text style={styles.subText}>{location}</Text>
+      <Text style={styles.subText}>{`Level ${level}`}</Text>
+
       {isAccepted && (
         <View style={styles.activityIndicator}>
           <ActivityIndicator
@@ -94,6 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Color.black.twoHundred,
   },
   avatar: {
     borderRadius: 10,
@@ -105,13 +110,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
   },
-  level: {
+  subText: {
     textAlign: 'center',
     color: Color.gray.oneHundred,
     fontFamily: Font.pRegular,
     fontSize: 16,
     textAlignVertical: 'center',
   },
+
   btnGroup: {
     flexDirection: 'row',
     justifyContent: 'space-around',

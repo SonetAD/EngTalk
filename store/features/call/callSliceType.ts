@@ -1,11 +1,5 @@
 type Call = {
-  isInCall?: boolean;
   filteredGender?: string;
-  otherCallParticipantAvatar?: {
-    src: string;
-    stockAvatar: string;
-  };
-  otherCallParticipantName?: string;
 };
 
 type CallSlice = {

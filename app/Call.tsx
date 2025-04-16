@@ -255,6 +255,7 @@ const Call = () => {
         <FoundPartner
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}
+          location={matchedUserData.user.location}
           avatar={matchedUserData.user.avatar}
           onAccept={acceptCall}
           onEnd={cancelCall}
@@ -266,6 +267,7 @@ const Call = () => {
         <StartConversation
           name={matchedUserData.user.name}
           level={matchedUserData.user.level}
+          location={matchedUserData.user.location}
           userId={matchedUserData.user._id}
           avatar={matchedUserData.user.avatar}
           onEnd={endCall}

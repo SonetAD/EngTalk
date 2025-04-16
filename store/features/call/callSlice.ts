@@ -24,13 +24,7 @@ const createCallSlice: StateCreator<
   CallSliceType
 > = (set, get) => ({
   call: {
-    isInCall: false,
     filteredGender: 'any',
-    otherCallParticipantAvatar: {
-      src: '',
-      stockAvatar: '',
-    },
-    otherCallParticipantName: '',
   },
   setCallInfo: (callData) => {
     set((state) => {
