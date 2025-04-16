@@ -52,7 +52,7 @@ const createAuthSlice: StateCreator<
     try {
       let res = await userLogin({ userName, password });
       const location = await getUserLocation();
-      if (location != res.user.location) {
+      if ( location && location != res.user.location) {
         console.log('new location')
         await updateProfile({
           token: res.token,
