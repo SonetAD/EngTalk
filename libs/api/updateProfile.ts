@@ -8,6 +8,7 @@ interface Props {
   userName?: string;
   name?: string;
   email?: string;
+  location?: any;
   password?: string;
   avatar?: {
     src: string;
@@ -22,6 +23,7 @@ const updateProfile = async (data: Props) => {
     if (data.userName) form.append('userName', data.userName);
     if (data.name) form.append('name', data.name);
     if (data.email) form.append('email', data.email);
+    if(data.location) form.append('location', data.location)
     if (data.password) form.append('password', data.password);
 
     if (data?.avatar?.src) {

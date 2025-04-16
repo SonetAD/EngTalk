@@ -9,6 +9,8 @@ import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
 import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
+import getUserLocation from '@/libs/getUserLocation';
+import updateProfile from '@/libs/api/updateProfile';
 
 const createAuthSlice: StateCreator<
   AuthSliceType &
@@ -30,6 +32,7 @@ const createAuthSlice: StateCreator<
       userId: '',
       userName: '',
       name: '',
+      location: '',
       email: '',
       gender: '',
       avatar: {
@@ -47,13 +50,24 @@ const createAuthSlice: StateCreator<
   },
   setUser: async ({ userName, password }) => {
     try {
-      const res = await userLogin({ userName, password });
+      let res = await userLogin({ userName, password });
+      const location = await getUserLocation();
+      if (location != res.user.location) {
+        console.log('new location')
+        await updateProfile({
+          token: res.token,
+          userId: res.user.id,
+          location: location,
+        });
+         res = await userLogin({ userName, password });
+      }
       set((state) => {
         state.user.token = res.token;
         state.user.userInfo = {
           userId: res.user.id,
           userName: res.user.userName,
           name: res.user.name,
+          location: res.user.location,
           email: res.user.email,
           gender: res.user.gender,
           avatar: res.user.avatar,
@@ -70,10 +84,15 @@ const createAuthSlice: StateCreator<
         state.user.token = '';
         state.user.userInfo = {
           userName: '',
+          userId: '',
+          location: '',
           name: '',
           email: '',
           gender: '',
-          avatar: '',
+          avatar: {
+            src: '',
+            stockAvatar: '',
+          },
           followers: [],
           following: [],
         };

@@ -18,6 +18,7 @@ const OtherProfileInfo = () => {
     userId,
     otherUserId,
     gender,
+    location,
     token,
     avatar,
     followers,
@@ -33,6 +34,7 @@ const OtherProfileInfo = () => {
       userId: state.user.userInfo.userId,
       otherUserId: state.otherUser.userId,
       gender: state.otherUser.gender,
+      location: state.otherUser.location,
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
       following: state.otherUser.following,
@@ -99,13 +101,17 @@ const OtherProfileInfo = () => {
   return (
     <View>
       <View style={styles.info}>
-        <Pressable onPress={() => router.push({
-          pathname: '/FullScreenAvatar',
-          params: {
-            src: avatar.src,
-            stockAvatar: avatar.stockAvatar
-          },
-        })}>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: '/FullScreenAvatar',
+              params: {
+                src: avatar.src,
+                stockAvatar: avatar.stockAvatar,
+              },
+            })
+          }
+        >
           <CustomAvatar avatar={avatar} />
         </Pressable>
 
@@ -124,7 +130,9 @@ const OtherProfileInfo = () => {
       </View>
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
-      <Text style={styles.location}>Bangladesh</Text>
+      <Text style={location ? styles.location : { display: 'none' }}>
+        {location}|
+      </Text>
       <View style={styles.btnGroup}>
         <CustomButton
           containerStyle={[styles.btn, followStatus && styles.noBgBtn]}

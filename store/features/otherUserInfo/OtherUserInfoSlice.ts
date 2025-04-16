@@ -29,6 +29,7 @@ const createOtherUserInfoSlice: StateCreator<
     userId: '',
     userName: '',
     name: '',
+    location: '',
     gender: '',
     avatar: {
       src: '',

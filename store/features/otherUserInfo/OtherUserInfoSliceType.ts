@@ -8,6 +8,7 @@ type User = {
   userName: string;
   userId: string;
   name: string;
+  location:string;
   gender: string;
   avatar: {
     src: string;

@@ -6,6 +6,7 @@ type User = {
     name:string;
     email:string;
     gender: string;
+    location:string;
     avatar:{
       src:string;
       stockAvatar:string;
