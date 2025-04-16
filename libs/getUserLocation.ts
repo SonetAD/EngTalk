@@ -4,7 +4,7 @@ import getCountryFlag from './getCountryFlag';
 const getUserLocation = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== 'granted') {
-    return 'Denied';
+    return null;
   }
   let location = await Location.getLastKnownPositionAsync();
   if (!location) {
