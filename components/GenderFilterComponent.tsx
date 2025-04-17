@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Animated, { FadeInUp, BounceIn, Easing } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import Font from '@/constants/font';
@@ -7,6 +7,7 @@ import Color from '@/constants/color';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import * as Haptics from 'expo-haptics';
+import CustomModal from './CustomModal';
 
 const GenderFilterComponent = () => {
   const { filteredGender, setCallInfo, totalGoldCoin } = useCentralStore(
@@ -17,12 +18,17 @@ const GenderFilterComponent = () => {
     }))
   );
 
+  const [showAlert, setShowAlert] = useState(false);
   const selectGender = (gender: string) => {
     if (totalGoldCoin >= 5) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       setCallInfo({
         filteredGender: gender,
       });
+    } else {
+      if (gender !== 'any') {
+        setShowAlert(true);
+      }
     }
   };
 
@@ -104,6 +110,21 @@ const GenderFilterComponent = () => {
           </Text>
         </Animated.View>
       </Pressable>
+      <CustomModal
+        isVisible={showAlert}
+        setVisibility={setShowAlert}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Not Yet</Text>
+          <Text style={styles.modalText}>Talk more, unlock filter!</Text>
+          <Pressable
+            onPress={() => setShowAlert(false)}
+            style={styles.closeBtn}
+          >
+            <Text>Close</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
     </Animated.View>
   );
 };
@@ -133,5 +154,27 @@ const styles = StyleSheet.create({
   selectedText: {
     fontFamily: Font.pBold,
     color: Color.white,
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  closeBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.gray.oneHundred,
+    fontFamily: Font.pBold,
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontFamily: Font.pSemiBold,
+    color: Color.red,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
+    textAlign: 'center',
   },
 });
