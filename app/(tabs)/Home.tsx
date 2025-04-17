@@ -19,6 +19,7 @@ import { useShallow } from 'zustand/react/shallow';
 import GenderFilterComponent from '@/components/GenderFilterComponent';
 import { useState } from 'react';
 import CustomModal from '@/components/CustomModal';
+import * as Location from 'expo-location';
 
 const Home = () => {
   const {
@@ -43,8 +44,10 @@ const Home = () => {
 
   const [showAllowLocation, setShowAllowLocation] = useState(false);
 
-  const startCall = () => {
-    if (!isError && !location) {
+  const startCall = async() => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+
+    if (status !=='granted') {
       setShowAllowLocation(true);
     } else {
       router.push('/Call');
