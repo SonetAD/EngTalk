@@ -1,11 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View,Pressable } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import FullScreenView from '@/components/FullScreenView';
 import Color from '@/constants/color';
 import Font from '@/constants/font';
+import LocalStore from '@/libs/localStore';
+import { router } from 'expo-router';
 
 const Setting = () => {
+  const logout=()=>{
+    LocalStore.clearAll()
+    router.replace('/Signin')
+  }
   return (
     <FullScreenView>
       <View style={styles.container}>
@@ -37,15 +43,14 @@ const Setting = () => {
             <Text style={styles.text}>Feedback</Text>
           </View>
 
-          {/* Log Out */}
-          <View style={styles.card}>
+          <Pressable onPress={logout} style={styles.card}>
             <Ionicons
               name='log-out-outline'
               size={22}
               color={Color.red}
             />
             <Text style={[styles.text, { color: Color.red }]}>Log Out</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>v1.0.0</Text>

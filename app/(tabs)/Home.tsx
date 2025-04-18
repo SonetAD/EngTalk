@@ -75,7 +75,7 @@ const Home = () => {
           text='Find Partner'
           containerStyle={styles.btn}
           handlePress={startCall}
-          isLoading={isLoading}
+          isLoading={isLoading || isError}
         />
       </ScrollView>
       <View>

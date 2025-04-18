@@ -17,10 +17,11 @@ import fetchAllBites from '@/libs/api/fetchAllBite';
 import { Color } from '@/constants/constants';
 
 const Explore = () => {
-  const { allBites, isLoading } = useCentralStore(
+  const { allBites, isLoading, isError } = useCentralStore(
     useShallow((state) => ({
       allBites: state.allBites,
       isLoading: state.voiceBiteStatus.isLoading,
+      isError: state.voiceBiteStatus.isError,
     }))
   );
 
@@ -100,7 +101,7 @@ const Explore = () => {
         estimatedItemSize={300}
         ListEmptyComponent={
           <View style={styles.container}>
-            <NoPostAvailable isLoading={isLoading} />
+            <NoPostAvailable isLoading={isLoading || isError} />
           </View>
         }
         onEndReached={fetchNextPage}

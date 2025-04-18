@@ -15,8 +15,8 @@ const getUserLocation = async () => {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     });
-    const flag = getCountryFlag(isoCountryCode);
-    return `${flag} ${country}`;
+    const flag = getCountryFlag('IN');
+    return `${flag} ${'India'}`;
   }
 
   return null;

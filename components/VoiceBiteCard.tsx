@@ -108,7 +108,7 @@ const VoiceBitesCard = ({ avatar, username, name, file }: Props) => {
               {isBuffering ? (
                 <ActivityIndicator
                   size='large'
-                  color={Color.white}
+                  color={Color.secondary.default}
                 />
               ) : (
                 <CustomAvatar

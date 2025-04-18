@@ -8,7 +8,7 @@ const CustomLoadingPage = () => {
     <View style={styles.container}>
       <ActivityIndicator
         size='large'
-        color={Color.white}
+        color={Color.secondary.default}
       />
       <CustomStatusBar />
     </View>
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
-    backgroundColor:Color.primary,
+    backgroundColor: Color.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

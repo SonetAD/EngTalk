@@ -9,13 +9,15 @@ import { useShallow } from 'zustand/react/shallow';
 import fetchUserBite from '@/libs/api/fetchUserBite';
 import { ActivityIndicator } from 'react-native';
 import { Color } from '@/constants/constants';
+import CustomLoadingPage from '@/components/CustomLoadingPage';
 
 const Profile = () => {
-  const {  userBites,userId, isLoading } = useCentralStore(
+  const { userBites, userId, isLoading, isError } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       userBites: state.userBites,
       isLoading: state.voiceBiteStatus.isLoading,
+      isError: state.voiceBiteStatus.isError,
     }))
   );
 
@@ -90,6 +92,8 @@ const Profile = () => {
   );
 
   const headerComponent = useCallback(() => <ProfileInfo />, []);
+
+  if (isLoading || isError) return <CustomLoadingPage />;
 
   return (
     <FullScreenView>
