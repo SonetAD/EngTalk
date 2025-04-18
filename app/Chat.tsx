@@ -44,8 +44,6 @@ const Chat = () => {
 
   useEffect(() => {
     NotificationSocket.on('message', ({ userId, message }) => {
-      console.log(userId);
-      console.log(otherChatParticipantUserId);
       if (userId === otherChatParticipantUserId) {
         useCentralStore.setState((prev) => ({
           messages: [message, ...prev.messages],
