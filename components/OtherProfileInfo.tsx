@@ -131,7 +131,7 @@ const OtherProfileInfo = () => {
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={location ? styles.location : { display: 'none' }}>
-        {location}|
+        {location}
       </Text>
       <View style={styles.btnGroup}>
         <CustomButton

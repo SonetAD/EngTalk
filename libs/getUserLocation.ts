@@ -11,12 +11,15 @@ const getUserLocation = async () => {
     location = await Location.getCurrentPositionAsync();
   }
   if (location) {
-    const [{ country, isoCountryCode }] = await Location.reverseGeocodeAsync({
+    const place = await Location.reverseGeocodeAsync({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     });
-    const flag = getCountryFlag('IN');
-    return `${flag} ${country}`;
+    if (place && place.length > 0) {
+      const [{ country, isoCountryCode }] = place;
+      const flag = getCountryFlag(isoCountryCode);
+      return `${flag} ${country}`;
+    }
   }
 
   return null;
