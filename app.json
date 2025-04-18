@@ -11,13 +11,9 @@
     "ios": {
       "supportsTablet": true,
       "bitcode": false,
-      "bundleIdentifier": "com.adtech.EngTalk"
+      "bundleIdentifier": "com.sonetadhikary.engtalk"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/app-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "permissions": [
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.CAMERA",
@@ -28,7 +24,7 @@
         "android.permission.WAKE_LOCK",
         "android.permission.BLUETOOTH"
       ],
-      "package": "com.adtech.EngTalk"
+      "package": "com.sonetadhikary.engtalk"
     },
     "web": {
       "bundler": "metro",
