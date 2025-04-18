@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import FullScreenView from '@/components/FullScreenView';
@@ -8,22 +8,38 @@ import LocalStore from '@/libs/localStore';
 import { router } from 'expo-router';
 
 const Setting = () => {
-  const logout=()=>{
-    LocalStore.clearAll()
-    router.replace('/Signin')
-  }
+  const logout = () => {
+    LocalStore.clearAll();
+    router.replace('/Signin');
+  };
+  const openAboutPage = () => {
+    Linking.openURL('https://engtalk.sonetstudio.org').catch(() =>
+      console.log('Unable to open settings')
+    );
+  };
+
+  const openEmail = () => {
+    const email = 'sonet.ad101@gmail.com';
+    const url = `mailto:${email}`;
+
+    Linking.openURL(url).catch(() => console.log('Unable to open email'));
+  };
+
   return (
     <FullScreenView>
       <View style={styles.container}>
         <View>
-          <View style={styles.card}>
+          <Pressable
+            onPress={openAboutPage}
+            style={styles.card}
+          >
             <Ionicons
               name='information-circle-outline'
               size={22}
               color={Color.white}
             />
             <Text style={styles.text}>About Us</Text>
-          </View>
+          </Pressable>
 
           <View style={styles.card}>
             <Ionicons
@@ -34,16 +50,22 @@ const Setting = () => {
             <Text style={styles.text}>Share</Text>
           </View>
 
-          <View style={styles.card}>
+          <Pressable
+            onPress={openEmail}
+            style={styles.card}
+          >
             <Ionicons
               name='chatbubble-ellipses-outline'
               size={22}
               color={Color.white}
             />
             <Text style={styles.text}>Feedback</Text>
-          </View>
+          </Pressable>
 
-          <Pressable onPress={logout} style={styles.card}>
+          <Pressable
+            onPress={logout}
+            style={styles.card}
+          >
             <Ionicons
               name='log-out-outline'
               size={22}
@@ -54,7 +76,7 @@ const Setting = () => {
         </View>
         <View style={styles.footer}>
           <Text style={styles.footerText}>v1.0.0</Text>
-          <Text style={styles.footerText}>© 2025 Sonet Studio</Text>
+          <Text style={styles.footerText}>© 2025 Sonet Adhikary</Text>
         </View>
       </View>
     </FullScreenView>
