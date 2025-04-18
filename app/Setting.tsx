@@ -8,7 +8,6 @@ import LocalStore from '@/libs/localStore';
 import { router } from 'expo-router';
 import * as Application from 'expo-application';
 
-
 const Setting = () => {
   const logout = () => {
     LocalStore.clearAll();
@@ -77,7 +76,9 @@ const Setting = () => {
           </Pressable>
         </View>
         <View style={styles.footer}>
-          <Text style={styles.footerText}>{Application.nativeApplicationVersion}</Text>
+          <Text
+            style={styles.footerText}
+          >{`v ${Application.nativeApplicationVersion}`}</Text>
           <Text style={styles.footerText}>© 2025 Sonet Adhikary</Text>
         </View>
       </View>
