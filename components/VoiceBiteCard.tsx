@@ -5,7 +5,6 @@ import {
   Pressable,
   StyleSheet,
   Animated,
-  Easing,
   ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,12 +12,17 @@ import { BlurView } from 'expo-blur';
 import { Audio } from 'expo-av';
 import { Sound } from 'expo-av/build/Audio';
 import { Color, Font } from '@/constants/constants';
-import { Backend } from '@/config';
 import CustomAvatar from './CustomAvatar';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import { Ionicons } from '@expo/vector-icons';
+import deleteVoiceBite from '@/libs/api/deleteVoiceBite';
+import CustomModal from './CustomModal';
 
 interface Props {
+  ownerId: string;
+  voiceBiteId: string;
   avatar: { stockAvatar: string; src: string };
-  username: string;
   name: string;
   file: string;
 }
@@ -29,11 +33,29 @@ const gradients = [
   [Color.primary, Color.secondary.twoHundred],
 ];
 
-const VoiceBitesCard = ({ avatar, username, name, file }: Props) => {
+const VoiceBitesCard = ({
+  avatar,
+  ownerId,
+  voiceBiteId,
+  name,
+  file,
+}: Props) => {
+  const { userId, token, getVoiceBite, getUserStat } = useCentralStore(
+    useShallow((state) => ({
+      userId: state.user.userInfo.userId,
+      token: state.user.token,
+      getVoiceBite: state.getVoiceBite,
+      getUserStat: state.getUserStat,
+    }))
+  );
+
+  const isOwner = userId === ownerId;
   const soundRef = useRef<Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -91,14 +113,49 @@ const VoiceBitesCard = ({ avatar, username, name, file }: Props) => {
   const randomGradient: any =
     gradients[Math.floor(Math.random() * gradients.length)];
 
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setDeleteAlert(false);
+    await deleteVoiceBite({ token, voiceBiteId });
+    Promise.all([getVoiceBite(), getUserStat()]);
+  };
+
   return (
     <Pressable
       onPress={togglePlay}
       style={styles.container}
+      disabled={isBuffering || isDeleting || isPlaying}
     >
       <Animated.View
         style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
       >
+        {isOwner && !isPlaying && (
+          <Pressable
+            onPress={() => setDeleteAlert(true)}
+            disabled={isDeleting || isBuffering || isPlaying}
+            style={styles.deleteIconWrapper}
+          >
+            <BlurView
+              intensity={40}
+              tint='dark'
+              style={StyleSheet.absoluteFill}
+            >
+              {!isDeleting ? (
+                <Ionicons
+                  name='trash-outline'
+                  size={16}
+                  color={Color.white}
+                />
+              ) : (
+                <ActivityIndicator
+                  size='small'
+                  color={Color.red}
+                />
+              )}
+            </BlurView>
+          </Pressable>
+        )}
+
         {isPlaying ? (
           <LinearGradient
             colors={randomGradient}
@@ -145,6 +202,25 @@ const VoiceBitesCard = ({ avatar, username, name, file }: Props) => {
           </BlurView>
         )}
       </Animated.View>
+      <View>
+        <CustomModal
+          isVisible={deleteAlert}
+          setVisibility={setDeleteAlert}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Delete</Text>
+            <Text style={styles.modalText}>
+              Are you sure you want to delete this voice bite?
+            </Text>
+            <Pressable
+              onPress={handleDelete}
+              style={styles.deleteBtn}
+            >
+              <Text style={styles.deleteBtnText}>Delete</Text>
+            </Pressable>
+          </View>
+        </CustomModal>
+      </View>
     </Pressable>
   );
 };
@@ -168,6 +244,22 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 6,
     overflow: 'hidden',
+    position: 'relative',
+  },
+  deleteIconWrapper: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    zIndex: 10,
   },
   cardBackground: {
     flex: 1,
@@ -205,6 +297,31 @@ const styles = StyleSheet.create({
     fontFamily: Font.pSemiBold,
     color: Color.white,
     marginTop: 12,
+    textAlign: 'center',
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    color: Color.red,
+    fontFamily: Font.pSemiBold,
+  },
+  deleteBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.red,
+    borderRadius: 10,
+  },
+  deleteBtnText: {
+    color: Color.white,
+    fontFamily: Font.pRegular,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
     textAlign: 'center',
   },
 });

@@ -81,8 +81,7 @@ const TabLayout = () => {
 
   useEffect(() => {
     if (userId) {
-      getVoiceBite();
-      getUserStat();
+      Promise.all([getVoiceBite(), getUserStat()]);
     }
   }, [userId]);
 

@@ -34,13 +34,16 @@ export const Backend = {
     return `${this.baseURL}/user/follow`;
   },
   get allPost() {
-    return `${this.baseURL}/post/allpost`;
+    return `${this.baseURL}/post/allpost/`;
   },
   get leaderBoard() {
     return `${this.baseURL}/user/leaderboard`;
   },
   get uploadPost() {
     return `${this.baseURL}/post/upload`;
+  },
+  get deletePost() {
+    return `${this.baseURL}/post/delete`;
   },
 
   get instaCall() {

@@ -11,7 +11,7 @@ import { Color } from '@/constants/constants';
 import OtherProfileInfo from '@/components/OtherProfileInfo';
 
 const OtherProfile = () => {
-  const { userName,userId, userBites, isLoading } = useCentralStore(
+  const { userName, userId, userBites, isLoading } = useCentralStore(
     useShallow((state) => ({
       userName: state.otherUser.userName,
       userId: state.otherUser.userId,
@@ -87,10 +87,11 @@ const OtherProfile = () => {
   const renderItem = useCallback(
     ({ item }: any) => (
       <VoiceBiteCard
-        username={item?.user?.userName}
+        ownerId={item?.user?._id}
+        voiceBiteId={item?._id}
         name={item?.user?.name}
         avatar={item?.user?.avatar}
-        fileName={item?.file}
+        file={item?.file}
       />
     ),
     []

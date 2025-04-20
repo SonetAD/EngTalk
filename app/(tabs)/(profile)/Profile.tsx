@@ -82,7 +82,8 @@ const Profile = () => {
   const renderItem = useCallback(
     ({ item }: any) => (
       <VoiceBiteCard
-        username={item?.user?.userName}
+        ownerId={item?.user?._id}
+        voiceBiteId={item?._id}
         name={item?.user?.name}
         avatar={item?.user?.avatar}
         file={item?.file}
@@ -94,6 +95,7 @@ const Profile = () => {
   const headerComponent = useCallback(() => <ProfileInfo />, []);
 
   if (isLoading || isError) return <CustomLoadingPage />;
+
 
   return (
     <FullScreenView>
