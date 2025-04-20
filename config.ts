@@ -62,6 +62,10 @@ export const Backend = {
   get sendMessageURL() {
     return `${this.baseURL}/message/send`;
   },
+  get deleteMessageURL() {
+    return `${this.baseURL}/message/delete`;
+  },
+
   get inboxURL() {
     return `${this.baseURL}/message/inbox`;
   },

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -7,8 +7,17 @@ import { useShallow } from 'zustand/react/shallow';
 import { Color, Font } from '@/constants/constants';
 import { router } from 'expo-router';
 import CustomAvatar from './CustomAvatar';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { runOnJS } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Message {
+  _id: string;
   message: string;
   messageType: string;
   sender: {
@@ -20,9 +29,10 @@ interface Message {
 
 interface Props {
   message: Message;
+  handleDeleteMessage: (messageId: string) => void;
 }
 
-const MessageBubble = ({ message }: Props) => {
+const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
   const { userId, otherChatParticipantAvatar, setOtherUser } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
@@ -31,53 +41,104 @@ const MessageBubble = ({ message }: Props) => {
     }))
   );
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = ['8%'];
+
   const isMe = message.sender._id === userId;
+
   const viewProfile = (otherUserName: string) => {
     setOtherUser({ userId: message.sender._id, goBackRoute: '/Chat' });
     router.push('/OtherProfile');
   };
 
-  return (
-    <View
-      style={[styles.container, isMe ? styles.rightAlign : styles.leftAlign]}
-    >
-      {!isMe && (
-        <Pressable onPress={() => viewProfile(message.sender._id)}>
-          <CustomAvatar
-            avatar={otherChatParticipantAvatar}
-            avatarStyle={styles.avatar}
-          />
-        </Pressable>
-      )}
+  const deletePopUp = () => {
+    bottomSheetModalRef.current?.present();
+  };
 
+  const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
+    if (isMe && success) {
+      runOnJS(deletePopUp)();
+    }
+  });
+  const handleDelete = () => {
+    bottomSheetModalRef.current?.dismiss();
+    handleDeleteMessage(message._id);
+  };
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        opacity={0.1}
+      />
+    ),
+    []
+  );
+
+  return (
+    <GestureDetector gesture={longPressGesture}>
       <View
-        style={[
-          styles.messageWrapper,
-          isMe ? styles.myMessageWrapper : styles.otherMessageWrapper,
-        ]}
+        style={[styles.container, isMe ? styles.rightAlign : styles.leftAlign]}
       >
-        <BlurView
-          intensity={30}
-          tint={isMe ? 'light' : 'dark'}
-          style={styles.blurContainer}
+        {!isMe && (
+          <Pressable onPress={() => viewProfile(message.sender._id)}>
+            <CustomAvatar
+              avatar={otherChatParticipantAvatar}
+              avatarStyle={styles.avatar}
+            />
+          </Pressable>
+        )}
+
+        <View
+          style={[
+            styles.messageWrapper,
+            isMe ? styles.myMessageWrapper : styles.otherMessageWrapper,
+          ]}
         >
-          <LinearGradient
-            colors={
-              isMe
-                ? ['rgba(255,156,1,0.3)', 'rgba(255,144,1,0.2)']
-                : ['rgba(35,37,51,0.4)', 'rgba(30,30,45,0.3)']
-            }
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.textContainer}
+          <BlurView
+            intensity={30}
+            tint={isMe ? 'light' : 'dark'}
+            style={styles.blurContainer}
           >
-            <Text style={isMe ? styles.myMessage : styles.otherMessage}>
-              {message.message}
-            </Text>
-          </LinearGradient>
-        </BlurView>
+            <LinearGradient
+              colors={
+                isMe
+                  ? ['rgba(255,156,1,0.3)', 'rgba(255,144,1,0.2)']
+                  : ['rgba(35,37,51,0.4)', 'rgba(30,30,45,0.3)']
+              }
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.textContainer}
+            >
+              <Text style={isMe ? styles.myMessage : styles.otherMessage}>
+                {message.message}
+              </Text>
+            </LinearGradient>
+          </BlurView>
+        </View>
+
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          stackBehavior='replace'
+          enablePanDownToClose={true}
+          snapPoints={snapPoints}
+          index={1}
+          handleStyle={styles.handleStyle}
+          backdropComponent={renderBackdrop}
+        >
+          <Pressable onPress={handleDelete}>
+            <BottomSheetView style={styles.bottomSheetContainer}>
+              <Text style={styles.delete}>Delete</Text>
+              <Ionicons
+                name='trash-outline'
+                size={24}
+                color={Color.red}
+              />
+            </BottomSheetView>
+          </Pressable>
+        </BottomSheetModal>
       </View>
-    </View>
+    </GestureDetector>
   );
 };
 
@@ -132,5 +193,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Color.gray.oneHundred,
     fontFamily: Font.pBold,
+  },
+  handleStyle: {
+    display: 'none',
+  },
+  bottomSheetContainer: {
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    backgroundColor: 'rgba(22, 22, 34, 0.9)',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  delete: {
+    fontFamily: Font.pBold,
+    color: Color.gray.oneHundred,
   },
 });

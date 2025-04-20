@@ -1,7 +1,6 @@
 import {
   KeyboardAvoidingView,
   Platform,
-  Keyboard,
   StyleSheet,
   View,
   ActivityIndicator,
@@ -18,6 +17,7 @@ import CustomLoadingPage from '@/components/CustomLoadingPage';
 import fetchConversation from '@/libs/api/fetchConversation';
 import { Color } from '@/constants/constants';
 import NoMessageAvalable from '@/components/NoMessageAvalable';
+import deleteMessage from '@/libs/api/deleteMessage';
 
 const Chat = () => {
   const {
@@ -28,6 +28,7 @@ const Chat = () => {
     totalConversationPages,
     isLoading,
     otherChatParticipantUserId,
+    getConversation,
   } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
@@ -37,19 +38,23 @@ const Chat = () => {
       isLoading: state.conversationStatus.isLoading,
       totalConversationPages: state.totalConversationPages,
       otherChatParticipantUserId: state.otherChatParticipant.userId,
+      getConversation: state.getConversation,
     }))
   );
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
 
   useEffect(() => {
-    NotificationSocket.on('message', ({ userId, message }) => {
-      if (userId === otherChatParticipantUserId) {
-        useCentralStore.setState((prev) => ({
-          messages: [message, ...prev.messages],
-        }));
-      }
-    });
+    if (otherChatParticipantUserId) {
+      NotificationSocket.on('message', ({ userId, message }) => {
+        if (userId === otherChatParticipantUserId) {
+          console.log('new messages');
+          useCentralStore.setState((prev) => ({
+            messages: [message, ...prev.messages],
+          }));
+        }
+      });
+    }
   }, [otherChatParticipantUserId]);
 
   useEffect(() => {
@@ -79,6 +84,14 @@ const Chat = () => {
     }
   }, [token, otherChatParticipantUserId, totalConversationPages]);
 
+  const handleDeleteMessage = async (messageId: string) => {
+    await deleteMessage({
+      token,
+      messageId,
+    });
+    getConversation(otherChatParticipantUserId);
+  };
+
   return (
     <FullScreenView>
       <KeyboardAvoidingView
@@ -94,7 +107,10 @@ const Chat = () => {
               <FlashList
                 data={messages}
                 renderItem={({ item }: { item: any }) => (
-                  <MessageBubble message={item} />
+                  <MessageBubble
+                    message={item}
+                    handleDeleteMessage={handleDeleteMessage}
+                  />
                 )}
                 estimatedItemSize={60}
                 contentContainerStyle={styles.listContent}
