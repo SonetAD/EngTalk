@@ -47,7 +47,7 @@ const MessageInputBox = () => {
           messageType: 'text',
         });
         setIsSending(false);
-        setNewMessage(newMessage.message);
+        setNewMessage(newMessage);
         setMessage('');
       } catch (err) {
         console.log(err);

@@ -114,10 +114,17 @@ const VoiceBitesCard = ({
     gradients[Math.floor(Math.random() * gradients.length)];
 
   const handleDelete = async () => {
-    setIsDeleting(true);
-    setDeleteAlert(false);
-    await deleteVoiceBite({ token, voiceBiteId });
-    Promise.all([getVoiceBite(), getUserStat()]);
+    try {
+      setIsDeleting(true);
+      setDeleteAlert(false);
+      await deleteVoiceBite({ token, voiceBiteId });
+      Promise.all([getVoiceBite(), getUserStat()]);
+    } catch (err) {
+      console.log(err);
+    }
+    finally {
+      setIsDeleting(false);
+    }
   };
 
   return (

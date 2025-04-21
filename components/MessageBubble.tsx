@@ -62,7 +62,9 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
   });
   const handleDelete = () => {
     bottomSheetModalRef.current?.dismiss();
-    handleDeleteMessage(message._id);
+    if (message._id) {
+      handleDeleteMessage(message._id);
+    }
   };
 
   const renderBackdrop = useCallback(

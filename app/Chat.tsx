@@ -43,12 +43,14 @@ const Chat = () => {
   );
   const currendPageRef = useRef(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  let checkMesageDuplication = '';
 
   useEffect(() => {
     if (otherChatParticipantUserId) {
       NotificationSocket.on('message', ({ userId, message }) => {
         if (userId === otherChatParticipantUserId) {
-          console.log('new messages');
+          if (message._id === checkMesageDuplication) return;
+          checkMesageDuplication = message._id;
           useCentralStore.setState((prev) => ({
             messages: [message, ...prev.messages],
           }));

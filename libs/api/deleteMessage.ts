@@ -16,8 +16,8 @@ const deleteMessage = async ({ token, messageId }: Props) => {
             },
         })
     }
-    catch(err){
-        console.log(err)
+    catch(err:any){
+        console.log(err?.response?.data);
     }
 };
 
