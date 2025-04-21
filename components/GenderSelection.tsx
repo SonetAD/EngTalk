@@ -42,9 +42,10 @@ export default GenderSelection;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: DeviceWidth * 0.8,
+    marginHorizontal:DeviceWidth * 0.2
   },
   btn: {
     backgroundColor: Color.black.twoHundred,

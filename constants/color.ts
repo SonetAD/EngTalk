@@ -3,7 +3,7 @@ const Color = {
   secondary: {
     default: '#FF9C01',
     oneHundred: '#FF9001',
-    twoHundred: '#FFA001'
+    twoHundred: '#FFA001',
   },
   black: {
     default: '#000000',
@@ -14,7 +14,7 @@ const Color = {
     oneHundred: '#CDCDE0',
   },
   white: '#ffffff',
-  red:'#E53935',
+  red: '#E53935',
 };
 
 export default Color;

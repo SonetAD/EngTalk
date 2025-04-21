@@ -7,6 +7,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Pressable,
+  Linking,
 } from 'react-native';
 import React, { useState } from 'react';
 import FullScreenView from '@/components/FullScreenView';
@@ -21,6 +23,7 @@ import ErrorAlert from '@/components/ErrorAlert';
 import createAccount from '@/libs/api/createAccount';
 import { Ionicons } from '@expo/vector-icons';
 import LocalStore from '@/libs/localStore';
+import Checkbox from 'expo-checkbox';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +31,7 @@ const Signup = () => {
     email: '',
     gender: '',
     passWord: '',
+    tos: false,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
@@ -41,6 +45,11 @@ const Signup = () => {
       !formData.gender
     ) {
       setErrorMessage('Please fill all the fields');
+      setShowErrorAlert(true);
+      return;
+    }
+    if (!formData.tos) {
+      setErrorMessage('Please accept terms and conditions');
       setShowErrorAlert(true);
       return;
     }
@@ -115,7 +124,29 @@ const Signup = () => {
                 onChangeText={(text) =>
                   setFormData({ ...formData, passWord: text })
                 }
+                containerStyle={{ marginTop: 15 }}
               />
+
+              <View style={styles.checkboxContainer}>
+                <Checkbox
+                  value={formData.tos}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, tos: value })
+                  }
+                  color={formData.tos ? Color.secondary.oneHundred : undefined}
+                  style={styles.checkbox}
+                />
+                <View style={styles.checkboxTextContainer}>
+                  <Text style={styles.checkboxLabel}>I agree to the </Text>
+                  <Pressable
+                    onPress={() =>
+                      Linking.openURL('https://engtalk-tos.sonetstudio.org/')
+                    }
+                  >
+                    <Text style={styles.link}>Terms of Service</Text>
+                  </Pressable>
+                </View>
+              </View>
 
               <CustomButton
                 text='Sign Up'
@@ -167,6 +198,32 @@ const styles = StyleSheet.create({
     fontFamily: Font.pRegular,
     fontSize: 13,
     width: DeviceWidth * 0.8,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    width: DeviceWidth * 0.8,
+    alignSelf: 'center',
+  },
+  checkbox: {
+    marginRight: 10,
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 5,
+    borderColor: Color.secondary.oneHundred,
+  },
+  checkboxTextContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    flex: 1,
+  },
+  checkboxLabel: {
+    color: Color.white,
+    fontFamily: Font.pRegular,
+    fontSize: 13,
   },
   signIn: {
     flexDirection: 'row',
