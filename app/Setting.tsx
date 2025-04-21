@@ -19,6 +19,12 @@ const Setting = () => {
     );
   };
 
+  const openPrivacyPage = () => {
+    Linking.openURL('https://engtalk-privacy.sonetstudio.org/').catch(() =>
+      console.log('Unable to open settings')
+    );
+  };
+
   const openEmail = () => {
     const email = 'sonet.ad101@gmail.com';
     const url = `mailto:${email}`;
@@ -61,6 +67,17 @@ const Setting = () => {
               color={Color.white}
             />
             <Text style={styles.text}>Feedback</Text>
+          </Pressable>
+          <Pressable
+            onPress={openPrivacyPage}
+            style={styles.card}
+          >
+            <Ionicons
+              name='shield-checkmark-outline'
+              size={22}
+              color={Color.white}
+            />
+            <Text style={styles.text}>Privacy</Text>
           </Pressable>
 
           <Pressable
