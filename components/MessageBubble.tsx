@@ -15,6 +15,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import { runOnJS } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
+import { NotificationSocket } from '@/libs/Socket';
 
 interface Message {
   _id: string;
@@ -33,10 +34,11 @@ interface Props {
 }
 
 const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
-  const { userId, otherChatParticipantAvatar, setOtherUser } = useCentralStore(
+  const { userId, otherChatParticipantAvatar,otherChatParticipantUserId, setOtherUser } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
+      otherChatParticipantUserId: state.otherChatParticipant.userId,
       setOtherUser: state.setOtherUser,
     }))
   );
@@ -60,10 +62,13 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
       runOnJS(deletePopUp)();
     }
   });
-  const handleDelete = () => {
+  const handleDelete = async() => {
     bottomSheetModalRef.current?.dismiss();
     if (message._id) {
-      handleDeleteMessage(message._id);
+      await handleDeleteMessage(message._id);
+      NotificationSocket.emit('deleteMessage', {
+        userId:otherChatParticipantUserId ,
+      })
     }
   };
 

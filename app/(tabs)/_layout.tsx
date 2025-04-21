@@ -82,6 +82,9 @@ const TabLayout = () => {
   useEffect(() => {
     if (userId) {
       Promise.all([getVoiceBite(), getUserStat()]);
+      NotificationSocket.on('deletePost',()=>{
+        getVoiceBite();
+      })
     }
   }, [userId]);
 

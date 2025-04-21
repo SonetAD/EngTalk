@@ -56,6 +56,12 @@ const Chat = () => {
           }));
         }
       });
+      
+      NotificationSocket.on('deleteMessage', ({ userId }) => {
+        if (userId === otherChatParticipantUserId) {
+          getConversation(otherChatParticipantUserId);
+        }
+      });
     }
   }, [otherChatParticipantUserId]);
 

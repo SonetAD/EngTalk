@@ -18,6 +18,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { Ionicons } from '@expo/vector-icons';
 import deleteVoiceBite from '@/libs/api/deleteVoiceBite';
 import CustomModal from './CustomModal';
+import { NotificationSocket } from '@/libs/Socket';
 
 interface Props {
   ownerId: string;
@@ -40,12 +41,11 @@ const VoiceBitesCard = ({
   name,
   file,
 }: Props) => {
-  const { userId, token, getVoiceBite, getUserStat } = useCentralStore(
+  const { userId, token, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       token: state.user.token,
       getVoiceBite: state.getVoiceBite,
-      getUserStat: state.getUserStat,
     }))
   );
 
@@ -118,11 +118,10 @@ const VoiceBitesCard = ({
       setIsDeleting(true);
       setDeleteAlert(false);
       await deleteVoiceBite({ token, voiceBiteId });
-      Promise.all([getVoiceBite(), getUserStat()]);
+      NotificationSocket.emit('deletePost');
     } catch (err) {
       console.log(err);
-    }
-    finally {
+    } finally {
       setIsDeleting(false);
     }
   };
