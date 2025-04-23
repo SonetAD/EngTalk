@@ -72,6 +72,15 @@ const ProfileInfo = () => {
     router.push('/EditProfile');
   };
 
+  const openFollowScreen = (screenName) => {
+    router.push({
+      pathname: '/FollowScreen',
+      params: {
+        screenName,
+      },
+    });
+  };
+
   return (
     <View>
       <View style={styles.info}>
@@ -92,14 +101,14 @@ const ProfileInfo = () => {
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
         </View>
-        <View>
+        <Pressable onPress={() => openFollowScreen('followers')}>
           <Text style={styles.statNumber}>{followers?.length || 0}</Text>
           <Text style={styles.statText}>followers</Text>
-        </View>
-        <View>
+        </Pressable>
+        <Pressable onPress={() => openFollowScreen('following')}>
           <Text style={styles.statNumber}>{following?.length || 0}</Text>
           <Text style={styles.statText}>following</Text>
-        </View>
+        </Pressable>
       </View>
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>

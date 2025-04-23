@@ -82,9 +82,9 @@ const TabLayout = () => {
   useEffect(() => {
     if (userId) {
       Promise.all([getVoiceBite(), getUserStat()]);
-      NotificationSocket.on('deletePost',()=>{
+      NotificationSocket.on('deletePost', () => {
         getVoiceBite();
-      })
+      });
     }
   }, [userId]);
 
@@ -185,6 +185,18 @@ const TabLayout = () => {
       />
       <Tabs.Screen
         name='OtherProfile'
+        options={{
+          href: null,
+          header: () => (
+            <ProfileHeaderComponent
+              userName={otherUserName}
+              otherUser={true}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name='FollowScreen'
         options={{
           href: null,
           header: () => (
