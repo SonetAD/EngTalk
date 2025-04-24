@@ -10,13 +10,17 @@ import CustomAvatar from './CustomAvatar';
 interface Props {
   userId: string;
 }
+
 const FollowUserCard = ({ userId }: Props) => {
-  const { setOtherUser } = useCentralStore(
+  const { myId, setOtherUser } = useCentralStore(
     useShallow((state) => ({
+      myId: state.user.userInfo.userId,
       setOtherUser: state.setOtherUser,
     }))
   );
+
   const [userInfo, setUserInfo] = useState<any>(null);
+
   useEffect(() => {
     (async () => {
       if (userId) {
@@ -30,42 +34,57 @@ const FollowUserCard = ({ userId }: Props) => {
   }, [userId]);
 
   const viewProfile = () => {
-    setOtherUser({ userId, goBackRoute: '/Profile' });
-    router.push('/OtherProfile');
+    if (userId === myId) {
+      router.navigate('/Profile');
+    } else {
+      setOtherUser({ userId, goBackRoute: '/Home' });
+      router.push('/OtherProfile');
+    }
   };
 
-  if (!userInfo) return null
-    return (
-      <Pressable onPress={viewProfile}>
-        <View style={styles.container}>
-          <CustomAvatar
-            avatar={userInfo.avatar}
-            avatarStyle={styles.avatar}
-          />
-          <Text style={styles.name}>{userInfo.name}</Text>
-        </View>
-      </Pressable>
-    );
+  if (!userInfo) return null;
+
+  return (
+    <Pressable
+      style={styles.card}
+      onPress={viewProfile}
+    >
+      <CustomAvatar
+        avatar={userInfo.avatar}
+        avatarStyle={styles.avatar}
+      />
+      <Text style={styles.name}>{userInfo.name}</Text>
+    </Pressable>
+  );
 };
 
 export default FollowUserCard;
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    marginHorizontal: 12,
+    marginVertical: 8,
+    borderRadius: 12,
+    backgroundColor: '#1E1E1E',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 48,
+    height: 48,
+    borderRadius: 999,
+    marginRight: 14,
   },
   name: {
-    flex: 1,
     fontSize: 16,
-    fontFamily: Font.pRegular,
+    fontFamily: Font.pMedium,
     color: Color.white,
   },
 });

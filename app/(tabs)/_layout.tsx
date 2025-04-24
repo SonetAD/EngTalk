@@ -11,6 +11,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import LeaderBoardHeaderComponent from '@/components/LeaderBoardHeaderComponent';
 import { NotificationSocket } from '@/libs/Socket';
+import FollowHeaderComponent from '@/components/FollowHeaderComponent';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -196,15 +197,10 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name='FollowScreen'
+        name='(follow)'
         options={{
           href: null,
-          header: () => (
-            <ProfileHeaderComponent
-              userName={otherUserName}
-              otherUser={true}
-            />
-          ),
+          header: FollowHeaderComponent 
         }}
       />
     </Tabs>

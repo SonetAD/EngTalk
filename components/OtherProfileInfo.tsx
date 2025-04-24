@@ -98,6 +98,24 @@ const OtherProfileInfo = () => {
     router.push('/Chat');
   };
 
+  const openFollowers = () => {
+    router.push({
+      pathname: '/followers',
+      params: {
+        userId: otherUserId,
+      },
+    });
+  };
+
+  const openFollowing = () => {
+    router.push({
+      pathname: '/following',
+      params: {
+        userId: otherUserId,
+      },
+    });
+  };
+
   return (
     <View>
       <View style={styles.info}>
@@ -119,14 +137,14 @@ const OtherProfileInfo = () => {
           <Text style={styles.statNumber}>{totalUserBites || 0}</Text>
           <Text style={styles.statText}>bites</Text>
         </View>
-        <View>
+        <Pressable onPress={openFollowers}>
           <Text style={styles.statNumber}>{followers?.length || 0}</Text>
           <Text style={styles.statText}>followers</Text>
-        </View>
-        <View>
+        </Pressable>
+        <Pressable onPress={openFollowing}>
           <Text style={styles.statNumber}>{following?.length || 0}</Text>
           <Text style={styles.statText}>following</Text>
-        </View>
+        </Pressable>
       </View>
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>

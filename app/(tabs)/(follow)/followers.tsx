@@ -6,26 +6,31 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { FlashList } from '@shopify/flash-list';
 import FollowUserCard from '@/components/FollowUserCard';
+import NoFollowFound from '@/components/NoFollowFound';
 
-const FollowScreen = () => {
-  const { followers, following } = useCentralStore(
+const Followers = () => {
+  const { myUserId, myFollowers, otherUserFollowers } = useCentralStore(
     useShallow((state) => ({
-      followers: state.user.userInfo.followers,
-      following: state.user.userInfo.following,
+      myUserId: state.user.userInfo.userId,
+      myFollowers: state.user.userInfo.followers,
+      otherUserFollowers: state.otherUser.followers,
     }))
   );
-  const { screenName } = useLocalSearchParams();
+  const { userId } = useLocalSearchParams();
+  const isMe = userId === myUserId;
+
   return (
     <FullScreenView>
       <FlashList
-        data={screenName === 'followers' ? followers : following}
+        data={isMe ? myFollowers : otherUserFollowers}
         renderItem={({ item }) => <FollowUserCard userId={item} />}
         estimatedItemSize={60}
+        ListEmptyComponent={() => <NoFollowFound text='No Followers' />}
       />
     </FullScreenView>
   );
 };
 
-export default FollowScreen;
+export default Followers;
 
 const styles = StyleSheet.create({});
