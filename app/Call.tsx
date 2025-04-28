@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-debugger;
 import FullScreenView from '@/components/FullScreenView';
 import {
   RTCPeerConnection,
@@ -8,8 +7,6 @@ import {
   RTCSessionDescription,
   MediaStream,
 } from 'react-native-webrtc';
-import { getIcServer } from '@/config';
-
 import Socket from '@/libs/Socket';
 import SearchingPartner from '@/components/SearchingPartner';
 import FoundPartner from '@/components/FoundPartner';
@@ -19,6 +16,7 @@ import { router } from 'expo-router';
 import ErrorAlert from '@/components/ErrorAlert';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import getIcServer from '@/libs/api/getIceServer';
 
 const Call = () => {
   const { token, userId, gender, filteredGender, setUserStat } =
@@ -36,112 +34,81 @@ const Call = () => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [matchedUserData, setMatchedUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [skipCount, setSkipCount] = useState(0);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const timerRef = useRef(0);
 
-  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const timerRef = useRef(0);
   const findMatchIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const targetUserSocketIdRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      if (!peerConnectionRef.current) {
-        const { iceServers } = await getIcServer(token);
+  const createPeerConnection = async () => {
+    const { iceServers } = await getIcServer(token);
+    const pc = new RTCPeerConnection({ iceServers });
 
-        peerConnectionRef.current = new RTCPeerConnection({ iceServers });
+    pc.addEventListener('icecandidate', (event) => {
+      if (event.candidate) {
+        Socket.emit('iceCandidate', {
+          targetSocketId: targetUserSocketIdRef.current,
+          candidate: event.candidate,
+        });
       }
-      const pc = peerConnectionRef.current;
+    });
 
-      pc.addEventListener('track', (event) => {
-        if (event.streams && event.streams[0]) {
-          setRemoteStream(event.streams[0]);
-        }
-      });
-    })();
-    return () => {
-      localStreamRef.current?.getTracks().forEach((track) => track.stop());
-      localStreamRef.current = null;
-
-      peerConnectionRef.current?.close();
-      peerConnectionRef.current = null;
-    };
-  }, []);
-
-  useEffect(() => {
-    Socket.emit('join', { userId, gender });
-
-    const handleIceCandidate = async ({ candidate }: any) => {
-      if (candidate) {
-        await peerConnectionRef.current?.addIceCandidate(
-          new RTCIceCandidate(candidate)
-        );
+    pc.addEventListener('track', (event) => {
+      if (event.streams && event.streams[0]) {
+        setRemoteStream(event.streams[0]);
       }
-    };
+    });
 
-    const handleOffer = async ({ offer, from }: any) => {
-      await peerConnectionRef.current?.setRemoteDescription(
-        new RTCSessionDescription(offer)
-      );
-      const answer = await peerConnectionRef.current?.createAnswer();
-      await peerConnectionRef.current?.setLocalDescription(answer);
-      Socket.emit('answer', { targetSocketId: from, answer });
+    pc.addEventListener('iceconnectionstatechange', () => {
+      console.log('ICE Connection State:', pc.iceConnectionState);
+      if (['failed', 'disconnected'].includes(pc.iceConnectionState)) {
+        endCall();
+      }
+    });
 
-      peerConnectionRef.current?.addEventListener('icecandidate', (event) => {
-        if (event.candidate) {
-          Socket.emit('iceCandidate', {
-            targetSocketId: from,
-            candidate: event.candidate,
-          });
-        }
+    return pc;
+  };
+
+  const startLocalStream = async () => {
+    try {
+      const stream = await mediaDevices.getUserMedia({
+        audio: true,
+        video: false,
       });
-    };
-
-    const handleAnswer = async ({ from, answer }: any) => {
-      await peerConnectionRef.current?.setRemoteDescription(
-        new RTCSessionDescription(answer)
-      );
-    };
-    const handleRejectCall = () => {
-      setMatchedUserData(null);
-      setCallAccepted(false);
-      // setSkipCount((prevCount) => prevCount + 1);
-      setIsLoading(false);
-      searchPartner();
-    };
-
-    const handleCallAccepted = async ({ matchedSocketId, role }: any) => {
-      await startLocalStream();
-      await initiateCall(matchedSocketId, role);
-      setCallAccepted(true);
-    };
-
-    const handleEndCall = () => {
-      setUserStat(timerRef.current);
-      router.replace('/Home');
-    };
-
-    searchPartner();
-
-    // Register event listeners
-    Socket.on('iceCandidate', handleIceCandidate);
-    Socket.on('offer', handleOffer);
-    Socket.on('answer', handleAnswer);
-    Socket.on('callRejected', handleRejectCall);
-    Socket.on('callAccepted', handleCallAccepted);
-    Socket.on('callEnd', handleEndCall);
-
-    return () => {
-      Socket.emit('callEnd', {
-        targetSocketId: matchedUserData?.targetSocketId,
+      localStreamRef.current = stream;
+      stream.getTracks().forEach((track) => {
+        peerConnectionRef.current?.addTrack(track, stream);
       });
-      Socket.off('iceCandidate', handleIceCandidate);
-      Socket.off('offer', handleOffer);
-      Socket.off('answer', handleAnswer);
-      Socket.off('callRejected', handleRejectCall);
-    };
-  }, []);
+    } catch (error) {
+      console.error('Error starting local stream:', error);
+    }
+  };
+
+  const initiateCall = async (targetSocketId: string, role: string) => {
+    if (!peerConnectionRef.current || role !== 'caller') return;
+    const offer = await peerConnectionRef.current.createOffer({
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: false,
+      voiceActivityDetection: true,
+    });
+    await peerConnectionRef.current.setLocalDescription(offer);
+    Socket.emit('offer', { targetSocketId, offer });
+  };
+
+  const fetchUser = async (matcheduserId: string, matchedSocketId: string) => {
+    try {
+      const user = await getUserInfo(matcheduserId);
+      user.targetSocketId = matchedSocketId;
+      setMatchedUserData(user);
+    } catch (err) {
+      setErrorMessage('Network Error');
+      setShowErrorAlert(true);
+    }
+  };
+
   const searchPartner = useCallback(() => {
     findMatchIntervalRef.current = setInterval(() => {
       Socket.emit('findMatch', { userId, preferredGender: filteredGender });
@@ -152,8 +119,7 @@ const Call = () => {
         clearInterval(findMatchIntervalRef.current);
         findMatchIntervalRef.current = null;
       }
-
-      fetchUser(matcheduserId, matchedSocketId);
+      await fetchUser(matcheduserId, matchedSocketId);
     };
 
     Socket.on('matchFound', matchHandler);
@@ -164,49 +130,7 @@ const Call = () => {
       }
       Socket.off('matchFound', matchHandler);
     };
-  }, [matchedUserData]);
-
-  const startLocalStream = async () => {
-    try {
-      const constraints = { audio: true, video: false };
-      const stream = await mediaDevices.getUserMedia(constraints);
-      localStreamRef.current = stream;
-      stream
-        .getTracks()
-        .forEach((track) => peerConnectionRef.current?.addTrack(track, stream));
-    } catch (error) {
-      console.error('Error starting local stream:', error);
-    }
-  };
-
-  const fetchUser = async (matcheduserId: string, matchedSocketId: string) => {
-    try {
-      if (matcheduserId) {
-        const user = await getUserInfo(matcheduserId);
-        user.targetSocketId = matchedSocketId;
-        setMatchedUserData(user);
-      }
-    } catch (err) {
-      setErrorMessage('Network Error');
-      setShowErrorAlert(true);
-    }
-  };
-
-  const initiateCall = async (targetSocketId: string, role: string) => {
-    if (!peerConnectionRef.current || role !== 'caller') return;
-    const sessionConstraints = {
-      mandatory: {
-        OfferToReceiveAudio: true,
-        OfferToReceiveVideo: false,
-        VoiceActivityDetection: true,
-      },
-    };
-    const offer = await peerConnectionRef.current.createOffer(
-      sessionConstraints
-    );
-    await peerConnectionRef.current.setLocalDescription(offer);
-    Socket.emit('offer', { targetSocketId, offer });
-  };
+  }, [userId, filteredGender]);
 
   const acceptCall = () => {
     setIsLoading(true);
@@ -217,36 +141,141 @@ const Call = () => {
     Socket.emit('rejectCall');
   };
 
-  const endCall = () => {
-    setUserStat(timerRef.current);
-    Socket.emit('callEnd', { targetSocketId: matchedUserData?.targetSocketId });
-    router.replace('/Home');
-  };
-
-  const stopSearching = () => {
-    router.replace('/Home');
-  };
   const cancelCall = () => {
     Socket.emit('rejectCall');
     Socket.emit('cancelCall');
     router.replace('/Home');
   };
 
-  const togleMuteState = () => {
+  const stopSearching = () => {
+    router.replace('/Home');
+  };
+
+  const endCall = () => {
+    setUserStat(timerRef.current);
+    Socket.emit('callEnd', { targetSocketId: matchedUserData?.targetSocketId });
+
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close();
+      peerConnectionRef.current = null;
+    }
+
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach((t) => t.stop());
+      localStreamRef.current = null;
+    }
+
+    router.replace('/Home');
+  };
+
+  const toggleMuteState = () => {
     const audioTrack = localStreamRef.current?.getAudioTracks()[0];
     if (audioTrack) {
       audioTrack.enabled = !audioTrack.enabled;
     }
   };
 
-  const togleLoudSpeaker = (isLoudSpeaker: boolean) => {
+  const toggleLoudSpeaker = (isLoudSpeaker: boolean) => {
     const audioTrack = remoteStream?.getAudioTracks()[0];
-    if (isLoudSpeaker) {
-      audioTrack?._setVolume(5);
-    } else {
-      audioTrack?._setVolume(1);
+    if (audioTrack && typeof (audioTrack as any)._setVolume === 'function') {
+      (audioTrack as any)._setVolume(isLoudSpeaker ? 5 : 1);
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      peerConnectionRef.current = await createPeerConnection();
+    })();
+
+    return () => {
+      if (findMatchIntervalRef.current) {
+        clearInterval(findMatchIntervalRef.current);
+      }
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current.close();
+        peerConnectionRef.current = null;
+      }
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach((track) => track.stop());
+        localStreamRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    Socket.emit('join', { userId, gender });
+
+    const handleIceCandidate = async ({ candidate }: any) => {
+      if (candidate) {
+        try {
+          await peerConnectionRef.current?.addIceCandidate(
+            new RTCIceCandidate(candidate)
+          );
+        } catch (error) {
+          console.error('Error adding received ICE candidate:', error);
+        }
+      }
+    };
+
+    const handleOffer = async ({ offer, from }: any) => {
+      if (!peerConnectionRef.current) {
+        peerConnectionRef.current = await createPeerConnection();
+      }
+      targetUserSocketIdRef.current = from;
+      await startLocalStream();
+      await peerConnectionRef.current?.setRemoteDescription(
+        new RTCSessionDescription(offer)
+      );
+      const answer = await peerConnectionRef.current?.createAnswer();
+      await peerConnectionRef.current?.setLocalDescription(answer);
+      Socket.emit('answer', { targetSocketId: from, answer });
+    };
+
+    const handleAnswer = async ({ answer }: any) => {
+      if (peerConnectionRef.current) {
+        await peerConnectionRef.current.setRemoteDescription(
+          new RTCSessionDescription(answer)
+        );
+      }
+    };
+
+    const handleRejectCall = () => {
+      setMatchedUserData(null);
+      setCallAccepted(false);
+      setIsLoading(false);
+      searchPartner();
+    };
+
+    const handleCallAccepted = async ({ matchedSocketId, role }: any) => {
+      targetUserSocketIdRef.current = matchedSocketId;
+      await startLocalStream();
+      await initiateCall(matchedSocketId, role);
+      setCallAccepted(true);
+    };
+
+    const handleCallEnd = () => {
+      endCall();
+    };
+
+    const cleanupSearch = searchPartner();
+
+    Socket.on('iceCandidate', handleIceCandidate);
+    Socket.on('offer', handleOffer);
+    Socket.on('answer', handleAnswer);
+    Socket.on('callRejected', handleRejectCall);
+    Socket.on('callAccepted', handleCallAccepted);
+    Socket.on('callEnd', handleCallEnd);
+
+    return () => {
+      cleanupSearch();
+      Socket.off('iceCandidate', handleIceCandidate);
+      Socket.off('offer', handleOffer);
+      Socket.off('answer', handleAnswer);
+      Socket.off('callRejected', handleRejectCall);
+      Socket.off('callAccepted', handleCallAccepted);
+      Socket.off('callEnd', handleCallEnd);
+    };
+  }, [searchPartner]);
 
   return (
     <FullScreenView>
@@ -272,8 +301,8 @@ const Call = () => {
           avatar={matchedUserData.user.avatar}
           onEnd={endCall}
           remoteStream={remoteStream}
-          toggleMute={togleMuteState}
-          toggleSpeaker={togleLoudSpeaker}
+          toggleMute={toggleMuteState}
+          toggleSpeaker={toggleLoudSpeaker}
           timerRef={timerRef}
         />
       )}
