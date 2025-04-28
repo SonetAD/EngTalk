@@ -64,7 +64,6 @@ const Call = () => {
     });
 
     pc.addEventListener('iceconnectionstatechange', () => {
-      console.log('ICE Connection State:', pc.iceConnectionState);
       if (['failed', 'disconnected'].includes(pc.iceConnectionState)) {
         endCall();
       }
