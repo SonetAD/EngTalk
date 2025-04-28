@@ -80,7 +80,8 @@
         "exclude": [
           "@config-plugins/react-native-webrtc",
           "socket.io-client",
-          "react-native-webrtc"
+          "react-native-webrtc",
+          "expo-checkbox"
         ]
       }
     }
