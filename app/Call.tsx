@@ -42,6 +42,7 @@ const Call = () => {
   const localStreamRef = useRef<MediaStream | null>(null);
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
   const targetUserSocketIdRef = useRef<string | null>(null);
+  const pendingIceCandidatesRef = useRef<RTCIceCandidate[]>([]);
 
   const createPeerConnection = async () => {
     const { iceServers } = await getIcServer(token);
@@ -208,9 +209,12 @@ const Call = () => {
     const handleIceCandidate = async ({ candidate }: any) => {
       if (candidate) {
         try {
-          await peerConnectionRef.current?.addIceCandidate(
-            new RTCIceCandidate(candidate)
-          );
+          const iceCandidate = new RTCIceCandidate(candidate);
+          if (peerConnectionRef.current?.remoteDescription?.type) {
+            await peerConnectionRef.current?.addIceCandidate(iceCandidate);
+          } else {
+            pendingIceCandidatesRef.current.push(iceCandidate);
+          }
         } catch (error) {
           console.error('Error adding received ICE candidate:', error);
         }
@@ -226,6 +230,14 @@ const Call = () => {
       await peerConnectionRef.current?.setRemoteDescription(
         new RTCSessionDescription(offer)
       );
+      for (const candidate of pendingIceCandidatesRef.current) {
+        try {
+          await peerConnectionRef.current?.addIceCandidate(candidate);
+        } catch (error) {
+          console.error('Error adding pending ICE candidate:', error);
+        }
+      }
+      pendingIceCandidatesRef.current = [];
       const answer = await peerConnectionRef.current?.createAnswer();
       await peerConnectionRef.current?.setLocalDescription(answer);
       Socket.emit('answer', { targetSocketId: from, answer });
@@ -236,6 +248,15 @@ const Call = () => {
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(answer)
         );
+
+        for (const candidate of pendingIceCandidatesRef.current) {
+          try {
+            await peerConnectionRef.current?.addIceCandidate(candidate);
+          } catch (error) {
+            console.error('Error adding pending ICE candidate:', error);
+          }
+        }
+        pendingIceCandidatesRef.current = [];
       }
     };
 
