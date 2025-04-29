@@ -130,7 +130,7 @@ const VoiceBitesCard = ({
     <Pressable
       onPress={togglePlay}
       style={styles.container}
-      disabled={isBuffering || isDeleting || isPlaying}
+      disabled={isBuffering || isDeleting}
     >
       <Animated.View
         style={[styles.card, { transform: [{ scale: scaleAnim }] }]}
