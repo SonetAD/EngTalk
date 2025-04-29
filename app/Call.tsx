@@ -17,8 +17,10 @@ import ErrorAlert from '@/components/ErrorAlert';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import getIcServer from '@/libs/api/getIceServer';
+import { useKeepAwake } from 'expo-keep-awake';
 
 const Call = () => {
+  useKeepAwake();
   const { token, userId, gender, filteredGender, setUserStat } =
     useCentralStore(
       useShallow((state) => ({

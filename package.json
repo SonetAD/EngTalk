@@ -61,7 +61,8 @@
     "react-native-webrtc": "^124.0.5",
     "react-native-webview": "13.12.5",
     "socket.io-client": "^4.8.1",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "expo-keep-awake": "~14.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
