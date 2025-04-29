@@ -178,7 +178,7 @@ const Call = () => {
   const toggleLoudSpeaker = (isLoudSpeaker: boolean) => {
     const audioTrack = remoteStream?.getAudioTracks()[0];
     if (audioTrack && typeof (audioTrack as any)._setVolume === 'function') {
-      (audioTrack as any)._setVolume(isLoudSpeaker ? 5 : 1);
+      (audioTrack as any)._setVolume(isLoudSpeaker ? 10.0 : 1.0);
     }
   };
 
