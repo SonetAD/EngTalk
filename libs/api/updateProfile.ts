@@ -23,7 +23,7 @@ const updateProfile = async (data: Props) => {
     if (data.userName) form.append('userName', data.userName);
     if (data.name) form.append('name', data.name);
     if (data.email) form.append('email', data.email);
-    if(data.location) form.append('location', data.location)
+    if (data.location) form.append('location', data.location);
     if (data.password) form.append('password', data.password);
 
     if (data?.avatar?.src) {
@@ -53,8 +53,8 @@ const updateProfile = async (data: Props) => {
     }
     return {};
   } catch (err: any) {
-    console.log(err);
-    throw new Error(err?.message);
+    const errorMessage=err?.response?.data?.errors?.validation?.msg
+    throw new Error(errorMessage);
   }
 };
 

@@ -13,6 +13,7 @@ import { useShallow } from 'zustand/react/shallow';
 import updateProfile from '@/libs/api/updateProfile';
 import { router } from 'expo-router';
 import LocalStore from '@/libs/localStore';
+import ErrorAlert from './ErrorAlert';
 
 const EditProfileHeaderComponent = () => {
   const {
@@ -40,6 +41,8 @@ const EditProfileHeaderComponent = () => {
   );
 
   const [loading, setLoading] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const saveUpdate = async () => {
     try {
@@ -74,8 +77,10 @@ const EditProfileHeaderComponent = () => {
       setLoading(false);
 
       router.navigate('/Profile');
-    } catch (err) {
-      console.log(err);
+    } catch (err:any) {
+      setErrorMessage(err.message);
+      setShowErrorAlert(true);
+      setLoading(false);
     }
   };
   return (
@@ -97,6 +102,11 @@ const EditProfileHeaderComponent = () => {
           <CustomBrightIcon name='checkmark-outline' />
         )}
       </Pressable>
+      <ErrorAlert
+        message={errorMessage}
+        visibility={showErrorAlert}
+        setVisibility={setShowErrorAlert}
+      />
     </View>
   );
 };
