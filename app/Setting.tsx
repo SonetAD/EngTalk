@@ -1,18 +1,49 @@
-import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
+import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import FullScreenView from '@/components/FullScreenView';
-import Color from '@/constants/color';
-import Font from '@/constants/font';
+import { Color, Font } from '@/constants/constants';
 import LocalStore from '@/libs/localStore';
 import { router } from 'expo-router';
 import * as Application from 'expo-application';
+import deleteUser from '@/libs/api/deleteUser';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import CustomModal from '@/components/CustomModal';
+import FormField from '@/components/FormField';
 
 const Setting = () => {
-  const logout = () => {
+  const { token } = useCentralStore(
+    useShallow((state) => ({ token: state.user.token }))
+  );
+
+  const [logoutPopUp, setLogoutPopUp] = useState(false);
+  const [deletePopUp, setDeletePopUp] = useState(false);
+  const [passwordInput, setPasswordInput] = useState<string>('');
+  const [enableDeleteBtn, setEnableBtn] = useState(false);
+  const [deleteInProgress, setDeleteIngInProgress] = useState(false);
+  const passwordRef = useRef(LocalStore.getString('passWord'));
+
+  const logoutHandler = () => {
     LocalStore.clearAll();
     router.replace('/Signin');
   };
+
+  const userDelete = async () => {
+    setDeleteIngInProgress(true);
+    await deleteUser({ token });
+    setDeleteIngInProgress(false);
+    setDeletePopUp(false);
+    logoutHandler();
+  };
+
   const openAboutPage = () => {
     Linking.openURL('https://engtalk.sonetstudio.org').catch(() =>
       console.log('Unable to open settings')
@@ -81,7 +112,7 @@ const Setting = () => {
           </Pressable>
 
           <Pressable
-            onPress={logout}
+            onPress={() => setLogoutPopUp(true)}
             style={styles.card}
           >
             <Ionicons
@@ -91,6 +122,19 @@ const Setting = () => {
             />
             <Text style={[styles.text, { color: Color.red }]}>Log Out</Text>
           </Pressable>
+          <Pressable
+            onPress={() => setDeletePopUp(true)}
+            style={styles.card}
+          >
+            <Ionicons
+              name='warning-outline'
+              size={22}
+              color={Color.red}
+            />
+            <Text style={[styles.text, { color: Color.red }]}>
+              Delete Account
+            </Text>
+          </Pressable>
         </View>
         <View style={styles.footer}>
           <Text
@@ -98,6 +142,69 @@ const Setting = () => {
           >{`v ${Application.nativeApplicationVersion}`}</Text>
           <Text style={styles.footerText}>© 2025 Sonet Adhikary</Text>
         </View>
+        <CustomModal
+          isVisible={logoutPopUp}
+          setVisibility={setLogoutPopUp}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Log Out</Text>
+            <Text style={styles.modalText}>Do you really want to log out?</Text>
+            <Pressable
+              onPress={logoutHandler}
+              style={styles.modalBtn}
+            >
+              <Text style={styles.modalBtnText}>Log Out</Text>
+            </Pressable>
+          </View>
+        </CustomModal>
+        <CustomModal
+          isVisible={deletePopUp}
+          setVisibility={setDeletePopUp}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Delete Account</Text>
+            <Text style={styles.modalText}>
+              This will permanently delete your account and data. Continue
+            </Text>
+            <FormField
+              value={passwordInput}
+              onChangeText={(text: string) => {
+                setPasswordInput(text);
+                if (text === passwordRef.current) {
+                  setEnableBtn(true);
+                } else {
+                  setEnableBtn(false);
+                }
+              }}
+              placeholder='password'
+              containerStyle={styles.passwordInput}
+            />
+            <Pressable
+              onPress={userDelete}
+              style={[
+                styles.modalBtn,
+                !enableDeleteBtn && { backgroundColor: Color.white },
+              ]}
+              disabled={!enableDeleteBtn}
+            >
+              {deleteInProgress ? (
+                <ActivityIndicator
+                  size='small'
+                  color={Color.white}
+                />
+              ) : (
+                <Text
+                  style={[
+                    styles.modalBtnText,
+                    !enableDeleteBtn && { color: Color.red },
+                  ]}
+                >
+                  Delete Account
+                </Text>
+              )}
+            </Pressable>
+          </View>
+        </CustomModal>
       </View>
     </FullScreenView>
   );
@@ -136,5 +243,35 @@ const styles = StyleSheet.create({
     color: Color.gray.oneHundred,
     fontSize: 13,
     fontFamily: Font.pLight,
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    color: Color.red,
+    fontFamily: Font.pSemiBold,
+  },
+  modalBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.red,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Color.red,
+  },
+  modalBtnText: {
+    color: Color.white,
+    fontFamily: Font.pRegular,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
+    textAlign: 'center',
+  },
+  passwordInput: {
+    width: '100%',
   },
 });

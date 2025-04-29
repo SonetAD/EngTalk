@@ -7,6 +7,10 @@ export const Backend = {
   get signinURL() {
     return `${this.baseURL}/user/signin`;
   },
+  get deleteUser() {
+    return `${this.baseURL}/user/delete`;
+  },
+
   get signupURL() {
     return `${this.baseURL}/user/signup`;
   },
