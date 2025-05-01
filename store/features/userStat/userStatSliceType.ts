@@ -1,5 +1,6 @@
 type UserStat = {
   totalGoldCoin: number;
+  totalSilverCoin:number;
   totalTrophy: number;
   level: number;
   talkTime: number;

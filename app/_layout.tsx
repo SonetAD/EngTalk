@@ -62,6 +62,14 @@ const RootLayout = () => {
             }}
           />
           <Stack.Screen
+            name='ConvertSilverCoinScreen'
+            options={{
+              header: InboxHeaderComponent,
+              headerShown: true,
+            }}
+          />
+
+          <Stack.Screen
             name='EditProfile'
             options={{
               header: EditProfileHeaderComponent,

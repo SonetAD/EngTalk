@@ -26,6 +26,7 @@ const createUserStatSlice: StateCreator<
 > = (set, get) => ({
   userStat: {
     totalGoldCoin: 0,
+    totalSilverCoin: 0,
     totalTrophy: 0,
     level: 0,
     talkTime: 0,
@@ -44,6 +45,7 @@ const createUserStatSlice: StateCreator<
       const userData = res.user;
       set((state) => {
         state.userStat.totalGoldCoin = userData.totalGoldCoin;
+        state.userStat.totalSilverCoin = userData.totalSilverCoin;
         state.userStat.totalTrophy = userData.totalTrophy;
         state.userStat.level = userData.level;
         state.userStat.talkTime = userData.talkTime;
@@ -54,6 +56,7 @@ const createUserStatSlice: StateCreator<
     } catch (err: any) {
       set((state) => {
         state.userStat.totalGoldCoin = 0;
+        state.userStat.totalSilverCoin = 0;
         state.userStat.totalTrophy = 0;
         state.userStat.level = 0;
         state.userStat.talkTime = 0;
@@ -69,6 +72,7 @@ const createUserStatSlice: StateCreator<
       const userData = res.user;
       set((state) => {
         state.userStat.totalGoldCoin = userData.totalGoldCoin;
+        state.userStat.totalSilverCoin = userData.totalSilverCoin;
         state.userStat.totalTrophy = userData.totalTrophy;
         state.userStat.level = userData.level;
         state.userStat.talkTime = userData.talkTime;
@@ -79,6 +83,7 @@ const createUserStatSlice: StateCreator<
     } catch (err: any) {
       set((state) => {
         state.userStat.totalGoldCoin = 0;
+        state.userStat.totalSilverCoin = 0;
         state.userStat.totalTrophy = 0;
         state.userStat.level = 0;
         state.userStat.talkTime = 0;

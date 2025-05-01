@@ -8,28 +8,41 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   hasUnreadMessage: boolean;
+  hasSilverCoin: boolean;
 }
-const HomeHeaderComponent = ({ hasUnreadMessage }: Props) => {
+
+const HomeHeaderComponent = ({ hasUnreadMessage, hasSilverCoin }: Props) => {
   const openInbox = () => {
     router.navigate('/Inbox');
   };
 
-  const scale = useSharedValue(0);
+  const scaleMessage = useSharedValue(0);
+  const scaleSilver = useSharedValue(0);
 
   useEffect(() => {
-    if (hasUnreadMessage) {
-      scale.value = withSpring(1, { damping: 5, stiffness: 100 });
-    } else {
-      scale.value = 0;
-    }
+    scaleMessage.value = hasUnreadMessage
+      ? withSpring(1, { damping: 5, stiffness: 100 })
+      : 0;
   }, [hasUnreadMessage]);
 
-  const animatedDotStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: scale.value,
+  useEffect(() => {
+    scaleSilver.value = hasSilverCoin
+      ? withSpring(1, { damping: 5, stiffness: 100 })
+      : 0;
+  }, [hasSilverCoin]);
+
+  const animatedDotMessageStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleMessage.value }],
+    opacity: scaleMessage.value,
+  }));
+
+  const animatedDotSilverStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleSilver.value }],
+    opacity: scaleSilver.value,
   }));
 
   return (
@@ -39,18 +52,34 @@ const HomeHeaderComponent = ({ hasUnreadMessage }: Props) => {
       </Text>
 
       <View style={styles.iconGroup}>
+        {/* Search Icon */}
         <Pressable onPress={() => router.navigate('/SearchUser')}>
           <CustomBrightIcon name='search-outline' />
         </Pressable>
+
+        {/* Inbox Icon */}
         <Pressable
           onPress={openInbox}
           style={styles.iconWrapper}
         >
           <CustomBrightIcon name='chatbubble-ellipses-outline' />
-
-          {/* Animated Red Dot */}
           {hasUnreadMessage && (
-            <Animated.View style={[styles.redDot, animatedDotStyle]} />
+            <Animated.View style={[styles.redDot, animatedDotMessageStyle]} />
+          )}
+        </Pressable>
+
+        {/* Silver Coin Icon */}
+        <Pressable
+          onPress={() => router.navigate('/ConvertSilverCoinScreen')}
+          style={styles.iconWrapper}
+        >
+          <Ionicons
+            name='diamond-outline'
+            size={24}
+            color={Color.silver}
+          />
+          {hasSilverCoin && (
+            <Animated.View style={[styles.redDot, animatedDotSilverStyle]} />
           )}
         </Pressable>
       </View>

@@ -14,6 +14,7 @@ const Color = {
     oneHundred: '#CDCDE0',
   },
   white: '#ffffff',
+  silver: '#C0C0C0',
   red: '#E53935',
 };
 

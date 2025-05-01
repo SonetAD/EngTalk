@@ -52,6 +52,7 @@ const TabLayout = () => {
     getUserStat,
     setInbox,
     hasUnreadMessage,
+    totalSilverCoin,
   } = useCentralStore(
     useShallow((state) => ({
       userName: state.user.userInfo.userName,
@@ -63,6 +64,7 @@ const TabLayout = () => {
       getUserStat: state.getUserStat,
       setInbox: state.setInbox,
       hasUnreadMessage: state.hasUnreadMessage,
+      totalSilverCoin: state.userStat.totalSilverCoin,
     }))
   );
 
@@ -120,7 +122,7 @@ const TabLayout = () => {
         options={{
           title: 'Home',
           header: () => (
-            <HomeHeaderComponent hasUnreadMessage={hasUnreadMessage} />
+            <HomeHeaderComponent hasUnreadMessage={hasUnreadMessage} hasSilverCoin={totalSilverCoin > 0} />
           ),
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon

@@ -31,6 +31,10 @@ export const Backend = {
     return `${this.baseURL}/stat/premiumcall`;
   },
 
+  get convertSilverCoin() {
+    return `${this.baseURL}/stat/convertsilvercoin`;
+  },
+
   get userPost() {
     return `${this.baseURL}/post/userpost`;
   },
