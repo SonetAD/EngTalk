@@ -122,7 +122,10 @@ const TabLayout = () => {
         options={{
           title: 'Home',
           header: () => (
-            <HomeHeaderComponent hasUnreadMessage={hasUnreadMessage} hasSilverCoin={totalSilverCoin > 0} />
+            <HomeHeaderComponent
+              hasUnreadMessage={hasUnreadMessage}
+              hasSilverCoin={totalSilverCoin > 5}
+            />
           ),
           tabBarIcon: ({ focused, color, size }) => (
             <TabIcon
@@ -202,7 +205,7 @@ const TabLayout = () => {
         name='(follow)'
         options={{
           href: null,
-          header: FollowHeaderComponent 
+          header: FollowHeaderComponent,
         }}
       />
     </Tabs>

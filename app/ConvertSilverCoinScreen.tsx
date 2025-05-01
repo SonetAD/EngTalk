@@ -1,25 +1,48 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import FullScreenView from '@/components/FullScreenView';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { Color, Font } from '@/constants/constants';
+import convertSilverCoin from '@/libs/api/convertSilverCoin';
+import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
 
 const ConvertSilverCoinScreen = () => {
-  const { totalSilverCoin } = useCentralStore(
+  const { token, totalSilverCoin } = useCentralStore(
     useShallow((state) => ({
+      token: state.user.token,
       totalSilverCoin: state.userStat.totalSilverCoin,
     }))
   );
+  const [converting, setConverting] = useState(false);
 
   const goldCoin = Math.floor(totalSilverCoin / 5);
   const isConvertable = totalSilverCoin >= 5;
+  const convertCoin = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setConverting(true);
+    await convertSilverCoin({ token });
+    setConverting(false);
+    router.replace('/Home');
+  };
 
   return (
     <FullScreenView>
       <View style={styles.centerContent}>
-        <Text style={styles.instructionText}>Talk and earn coin</Text>
+        <Text style={styles.instructionText}>Turn silver into gold</Text>
+        {!isConvertable && (
+          <Text style={[styles.instructionText, styles.warning]}>
+            Not enouth coins!
+          </Text>
+        )}
 
         <View style={styles.card}>
           <View style={styles.coinRow}>
@@ -52,15 +75,23 @@ const ConvertSilverCoinScreen = () => {
         <Pressable
           style={[styles.button, !isConvertable && styles.buttonDisabled]}
           disabled={!isConvertable}
+          onPress={convertCoin}
         >
-          <Text
-            style={[
-              styles.buttonText,
-              !isConvertable && styles.buttonTextDisable,
-            ]}
-          >
-            Convert
-          </Text>
+          {converting ? (
+            <ActivityIndicator
+              color={Color.primary}
+              size='small'
+            />
+          ) : (
+            <Text
+              style={[
+                styles.buttonText,
+                !isConvertable && styles.buttonTextDisable,
+              ]}
+            >
+              Convert
+            </Text>
+          )}
         </Pressable>
       </View>
     </FullScreenView>
@@ -83,6 +114,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+
   instructionText: {
     fontSize: 16,
     color: Color.white,
@@ -90,6 +122,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     opacity: 0.7,
     textAlign: 'center',
+  },
+  warning: {
+    color: Color.red,
+    fontFamily: Font.pSemiBold,
   },
   card: {
     width: '100%',

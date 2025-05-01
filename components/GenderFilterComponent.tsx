@@ -8,6 +8,7 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import * as Haptics from 'expo-haptics';
 import CustomModal from './CustomModal';
+import { router } from 'expo-router';
 
 const GenderFilterComponent = () => {
   const { filteredGender, setCallInfo, totalGoldCoin } = useCentralStore(
@@ -30,6 +31,11 @@ const GenderFilterComponent = () => {
         setShowAlert(true);
       }
     }
+  };
+
+  const handlePress = () => {
+    setShowAlert(false);
+    router.navigate('/ConvertSilverCoinScreen');
   };
 
   return (
@@ -118,10 +124,10 @@ const GenderFilterComponent = () => {
           <Text style={styles.modalTitle}>Not Yet</Text>
           <Text style={styles.modalText}>Talk more, unlock filter!</Text>
           <Pressable
-            onPress={() => setShowAlert(false)}
+            onPress={handlePress}
             style={styles.closeBtn}
           >
-            <Text>Close</Text>
+            <Text>Redeem</Text>
           </Pressable>
         </View>
       </CustomModal>
@@ -165,7 +171,7 @@ const styles = StyleSheet.create({
   closeBtn: {
     paddingHorizontal: 20,
     paddingVertical: 7,
-    backgroundColor: Color.gray.oneHundred,
+    backgroundColor: 'gold',
     fontFamily: Font.pBold,
     borderRadius: 10,
   },

@@ -11,6 +11,7 @@ import EditProfileHeaderComponent from '@/components/EditProfileHeaderComponent'
 import FullScreenAvatarHeaderComponent from '@/components/FullScreenAvatarHeaderComponent';
 import SearchUserHeaderComponent from '@/components/SearchUserHeaderComponent';
 import SettingHeaderComponent from '@/components/SettingHeaderComponent';
+import ConvertHeader from '@/components/ConvertSilverHeader';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -64,7 +65,7 @@ const RootLayout = () => {
           <Stack.Screen
             name='ConvertSilverCoinScreen'
             options={{
-              header: InboxHeaderComponent,
+              header: ConvertHeader,
               headerShown: true,
             }}
           />
