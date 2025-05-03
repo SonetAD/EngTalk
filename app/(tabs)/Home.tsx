@@ -17,7 +17,7 @@ import HomePageStat from '@/components/HomePageStat';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import GenderFilterComponent from '@/components/GenderFilterComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomModal from '@/components/CustomModal';
 import * as Location from 'expo-location';
 
@@ -43,11 +43,16 @@ const Home = () => {
   );
 
   const [showAllowLocation, setShowAllowLocation] = useState(false);
+  const [showError, setShowError] = useState(false);
 
-  const startCall = async() => {
+  useEffect(() => {
+    setShowError(isError);
+  }, [isError]);
+
+  const startCall = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
 
-    if (status !=='granted') {
+    if (status !== 'granted') {
       setShowAllowLocation(true);
     } else {
       router.push('/Call');
@@ -59,6 +64,12 @@ const Home = () => {
     Linking.openSettings().catch(() => console.log('Unable to open settings'));
   };
 
+  const retry = () => {
+    setShowError(false);
+    router.replace('/');
+  };
+
+  console.log(isError);
   return (
     <FullScreenView>
       <ScrollView contentContainerStyle={styles.container}>
@@ -75,7 +86,7 @@ const Home = () => {
           text='Find Partner'
           containerStyle={styles.btn}
           handlePress={startCall}
-          isLoading={isLoading || isError}
+          isLoading={isLoading}
         />
       </ScrollView>
       <View>
@@ -93,6 +104,21 @@ const Home = () => {
               style={styles.enableSettingBtn}
             >
               <Text>Enable</Text>
+            </Pressable>
+          </View>
+        </CustomModal>
+        <CustomModal
+          isVisible={showError}
+          setVisibility={setShowError}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Error!</Text>
+            <Text style={styles.modalText}>{error}</Text>
+            <Pressable
+              onPress={retry}
+              style={styles.enableSettingBtn}
+            >
+              <Text>Retry</Text>
             </Pressable>
           </View>
         </CustomModal>
