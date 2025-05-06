@@ -129,5 +129,6 @@ const styles = StyleSheet.create({
     height: DeviceHeight - 50,
     width: DeviceWidth,
     flex: 1,
+    marginHorizontal: 100,
   },
 });

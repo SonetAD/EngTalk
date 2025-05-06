@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Font from '@/constants/font';
 import Color from '@/constants/color';
 import { AnimatedRollingNumber } from 'react-native-animated-rolling-numbers';
+import { DeviceWidth } from '@/constants/dimensions';
 
 interface Props {
   goldCoin?: number;
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '90%',
+    width:  DeviceWidth*0.9,
     marginTop: 20,
     backgroundColor: Color.black.twoHundred,
     padding: 15,

@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import deleteVoiceBite from '@/libs/api/deleteVoiceBite';
 import CustomModal from './CustomModal';
 import { NotificationSocket } from '@/libs/Socket';
+import trimLongString from '@/libs/trimLongString';
 
 interface Props {
   ownerId: string;
@@ -181,7 +182,7 @@ const VoiceBitesCard = ({
               )}
             </View>
             <Text style={styles.username}>
-              {name.length > 15 ? name.substring(0, 15) + '...' : name}
+              {trimLongString({ text: name })}
             </Text>
           </LinearGradient>
         ) : (

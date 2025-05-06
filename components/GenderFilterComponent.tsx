@@ -9,6 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import * as Haptics from 'expo-haptics';
 import CustomModal from './CustomModal';
 import { router } from 'expo-router';
+import { DeviceWidth } from '@/constants/dimensions';
 
 const GenderFilterComponent = () => {
   const { filteredGender, setCallInfo, totalGoldCoin } = useCentralStore(
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '90%',
+    width: DeviceWidth*0.9,
     marginTop: 20,
     backgroundColor: Color.black.twoHundred,
     padding: 15,

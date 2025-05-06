@@ -5,6 +5,7 @@ import { Font, Color } from '@/constants/constants';
 import { router } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import trimLongString from '@/libs/trimLongString';
 
 interface Props {
   otherUserId: string;
@@ -37,7 +38,7 @@ const SearchUserResultCard = ({ otherUserId, name, avatar }: Props) => {
           avatar={avatar}
           avatarStyle={styles.avatar}
         />
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>{trimLongString({ text: name })}</Text>
       </View>
     </Pressable>
   );

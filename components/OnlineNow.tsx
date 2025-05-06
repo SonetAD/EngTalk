@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.black.twoHundred,
     elevation: 5,
     borderRadius: 8,
-    width: DeviceWidth * 0.8,
+    width: DeviceWidth * 0.9,
   },
   digits: {
     fontSize: 30,

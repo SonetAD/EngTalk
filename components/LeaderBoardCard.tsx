@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Color, Font } from '@/constants/constants';
+import { Color, DeviceWidth, Font } from '@/constants/constants';
 import CustomAvatar from './CustomAvatar';
+import trimLongString from '@/libs/trimLongString';
 
 interface Props {
   rank: number;
@@ -38,7 +39,7 @@ const LeaderboardCard = ({
           />
         </View>
 
-        <Text style={styles.username}>{name}</Text>
+        <Text style={styles.username}>{trimLongString({text: name})}</Text>
 
         <View style={styles.trophyContainer}>
           <Text style={styles.trophyCount}>{totalTrophy}</Text>
@@ -57,6 +58,9 @@ export default LeaderboardCard;
 
 const styles = StyleSheet.create({
   container: {
+    width: DeviceWidth * 0.9,
+    flex: 1,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(22, 22, 34, 0.9)',
