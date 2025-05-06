@@ -96,6 +96,7 @@ const Explore = () => {
   return (
     <FullScreenView>
       <FlashList
+        contentContainerStyle={styles.listContent}
         data={allBites.posts}
         numColumns={2}
         renderItem={renderItem}
@@ -125,6 +126,9 @@ const Explore = () => {
 export default Explore;
 
 const styles = StyleSheet.create({
+  listContent: {
+    paddingHorizontal: 10,
+  },
   container: {
     height: DeviceHeight - 50,
     width: DeviceWidth,

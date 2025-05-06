@@ -142,24 +142,18 @@ const VoiceBitesCard = ({
             disabled={isDeleting || isBuffering || isPlaying}
             style={styles.deleteIconWrapper}
           >
-            <BlurView
-              intensity={40}
-              tint='dark'
-              style={StyleSheet.absoluteFill}
-            >
-              {!isDeleting ? (
-                <Ionicons
-                  name='trash-outline'
-                  size={16}
-                  color={Color.white}
-                />
-              ) : (
-                <ActivityIndicator
-                  size='small'
-                  color={Color.red}
-                />
-              )}
-            </BlurView>
+            {!isDeleting ? (
+              <Ionicons
+                name='trash-outline'
+                size={16}
+                color={Color.white}
+              />
+            ) : (
+              <ActivityIndicator
+                size='small'
+                color={Color.red}
+              />
+            )}
           </Pressable>
         )}
 
@@ -263,9 +257,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-    backgroundColor: 'rgba(255,255,255,0.1)',
     zIndex: 10,
   },
   cardBackground: {

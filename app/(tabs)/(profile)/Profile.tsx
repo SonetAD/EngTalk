@@ -100,6 +100,7 @@ const Profile = () => {
   return (
     <FullScreenView>
       <FlashList
+      contentContainerStyle={{paddingHorizontal: 10}}
         ListHeaderComponent={headerComponent}
         data={userBites.posts}
         numColumns={2}
