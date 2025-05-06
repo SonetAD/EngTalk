@@ -69,7 +69,6 @@ const Home = () => {
     router.replace('/');
   };
 
-  console.log(isError);
   return (
     <FullScreenView>
       <ScrollView contentContainerStyle={styles.container}>

@@ -76,18 +76,18 @@ const ProfileInfo = () => {
     router.push({
       pathname: '/followers',
       params: {
-        userId
+        userId,
       },
-    })
+    });
   };
 
   const openFollowing = () => {
     router.push({
       pathname: '/following',
       params: {
-        userId
+        userId,
       },
-    })
+    });
   };
 
   return (
@@ -177,35 +177,30 @@ const styles = StyleSheet.create({
     color: Color.white,
     fontFamily: Font.pBold,
     fontSize: 20,
-    marginHorizontal: 10,
   },
   location: {
     color: Color.gray.oneHundred,
     fontFamily: Font.pRegular,
-    marginHorizontal: 10,
     fontSize: 12,
   },
   gender: {
     color: '#FFC0CB',
     fontFamily: Font.pSemiBold,
-    marginHorizontal: 10,
     fontSize: 12,
   },
   voiceBites: {
     color: Color.white,
     fontFamily: Font.pBold,
-    marginHorizontal: 10,
     marginVertical: 10,
     fontSize: 12,
   },
   btnGroup: {
     flexDirection: 'row',
-    marginHorizontal: 5,
     marginVertical: 10,
-    gap: 5,
+    gap: '1%',
   },
   btn: {
-    width: '45%',
+    width: '49%',
     borderWidth: 1,
     borderColor: Color.secondary.default,
   },
