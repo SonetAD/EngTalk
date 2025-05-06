@@ -113,8 +113,12 @@ const TabLayout = () => {
           backgroundColor: Color.primary,
           borderTopWidth: 0.3,
           borderTopColor: Color.black.twoHundred,
-          height: 60,
         },
+        tabBarIconStyle:{
+          flex:1,
+          alignItems:'center',
+          justifyContent:'center'
+        }
       }}
     >
       <Tabs.Screen
