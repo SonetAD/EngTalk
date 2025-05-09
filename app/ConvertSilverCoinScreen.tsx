@@ -48,7 +48,7 @@ const ConvertSilverCoinScreen = () => {
           <View style={styles.coinRow}>
             <View style={styles.coin}>
               <Ionicons
-                name='diamond-outline'
+                name='medal-outline'
                 size={32}
                 color={Color.silver}
               />

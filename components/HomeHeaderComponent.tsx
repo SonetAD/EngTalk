@@ -74,7 +74,7 @@ const HomeHeaderComponent = ({ hasUnreadMessage, hasSilverCoin }: Props) => {
           style={styles.iconWrapper}
         >
           <Ionicons
-            name='diamond-outline'
+            name='medal-outline'
             size={24}
             color={Color.silver}
           />
