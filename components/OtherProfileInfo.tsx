@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import CustomAvatar from './CustomAvatar';
 import capitalizeFirstLetter from './capitalizeFirstLetter';
+import { Ionicons } from '@expo/vector-icons';
+import NameComponent from './NameComponent';
 
 const OtherProfileInfo = () => {
   const {
@@ -23,6 +25,7 @@ const OtherProfileInfo = () => {
     avatar,
     followers,
     following,
+    isBlueTicked,
     totalTrophy,
     talkTime,
     level,
@@ -38,6 +41,7 @@ const OtherProfileInfo = () => {
       avatar: state.otherUser.avatar,
       followers: state.otherUser.followers,
       following: state.otherUser.following,
+      isBlueTicked: state.otherUser.isBlueTicked,
       totalTrophy: state.otherUser.totalTrophy,
       talkTime: state.otherUser.talkTime,
       level: state.otherUser.level,
@@ -146,7 +150,11 @@ const OtherProfileInfo = () => {
           <Text style={styles.statText}>following</Text>
         </Pressable>
       </View>
-      <Text style={styles.name}>{name}</Text>
+      <NameComponent
+        name={name}
+        isBlueTicked={isBlueTicked}
+      />
+
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={location ? styles.location : { display: 'none' }}>
         {location}
@@ -199,11 +207,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Font.pRegular,
     fontSize: 13,
-  },
-  name: {
-    color: Color.white,
-    fontFamily: Font.pBold,
-    fontSize: 20,
   },
   location: {
     color: Color.gray.oneHundred,

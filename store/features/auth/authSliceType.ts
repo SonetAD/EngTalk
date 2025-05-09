@@ -13,6 +13,7 @@ type User = {
     },
     followers: string[];
     following: string[];
+    isBlueTicked:boolean
   };
 };
 

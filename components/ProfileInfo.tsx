@@ -12,6 +12,8 @@ import CustomButton from './CustomButton';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import RecordVoiceBites from './RecordVoiceBites';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import NameComponent from './NameComponent';
 
 const ProfileInfo = () => {
   const {
@@ -27,6 +29,7 @@ const ProfileInfo = () => {
     totalTrophy,
     talkTime,
     level,
+    isBlueTicked,
   } = useCentralStore(
     useShallow((state) => ({
       name: state.user.userInfo.name,
@@ -41,6 +44,7 @@ const ProfileInfo = () => {
       talkTime: state.userStat.talkTime,
       level: state.userStat.level,
       totalUserBites: state.userBites.totalPosts,
+      isBlueTicked: state.user.userInfo.isBlueTicked,
     }))
   );
 
@@ -89,7 +93,7 @@ const ProfileInfo = () => {
       },
     });
   };
-
+  console.log(isBlueTicked);
   return (
     <View>
       <View style={styles.info}>
@@ -119,7 +123,7 @@ const ProfileInfo = () => {
           <Text style={styles.statText}>following</Text>
         </Pressable>
       </View>
-      <Text style={styles.name}>{name}</Text>
+      <NameComponent name={name} isBlueTicked={isBlueTicked} />
       <Text style={styles.gender}>{capitalizeFirstLetter(gender)}</Text>
       <Text style={location ? styles.location : { display: 'none' }}>
         {location}
@@ -172,11 +176,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Font.pRegular,
     fontSize: 13,
-  },
-  name: {
-    color: Color.white,
-    fontFamily: Font.pBold,
-    fontSize: 20,
   },
   location: {
     color: Color.gray.oneHundred,

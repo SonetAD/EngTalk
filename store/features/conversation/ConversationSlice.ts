@@ -18,6 +18,7 @@ const defaultUser = {
     stockAvatar: '',
   },
   name: '',
+  isBlueTicked:false
 };
 
 const defaultMessage = {

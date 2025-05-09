@@ -6,18 +6,21 @@ import { useShallow } from 'zustand/react/shallow';
 import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
 import CustomBrightIcon from './CustomBrightIcon';
+import NameComponent from './NameComponent';
 
 const ChatHeaderComponent = () => {
   const {
     otherChatParticipantUserId,
     otherChatParticipantName,
     otherChatParticipantAvatar,
+    otherChatParticipantIsBlueTicked,
     setOtherUser,
   } = useCentralStore(
     useShallow((state) => ({
       otherChatParticipantName: state.otherChatParticipant.name,
       otherChatParticipantUserId: state.otherChatParticipant.userId,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
+      otherChatParticipantIsBlueTicked: state.otherChatParticipant.isBlueTicked,
       setOtherUser: state.setOtherUser,
     }))
   );
@@ -26,6 +29,7 @@ const ChatHeaderComponent = () => {
     setOtherUser({ userId: otherChatParticipantUserId, goBackRoute: '/Chat' });
     router.push('/OtherProfile');
   };
+
   return (
     <Pressable onPress={viewProfile}>
       <View style={styles.container}>
@@ -37,7 +41,12 @@ const ChatHeaderComponent = () => {
           avatarStyle={styles.avatar}
         />
 
-        <Text style={styles.name}>{otherChatParticipantName}</Text>
+        <NameComponent
+          name={otherChatParticipantName}
+          isBlueTicked={otherChatParticipantIsBlueTicked}
+          fontStyle={styles.name}
+          iconSize={18}
+        />
       </View>
     </Pressable>
   );
@@ -62,7 +71,6 @@ const styles = StyleSheet.create({
   },
 
   name: {
-    color: Color.white,
     fontSize: 17,
     fontFamily: Font.pSemiBold,
   },

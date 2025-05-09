@@ -37,6 +37,7 @@ const createOtherUserInfoSlice: StateCreator<
     },
     followers: [],
     following: [],
+    isBlueTicked: false,
     level: 0,
     talkTime: 0,
     totalTrophy: 0,

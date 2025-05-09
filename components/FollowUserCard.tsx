@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import getUserInfo from '@/libs/api/userInfo';
 import { Color, Font } from '@/constants/constants';
@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import CustomAvatar from './CustomAvatar';
+import NameComponent from './NameComponent';
 
 interface Props {
   userId: string;
@@ -26,8 +27,8 @@ const FollowUserCard = ({ userId }: Props) => {
       if (userId) {
         const res = await getUserInfo(userId);
         if (res) {
-          const { name, _id, avatar } = res.user;
-          setUserInfo({ name, avatar });
+          const { name, avatar, isBlueTicked } = res.user;
+          setUserInfo({ name, avatar, isBlueTicked });
         }
       }
     })();
@@ -45,15 +46,20 @@ const FollowUserCard = ({ userId }: Props) => {
   if (!userInfo) return null;
 
   return (
-    <Pressable
-      style={styles.card}
-      onPress={viewProfile}
-    >
-      <CustomAvatar
-        avatar={userInfo.avatar}
-        avatarStyle={styles.avatar}
-      />
-      <Text style={styles.name}>{userInfo.name}</Text>
+    <Pressable onPress={viewProfile}>
+      <View style={styles.container}>
+        <CustomAvatar
+          avatar={userInfo.avatar}
+          avatarStyle={styles.avatar}
+        />
+        <View style={styles.nameWrapper}>
+          <NameComponent
+            name={userInfo.name}
+            isBlueTicked={userInfo.isBlueTicked}
+            fontStyle={styles.name}
+          />
+        </View>
+      </View>
     </Pressable>
   );
 };
@@ -61,30 +67,23 @@ const FollowUserCard = ({ userId }: Props) => {
 export default FollowUserCard;
 
 const styles = StyleSheet.create({
-  card: {
+  container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    marginHorizontal: 12,
-    marginVertical: 8,
-    borderRadius: 12,
-    backgroundColor: '#1E1E1E',
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    gap: 10,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 999,
-    marginRight: 14,
+    width: 50,
+    height: 50,
+  },
+  nameWrapper: {
+    justifyContent: 'center',
   },
   name: {
     fontSize: 16,
-    fontFamily: Font.pMedium,
+    fontFamily: Font.pRegular,
     color: Color.white,
   },
 });

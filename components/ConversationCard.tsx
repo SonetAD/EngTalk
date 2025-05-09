@@ -5,6 +5,8 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import trimLongString from '@/libs/trimLongString';
 
 type User = {
   _id: string;
@@ -13,6 +15,7 @@ type User = {
     default: boolean;
     src: string;
   };
+  isBlueTicked: boolean;
 };
 type Conversation = {
   participants: User[];
@@ -66,14 +69,23 @@ const ConversationCard = ({ conversation }: Props) => {
         />
 
         <View style={styles.textContainer}>
-          <Text
-            style={[
-              styles.userName,
-              !conversation.readStatus && styles.unreadMessage,
-            ]}
-          >
-            {otherUser.name}
-          </Text>
+          <View style={styles.nameRow}>
+            <Text
+              style={[
+                styles.name,
+                !conversation.readStatus && styles.unreadMessage,
+              ]}
+            >
+              {trimLongString({ text: otherUser.name })}
+            </Text>
+            {otherUser.isBlueTicked && (
+              <Ionicons
+                name='checkmark-circle'
+                size={16}
+                color={Color.blueTick}
+              />
+            )}
+          </View>
 
           <Text
             style={[
@@ -117,7 +129,13 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
   },
-  userName: {
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+
+  name: {
     fontSize: 16,
     fontFamily: Font.pRegular,
     color: Color.gray.oneHundred,

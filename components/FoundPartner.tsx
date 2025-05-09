@@ -11,10 +11,11 @@ import CustomButton from '@/components/CustomButton';
 import CustomAvatar from './CustomAvatar';
 import { useShallow } from 'zustand/react/shallow';
 import useCentralStore from '@/store/store/Store';
-import { router } from 'expo-router';
+import NameComponent from './NameComponent';
 
 interface Props {
   name: string;
+  isBlueTicked: boolean;
   avatar: { src: string; stockAvatar: string };
   location: string;
   level: number;
@@ -26,6 +27,7 @@ interface Props {
 
 const FoundPartner = ({
   name,
+  isBlueTicked,
   avatar,
   location,
   level,
@@ -49,7 +51,12 @@ const FoundPartner = ({
         avatarStyle={styles.avatar}
       />
 
-      <Text style={styles.name}>{name}</Text>
+      <NameComponent
+        name={name}
+        isBlueTicked={isBlueTicked}
+        fontStyle={styles.name}
+      />
+
       <Text style={styles.subText}>{location}</Text>
       <Text style={styles.subText}>{`Level ${level}`}</Text>
 
@@ -103,6 +110,7 @@ const styles = StyleSheet.create({
   avatar: {
     borderRadius: 10,
   },
+
   name: {
     color: Color.gray.oneHundred,
     fontFamily: Font.pBold,

@@ -16,6 +16,7 @@ const Color = {
   white: '#ffffff',
   silver: '#C0C0C0',
   red: '#E53935',
+  blueTick:'#1DA1F2'
 };
 
 export default Color;

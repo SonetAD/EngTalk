@@ -11,12 +11,14 @@ import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
+import NameComponent from './NameComponent';
 
 interface Props {
   userId: string;
   name: string;
+  isBlueTicked: boolean;
   avatar: { src: string; stockAvatar: string };
-  location:string;
+  location: string;
   level: number;
   onEnd: () => void;
   remoteStream: MediaStream;
@@ -28,6 +30,7 @@ interface Props {
 const StartConversation = ({
   userId,
   name,
+  isBlueTicked,
   avatar,
   location,
   level,
@@ -53,7 +56,12 @@ const StartConversation = ({
         avatarStyle={styles.avatar}
       />
 
-      <Text style={styles.name}>{name}</Text>
+      <NameComponent
+        name={name}
+        isBlueTicked={isBlueTicked}
+        fontStyle={styles.name}
+      />
+
       <Text style={styles.subText}>{location}</Text>
       <Text style={styles.subText}>{`Level ${level}`}</Text>
 

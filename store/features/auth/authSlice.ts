@@ -41,6 +41,7 @@ const createAuthSlice: StateCreator<
       },
       followers: [],
       following: [],
+      isBlueTicked: false,
     },
   },
   authStatus: {
@@ -52,14 +53,13 @@ const createAuthSlice: StateCreator<
     try {
       let res = await userLogin({ userName, password });
       const location = await getUserLocation();
-      if ( location && location != res.user.location) {
-        console.log('new location')
+      if (location && location != res.user.location) {
         await updateProfile({
           token: res.token,
           userId: res.user.id,
           location: location,
         });
-         res = await userLogin({ userName, password });
+        res = await userLogin({ userName, password });
       }
       set((state) => {
         state.user.token = res.token;
@@ -73,6 +73,7 @@ const createAuthSlice: StateCreator<
           avatar: res.user.avatar,
           followers: res.user.followers,
           following: res.user.following,
+          isBlueTicked: res.user.isBlueTicked,
         };
         state.authStatus.isLoading = false;
         state.authStatus.isError = false;
@@ -95,6 +96,7 @@ const createAuthSlice: StateCreator<
           },
           followers: [],
           following: [],
+          isBlueTicked: false,
         };
         state.authStatus.isLoading = false;
         state.authStatus.isError = true;

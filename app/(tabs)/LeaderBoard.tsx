@@ -86,6 +86,7 @@ const LeaderBoard = () => {
             avatar={item?.avatar}
             rank={index + 1}
             name={item?.name}
+            isBlueTicked={item?.isBlueTicked}
             userId={item?._id}
             gender={item?.gender}
             totalTrophy={item?.totalTrophy}

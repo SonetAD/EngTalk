@@ -88,6 +88,7 @@ const Explore = () => {
         name={item?.user?.name}
         avatar={item?.user?.avatar}
         file={item?.file}
+        isBlueTicked={item?.user?.isBlueTicked}
       />
     ),
     []

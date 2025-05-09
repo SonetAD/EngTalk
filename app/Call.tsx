@@ -305,6 +305,7 @@ const Call = () => {
       {matchedUserData?.user?._id && !callAccepted && (
         <FoundPartner
           name={matchedUserData.user.name}
+          isBlueTicked={matchedUserData.user.isBlueTicked}
           level={matchedUserData.user.level}
           location={matchedUserData.user.location}
           avatar={matchedUserData.user.avatar}
@@ -317,6 +318,7 @@ const Call = () => {
       {matchedUserData && remoteStream && callAccepted && (
         <StartConversation
           name={matchedUserData.user.name}
+          isBlueTicked={matchedUserData.user.isBlueTicked}
           level={matchedUserData.user.level}
           location={matchedUserData.user.location}
           userId={matchedUserData.user._id}

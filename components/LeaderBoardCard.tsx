@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Color, DeviceWidth, Font } from '@/constants/constants';
 import CustomAvatar from './CustomAvatar';
-import trimLongString from '@/libs/trimLongString';
+import NameComponent from './NameComponent';
 
 interface Props {
   rank: number;
@@ -14,6 +14,7 @@ interface Props {
   gender: string;
   userId: string;
   name: string;
+  isBlueTicked: boolean;
   totalTrophy: number;
   viewProfile: (otherUserId: string) => void;
 }
@@ -24,6 +25,7 @@ const LeaderboardCard = ({
   avatar,
   gender,
   name,
+  isBlueTicked,
   totalTrophy,
   viewProfile,
 }: Props) => {
@@ -31,23 +33,22 @@ const LeaderboardCard = ({
     <Pressable onPress={() => viewProfile(userId)}>
       <View style={styles.container}>
         <Text style={styles.rank}>{rank}</Text>
-
-        <View style={styles.avatarWrapper}>
-          <CustomAvatar
-            avatar={avatar}
-            avatarStyle={styles.avatar}
-          />
-        </View>
-
-        <Text style={styles.username}>{trimLongString({text: name})}</Text>
-
-        <View style={styles.trophyContainer}>
-          <Text style={styles.trophyCount}>{totalTrophy}</Text>
-          <Ionicons
-            name='trophy'
-            size={20}
-            color={Color.secondary.default}
-          />
+        <View style={styles.contentRow}>
+          <View style={styles.leftRow}>
+            <View style={styles.avatarWrapper}>
+              <CustomAvatar avatar={avatar} avatarStyle={styles.avatar} />
+            </View>
+            <NameComponent
+              name={name}
+              isBlueTicked={isBlueTicked}
+              fontStyle={styles.name}
+              nameLength={10}
+            />
+          </View>
+          <View style={styles.trophyContainer}>
+            <Text style={styles.trophyCount}>{totalTrophy}</Text>
+            <Ionicons name="trophy" size={20} color={Color.secondary.default} />
+          </View>
         </View>
       </View>
     </Pressable>
@@ -59,7 +60,6 @@ export default LeaderboardCard;
 const styles = StyleSheet.create({
   container: {
     width: DeviceWidth * 0.9,
-    flex: 1,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -81,6 +81,17 @@ const styles = StyleSheet.create({
     color: Color.white,
     marginRight: 12,
   },
+  contentRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  leftRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   avatarWrapper: {
     width: 54,
     height: 54,
@@ -100,12 +111,10 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
-  username: {
-    flex: 1,
+  name: {
     fontSize: 16,
     fontFamily: Font.pSemiBold,
     color: Color.white,
-    marginLeft: 10,
   },
   trophyContainer: {
     flexDirection: 'row',

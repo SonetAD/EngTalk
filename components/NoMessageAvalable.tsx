@@ -6,30 +6,39 @@ import CustomButton from './CustomButton';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { router } from 'expo-router';
+import NameComponent from './NameComponent';
 
 const NoMessageAvalable = () => {
   const {
     otherChatParticipantUserId,
     otherChatParticipantName,
     otherChatParticipantAvatar,
+    otherChatParticipantIsBlueTicked,
+
     setOtherUser,
   } = useCentralStore(
     useShallow((state) => ({
       otherChatParticipantUserId: state.otherChatParticipant.userId,
       otherChatParticipantName: state.otherChatParticipant.name,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
+      otherChatParticipantIsBlueTicked: state.otherChatParticipant.isBlueTicked,
       setOtherUser: state.setOtherUser,
     }))
   );
 
   const viewProfile = () => {
-    setOtherUser({userId:otherChatParticipantUserId, goBackRoute: '/Chat'});
+    setOtherUser({ userId: otherChatParticipantUserId, goBackRoute: '/Chat' });
     router.navigate('/OtherProfile');
   };
   return (
     <View style={styles.container}>
       <CustomAvatar avatar={otherChatParticipantAvatar} />
-      <Text style={styles.name}>{otherChatParticipantName}</Text>
+      <NameComponent
+        name={otherChatParticipantName}
+        isBlueTicked={otherChatParticipantIsBlueTicked}
+        fontStyle={styles.name}
+      />
+
       <CustomButton
         text='View Profile'
         handlePress={viewProfile}
@@ -51,10 +60,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
+
   name: {
-    fontSize: 20,
     fontFamily: Font.pSemiBold,
-    color: Color.white,
   },
   btn: {
     backgroundColor: '',

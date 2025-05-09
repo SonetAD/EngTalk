@@ -68,6 +68,7 @@ const SearchUser = () => {
               <SearchUserResultCard
                 otherUserId={item?._id}
                 name={item?.name}
+                isBlueTicked={item?.isBlueTicked}
                 avatar={item?.avatar}
               />
             )}

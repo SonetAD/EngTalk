@@ -27,6 +27,7 @@ interface Props {
   avatar: { stockAvatar: string; src: string };
   name: string;
   file: string;
+  isBlueTicked: boolean;
 }
 
 const gradients = [
@@ -41,12 +42,12 @@ const VoiceBitesCard = ({
   voiceBiteId,
   name,
   file,
+  isBlueTicked,
 }: Props) => {
-  const { userId, token, getVoiceBite } = useCentralStore(
+  const { userId, token } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       token: state.user.token,
-      getVoiceBite: state.getVoiceBite,
     }))
   );
 
@@ -127,6 +128,32 @@ const VoiceBitesCard = ({
     }
   };
 
+  const AvatarWithTick = () => (
+    <View style={styles.avatarWrapper}>
+      {isBuffering ? (
+        <ActivityIndicator
+          size='large'
+          color={Color.white}
+        />
+      ) : (
+        <>
+          <CustomAvatar
+            avatar={avatar}
+            avatarStyle={styles.avatar}
+          />
+          {isBlueTicked && (
+            <Ionicons
+              name='checkmark-circle'
+              size={20}
+              color={Color.blueTick}
+              style={styles.tickIcon}
+            />
+          )}
+        </>
+      )}
+    </View>
+  );
+
   return (
     <Pressable
       onPress={togglePlay}
@@ -162,19 +189,7 @@ const VoiceBitesCard = ({
             colors={randomGradient}
             style={styles.gradient}
           >
-            <View style={styles.avatarWrapper}>
-              {isBuffering ? (
-                <ActivityIndicator
-                  size='large'
-                  color={Color.secondary.default}
-                />
-              ) : (
-                <CustomAvatar
-                  avatar={avatar}
-                  avatarStyle={styles.avatar}
-                />
-              )}
-            </View>
+            <AvatarWithTick />
             <Text style={styles.username}>
               {trimLongString({ text: name })}
             </Text>
@@ -184,44 +199,30 @@ const VoiceBitesCard = ({
             intensity={50}
             style={[styles.cardBackground, styles.blurBackground]}
           >
-            <View style={styles.avatarWrapper}>
-              {isBuffering ? (
-                <ActivityIndicator
-                  size='large'
-                  color={Color.white}
-                />
-              ) : (
-                <CustomAvatar
-                  avatar={avatar}
-                  avatarStyle={styles.avatar}
-                />
-              )}
-            </View>
+            <AvatarWithTick />
             <Text style={styles.username}>
               {name.length > 15 ? name.substring(0, 15) + '...' : name}
             </Text>
           </BlurView>
         )}
       </Animated.View>
-      <View>
-        <CustomModal
-          isVisible={deleteAlert}
-          setVisibility={setDeleteAlert}
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Delete</Text>
-            <Text style={styles.modalText}>
-              Are you sure you want to delete this voice bite?
-            </Text>
-            <Pressable
-              onPress={handleDelete}
-              style={styles.deleteBtn}
-            >
-              <Text style={styles.deleteBtnText}>Delete</Text>
-            </Pressable>
-          </View>
-        </CustomModal>
-      </View>
+      <CustomModal
+        isVisible={deleteAlert}
+        setVisibility={setDeleteAlert}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Delete</Text>
+          <Text style={styles.modalText}>
+            Are you sure you want to delete this voice bite?
+          </Text>
+          <Pressable
+            onPress={handleDelete}
+            style={styles.deleteBtn}
+          >
+            <Text style={styles.deleteBtnText}>Delete</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
     </Pressable>
   );
 };
@@ -280,21 +281,28 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    overflow: 'hidden',
-    backgroundColor: Color.black.twoHundred,
+    overflow: 'visible',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
+    marginBottom: 8,
   },
   avatar: {
     width: 76,
     height: 76,
     borderRadius: 38,
   },
+  tickIcon: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: Color.black.default,
+    borderRadius: 10,
+  },
   username: {
     fontSize: 18,
     fontFamily: Font.pSemiBold,
     color: Color.white,
-    marginTop: 12,
     textAlign: 'center',
   },
   modalContent: {
@@ -307,12 +315,15 @@ const styles = StyleSheet.create({
   modalTitle: {
     color: Color.red,
     fontFamily: Font.pSemiBold,
+    fontSize: 18,
+    marginBottom: 10,
   },
   deleteBtn: {
     paddingHorizontal: 20,
     paddingVertical: 7,
     backgroundColor: Color.red,
     borderRadius: 10,
+    marginTop: 15,
   },
   deleteBtnText: {
     color: Color.white,

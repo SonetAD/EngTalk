@@ -16,6 +16,7 @@ type User = {
   };
   followers: string[];
   following: string[];
+  isBlueTicked: boolean;
   level: number;
   talkTime: number;
   totalTrophy: number;

@@ -87,6 +87,7 @@ const Profile = () => {
         name={item?.user?.name}
         avatar={item?.user?.avatar}
         file={item?.file}
+        isBlueTicked={item?.user?.isBlueTicked}
       />
     ),
     []
@@ -96,11 +97,10 @@ const Profile = () => {
 
   if (isLoading || isError) return <CustomLoadingPage />;
 
-
   return (
     <FullScreenView>
       <FlashList
-      contentContainerStyle={{paddingHorizontal: 10}}
+        contentContainerStyle={{ paddingHorizontal: 10 }}
         ListHeaderComponent={headerComponent}
         data={userBites.posts}
         numColumns={2}

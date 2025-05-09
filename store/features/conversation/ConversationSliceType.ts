@@ -5,6 +5,7 @@ type User = {
     stockAvatar:string;
   };
   name: string;
+  isBlueTicked:boolean;
 };
 
 type Message = {

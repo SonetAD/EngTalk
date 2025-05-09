@@ -5,23 +5,31 @@ import { Font, Color } from '@/constants/constants';
 import { router } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
-import trimLongString from '@/libs/trimLongString';
+import NameComponent from './NameComponent';
 
 interface Props {
   otherUserId: string;
   name: string;
+  isBlueTicked: boolean;
   avatar: {
     src: string;
     stockAvatar: string;
   };
 }
-const SearchUserResultCard = ({ otherUserId, name, avatar }: Props) => {
+
+const SearchUserResultCard = ({
+  otherUserId,
+  name,
+  isBlueTicked,
+  avatar,
+}: Props) => {
   const { userId, setOtherUser } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       setOtherUser: state.setOtherUser,
     }))
   );
+
   const viewProfile = (otherUserId: string) => {
     if (userId === otherUserId) {
       router.navigate('/Profile');
@@ -38,7 +46,13 @@ const SearchUserResultCard = ({ otherUserId, name, avatar }: Props) => {
           avatar={avatar}
           avatarStyle={styles.avatar}
         />
-        <Text style={styles.name}>{trimLongString({ text: name })}</Text>
+        <View style={styles.nameWrapper}>
+          <NameComponent
+            name={name}
+            isBlueTicked={isBlueTicked}
+            fontStyle={styles.name}
+          />
+        </View>
       </View>
     </Pressable>
   );
@@ -49,18 +63,19 @@ export default SearchUserResultCard;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 10,
-    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal:10
+    paddingHorizontal: 10,
+    gap: 10,
   },
   avatar: {
     width: 50,
     height: 50,
   },
+  nameWrapper: {
+    justifyContent: 'center',
+  },
   name: {
-    flex: 1,
     fontSize: 16,
     fontFamily: Font.pRegular,
     color: Color.white,
