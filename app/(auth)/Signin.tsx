@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   Text,
+  Pressable,
   View,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -15,10 +16,10 @@ import Font from '@/constants/font';
 import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
 import { Link, router } from 'expo-router';
-import ErrorAlert from '@/components/ErrorAlert';
 import { Ionicons } from '@expo/vector-icons';
 import userLogin from '@/libs/api/userLogin';
 import LocalStore from '@/libs/localStore';
+import CustomModal from '@/components/CustomModal';
 
 const Signin = () => {
   const [formData, setFormData] = useState({
@@ -53,6 +54,10 @@ const Signin = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+  const retry = () => {
+    setShowErrorAlert(false);
+    setErrorMessage('');
   };
 
   return (
@@ -103,11 +108,26 @@ const Signin = () => {
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      <ErrorAlert
+      {/* <ErrorAlert
         message={errorMessage}
         visibility={showErrorAlert}
         setVisibility={setShowErrorAlert}
-      />
+      /> */}
+      <CustomModal
+        isVisible={showErrorAlert}
+        setVisibility={setShowErrorAlert}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Error!</Text>
+          <Text style={styles.modalText}>{errorMessage}</Text>
+          <Pressable
+            onPress={retry}
+            style={styles.modalBtn}
+          >
+            <Text>Ok</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
     </FullScreenView>
   );
 };
@@ -144,5 +164,28 @@ const styles = StyleSheet.create({
   link: {
     fontFamily: Font.pBold,
     color: Color.secondary.oneHundred,
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+
+  modalTitle: {
+    fontFamily: Font.pSemiBold,
+    color: Color.red,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
+    textAlign: 'center',
+  },
+  modalBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.gray.oneHundred,
+    fontFamily: Font.pBold,
+    borderRadius: 10,
   },
 });

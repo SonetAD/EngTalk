@@ -19,11 +19,11 @@ import FormField from '@/components/FormField';
 import CustomButton from '@/components/CustomButton';
 import { Link, router } from 'expo-router';
 import GenderSelection from '@/components/GenderSelection';
-import ErrorAlert from '@/components/ErrorAlert';
 import createAccount from '@/libs/api/createAccount';
 import { Ionicons } from '@expo/vector-icons';
 import LocalStore from '@/libs/localStore';
 import Checkbox from 'expo-checkbox';
+import CustomModal from '@/components/CustomModal';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -74,6 +74,11 @@ const Signup = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const retry = () => {
+    setShowErrorAlert(false);
+    setErrorMessage('');
   };
 
   return (
@@ -168,11 +173,21 @@ const Signup = () => {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
-      <ErrorAlert
-        visibility={showErrorAlert}
+      <CustomModal
+        isVisible={showErrorAlert}
         setVisibility={setShowErrorAlert}
-        message={errorMessage}
-      />
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Error!</Text>
+          <Text style={styles.modalText}>{errorMessage}</Text>
+          <Pressable
+            onPress={retry}
+            style={styles.modalBtn}
+          >
+            <Text>Ok</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
     </FullScreenView>
   );
 };
@@ -240,5 +255,28 @@ const styles = StyleSheet.create({
   link: {
     fontFamily: Font.pBold,
     color: Color.secondary.oneHundred,
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+
+  modalTitle: {
+    fontFamily: Font.pSemiBold,
+    color: Color.red,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
+    textAlign: 'center',
+  },
+  modalBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.gray.oneHundred,
+    fontFamily: Font.pBold,
+    borderRadius: 10,
   },
 });
