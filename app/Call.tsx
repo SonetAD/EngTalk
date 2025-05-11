@@ -150,6 +150,7 @@ const Call = () => {
   };
 
   const stopSearching = () => {
+    cancelCall()
     router.replace('/Home');
   };
 
