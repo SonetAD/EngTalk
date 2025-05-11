@@ -44,9 +44,11 @@ const Home = () => {
 
   const [showAllowLocation, setShowAllowLocation] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [errorMessage,setErrorMessage]=useState('');
 
   useEffect(() => {
     setShowError(isError);
+    setErrorMessage(error);
   }, [isError]);
 
   const startCall = async () => {
@@ -61,11 +63,15 @@ const Home = () => {
 
   const openSettings = () => {
     setShowAllowLocation(false);
-    Linking.openSettings().catch(() => console.log('Unable to open settings'));
+    Linking.openSettings().catch(() =>{
+      setShowError(true);
+      setErrorMessage('Failed to open settings');
+    });
   };
 
   const retry = () => {
     setShowError(false);
+    setErrorMessage('');
     router.replace('/');
   };
 
@@ -112,7 +118,7 @@ const Home = () => {
         >
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Error!</Text>
-            <Text style={styles.modalText}>{error}</Text>
+            <Text style={styles.modalText}>{errorMessage}</Text>
             <Pressable
               onPress={retry}
               style={styles.enableSettingBtn}
