@@ -159,26 +159,32 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
           handleStyle={styles.handleStyle}
           backdropComponent={renderBackdrop}
         >
-          <Pressable onPress={handleDelete}>
-            <BottomSheetView style={styles.bottomSheetContainer}>
-              <Text style={styles.delete}>Delete</Text>
+          <BottomSheetView style={styles.bottomSheetContainer}>
+            <Pressable
+              onPress={handleCopy}
+              style={styles.actionContainer}
+            >
+              <Ionicons
+                name='copy-outline'
+                size={24}
+                color={Color.white}
+              />
+
+              <Text style={styles.delete}>Copy</Text>
+            </Pressable>
+            <Pressable
+              onPress={handleDelete}
+              style={styles.actionContainer}
+            >
               <Ionicons
                 name='trash-outline'
                 size={24}
                 color={Color.red}
               />
-            </BottomSheetView>
-          </Pressable>
-          <Pressable onPress={handleDelete}>
-            <BottomSheetView style={styles.bottomSheetContainer}>
+
               <Text style={styles.delete}>Delete</Text>
-              <Ionicons
-                name='trash-outline'
-                size={24}
-                color={Color.red}
-              />
-            </BottomSheetView>
-          </Pressable>
+            </Pressable>
+          </BottomSheetView>
         </BottomSheetModal>
       </View>
     </GestureDetector>
@@ -247,7 +253,11 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  actionContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   delete: {
