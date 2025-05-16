@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NotificationSocket } from '@/libs/Socket';
 import IsItALink from '@/libs/isItALink';
 import openLink from '@/libs/openLink';
+import * as Clipboard from 'expo-clipboard';
 
 interface Message {
   _id: string;
@@ -84,6 +85,10 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
         userId: otherChatParticipantUserId,
       });
     }
+  };
+  const handleCopy = async () => {
+    bottomSheetModalRef.current?.dismiss();
+    await Clipboard.setStringAsync(message.message);
   };
 
   const renderBackdrop = useCallback(
@@ -154,6 +159,16 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
           handleStyle={styles.handleStyle}
           backdropComponent={renderBackdrop}
         >
+          <Pressable onPress={handleDelete}>
+            <BottomSheetView style={styles.bottomSheetContainer}>
+              <Text style={styles.delete}>Delete</Text>
+              <Ionicons
+                name='trash-outline'
+                size={24}
+                color={Color.red}
+              />
+            </BottomSheetView>
+          </Pressable>
           <Pressable onPress={handleDelete}>
             <BottomSheetView style={styles.bottomSheetContainer}>
               <Text style={styles.delete}>Delete</Text>
