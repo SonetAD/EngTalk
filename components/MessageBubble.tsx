@@ -16,6 +16,8 @@ import {
 import { runOnJS } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { NotificationSocket } from '@/libs/Socket';
+import IsItALink from '@/libs/isItALink';
+import openLink from '@/libs/openLink';
 
 interface Message {
   _id: string;
@@ -34,7 +36,12 @@ interface Props {
 }
 
 const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
-  const { userId, otherChatParticipantAvatar,otherChatParticipantUserId, setOtherUser } = useCentralStore(
+  const {
+    userId,
+    otherChatParticipantAvatar,
+    otherChatParticipantUserId,
+    setOtherUser,
+  } = useCentralStore(
     useShallow((state) => ({
       userId: state.user.userInfo.userId,
       otherChatParticipantAvatar: state.otherChatParticipant.avatar,
@@ -57,18 +64,25 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
     bottomSheetModalRef.current?.present();
   };
 
+  const openMessageURL = () => {
+    const isLink = IsItALink(message.message);
+    if (isLink) {
+      openLink(message.message);
+    }
+  };
+
   const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
     if (isMe && success) {
       runOnJS(deletePopUp)();
     }
   });
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     bottomSheetModalRef.current?.dismiss();
     if (message._id) {
       await handleDeleteMessage(message._id);
       NotificationSocket.emit('deleteMessage', {
-        userId:otherChatParticipantUserId ,
-      })
+        userId: otherChatParticipantUserId,
+      });
     }
   };
 
@@ -117,9 +131,16 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
               end={{ x: 1, y: 1 }}
               style={styles.textContainer}
             >
-              <Text style={isMe ? styles.myMessage : styles.otherMessage}>
-                {message.message}
-              </Text>
+              <Pressable onPress={openMessageURL}>
+                <Text
+                  style={[
+                    isMe ? styles.myMessage : styles.otherMessage,
+                    IsItALink(message.message) && styles.link,
+                  ]}
+                >
+                  {message.message}
+                </Text>
+              </Pressable>
             </LinearGradient>
           </BlurView>
         </View>
@@ -217,5 +238,9 @@ const styles = StyleSheet.create({
   delete: {
     fontFamily: Font.pBold,
     color: Color.gray.oneHundred,
+  },
+  link: {
+    color: Color.secondary.default,
+    textDecorationLine: 'underline',
   },
 });
