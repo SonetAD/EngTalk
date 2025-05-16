@@ -100,7 +100,7 @@ const Signup = () => {
               />
 
               <Text style={styles.heading}>
-                New here? The world is waiting to hear your voice!
+              Your voice matters. Let’s start your English journey!
               </Text>
 
               <FormField
@@ -165,7 +165,7 @@ const Signup = () => {
                   href='/Signin'
                   style={styles.link}
                 >
-                  Sign In
+                Log In
                 </Link>
               </View>
             </View>

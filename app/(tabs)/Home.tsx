@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import CustomModal from '@/components/CustomModal';
 import * as Location from 'expo-location';
 import * as Linking from 'expo-linking';
+import * as StoreReview from 'expo-store-review';
 
 const Home = () => {
   const {
@@ -39,6 +40,16 @@ const Home = () => {
   const [showAllowLocation, setShowAllowLocation] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      if (totalTrophy && totalTrophy > 5) {
+        if (await StoreReview.hasAction()) {
+          StoreReview.requestReview();
+        }
+      }
+    })();
+  }, [totalTrophy]);
 
   useEffect(() => {
     setShowError(isError);

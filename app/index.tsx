@@ -9,7 +9,7 @@ const App = () => {
   const isUserLoggedIn = LocalStore.contains('userName');
 
   const handlePress = () => {
-    router.navigate('/Signin');
+    router.navigate('/Signup');
   };
 
   if (isUserLoggedIn) {

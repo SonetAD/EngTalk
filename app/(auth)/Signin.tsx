@@ -92,7 +92,7 @@ const Signin = () => {
               }
             />
             <CustomButton
-              text='Sign In'
+              text='Log In'
               isLoading={isLoading}
               handlePress={handleSubmit}
             />
