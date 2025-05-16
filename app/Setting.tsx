@@ -3,7 +3,6 @@ import {
   Text,
   View,
   Pressable,
-  Linking,
   ActivityIndicator,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
@@ -18,6 +17,7 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import CustomModal from '@/components/CustomModal';
 import FormField from '@/components/FormField';
+import openLink from '@/libs/openLink';
 
 const Setting = () => {
   const { token } = useCentralStore(
@@ -44,31 +44,12 @@ const Setting = () => {
     logoutHandler();
   };
 
-  const openAboutPage = () => {
-    Linking.openURL('https://engtalk.sonetstudio.org').catch(() =>
-      console.log('Unable to open settings')
-    );
-  };
-
-  const openPrivacyPage = () => {
-    Linking.openURL('https://engtalk-privacy.sonetstudio.org/').catch(() =>
-      console.log('Unable to open settings')
-    );
-  };
-
-  const openEmail = () => {
-    const email = 'sonet.ad101@gmail.com';
-    const url = `mailto:${email}`;
-
-    Linking.openURL(url).catch(() => console.log('Unable to open email'));
-  };
-
   return (
     <FullScreenView>
       <View style={styles.container}>
         <View>
           <Pressable
-            onPress={openAboutPage}
+            onPress={() => openLink('https://engtalk.sonetstudio.org')}
             style={styles.card}
           >
             <Ionicons
@@ -89,7 +70,7 @@ const Setting = () => {
           </View>
 
           <Pressable
-            onPress={openEmail}
+            onPress={() => openLink('sonet.ad101@gmail.com')}
             style={styles.card}
           >
             <Ionicons
@@ -100,7 +81,7 @@ const Setting = () => {
             <Text style={styles.text}>Feedback</Text>
           </Pressable>
           <Pressable
-            onPress={openPrivacyPage}
+            onPress={() => openLink('https://engtalk-privacy.sonetstudio.org/')}
             style={styles.card}
           >
             <Ionicons

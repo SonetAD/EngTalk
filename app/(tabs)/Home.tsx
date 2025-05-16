@@ -1,11 +1,4 @@
-import {
-  Linking,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Pressable,
-} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
 import CustomButton from '@/components/CustomButton';
 import { DeviceHeight, DeviceWidth } from '@/constants/dimensions';
@@ -20,6 +13,7 @@ import GenderFilterComponent from '@/components/GenderFilterComponent';
 import { useEffect, useState } from 'react';
 import CustomModal from '@/components/CustomModal';
 import * as Location from 'expo-location';
+import * as Linking from 'expo-linking';
 
 const Home = () => {
   const {
@@ -44,7 +38,7 @@ const Home = () => {
 
   const [showAllowLocation, setShowAllowLocation] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [errorMessage,setErrorMessage]=useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setShowError(isError);
@@ -63,7 +57,7 @@ const Home = () => {
 
   const openSettings = () => {
     setShowAllowLocation(false);
-    Linking.openSettings().catch(() =>{
+    Linking.openSettings().catch(() => {
       setShowError(true);
       setErrorMessage('Failed to open settings');
     });

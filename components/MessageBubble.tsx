@@ -241,6 +241,5 @@ const styles = StyleSheet.create({
   },
   link: {
     color: Color.secondary.default,
-    textDecorationLine: 'underline',
   },
 });
