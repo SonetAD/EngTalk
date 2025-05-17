@@ -54,7 +54,7 @@
     "react-native-circular-progress": "^1.4.1",
     "react-native-compressor": "^1.11.0",
     "react-native-gesture-handler": "~2.20.2",
-    "react-native-google-mobile-ads": "15.2.0",
+    "react-native-google-mobile-ads": "14.8.0",
     "react-native-mmkv": "^3.2.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-pager-view": "6.5.1",
