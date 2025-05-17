@@ -22,7 +22,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.WAKE_LOCK",
-        "android.permission.BLUETOOTH"
+        "android.permission.BLUETOOTH",
+        "com.google.android.gms.permission.AD_ID"
       ],
       "package": "com.sonetadhikary.engtalk"
     },
@@ -33,6 +34,15 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "extraProguardRules": "-keep class com.google.android.gms.** { *; }"
+          }
+        }
+      ],
       "@config-plugins/react-native-webrtc",
       [
         "expo-splash-screen",
@@ -43,7 +53,14 @@
           "backgroundColor": "#161622"
         }
       ],
-      "react-native-compressor"
+      "react-native-compressor",
+      "expo-build-properties",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-6177013999348150~4597785166"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
