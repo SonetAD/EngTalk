@@ -18,6 +18,7 @@ import { useShallow } from 'zustand/react/shallow';
 import CustomModal from '@/components/CustomModal';
 import FormField from '@/components/FormField';
 import openLink from '@/libs/openLink';
+import { Share } from 'react-native';
 
 const Setting = () => {
   const { token } = useCentralStore(
@@ -34,6 +35,27 @@ const Setting = () => {
   const logoutHandler = () => {
     LocalStore.clearAll();
     router.replace('/Signin');
+  };
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'I’m practicing English on EngTalk with real people — join me: https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk',
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Shared with activity type:', result.activityType);
+        } else {
+          console.log('Shared');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
   };
 
   const userDelete = async () => {
@@ -60,14 +82,17 @@ const Setting = () => {
             <Text style={styles.text}>About Us</Text>
           </Pressable>
 
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={handleShare}
+          >
             <Ionicons
               name='share-social-outline'
               size={22}
               color={Color.white}
             />
             <Text style={styles.text}>Share</Text>
-          </View>
+          </Pressable>
 
           <Pressable
             onPress={() => openLink('sonet.ad101@gmail.com')}
