@@ -5,15 +5,19 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import FullScreenView from '@/components/FullScreenView';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import { Color, Font } from '@/constants/constants';
 import convertSilverCoin from '@/libs/api/convertSilverCoin';
-import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import {
+  RewardedAd,
+  RewardedAdEventType,
+  TestIds,
+} from 'react-native-google-mobile-ads';
 
 const ConvertSilverCoinScreen = () => {
   const { token, totalSilverCoin } = useCentralStore(
@@ -22,16 +26,69 @@ const ConvertSilverCoinScreen = () => {
       totalSilverCoin: state.userStat.totalSilverCoin,
     }))
   );
-  const [converting, setConverting] = useState(false);
+
+  const adUnitId = __DEV__
+    ? TestIds.REWARDED
+    : 'ca-app-pub-6177013999348150~4597785166';
+
+  const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+    keywords: [
+      'learn English',
+      'spoken English',
+      'language learning',
+      'education',
+      'make friends',
+      'chat',
+      'social',
+      'IELTS',
+      'TOEFL',
+      'SAT',
+      'exam preparation',
+      'English test',
+      'study abroad',
+    ],
+  });
+
+  const [converting, setConverting] = useState(true);
+  const [earnedReward, setEarnedReward] = useState(false);
 
   const goldCoin = Math.floor(totalSilverCoin / 5);
   const isConvertable = totalSilverCoin >= 5;
+
+  useEffect(() => {
+    const unsubscribeLoaded = rewarded.addAdEventListener(
+      RewardedAdEventType.LOADED,
+      () => {
+        setConverting(false);
+      }
+    );
+    const unsubscribeEarned = rewarded.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD,
+      (reward) => {
+        setEarnedReward(true);
+      }
+    );
+
+    rewarded.load();
+
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeEarned();
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (earnedReward) {
+        setConverting(true);
+        await convertSilverCoin({ token });
+        setConverting(false);
+      }
+    })();
+  }, [earnedReward]);
   const convertCoin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setConverting(true);
-    await convertSilverCoin({ token });
-    setConverting(false);
-    router.replace('/Home');
+    rewarded.show();
   };
 
   return (
@@ -79,7 +136,7 @@ const ConvertSilverCoinScreen = () => {
         >
           {converting ? (
             <ActivityIndicator
-              color={Color.primary}
+              color={Color.secondary.default}
               size='small'
             />
           ) : (

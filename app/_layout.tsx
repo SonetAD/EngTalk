@@ -12,6 +12,7 @@ import FullScreenAvatarHeaderComponent from '@/components/FullScreenAvatarHeader
 import SearchUserHeaderComponent from '@/components/SearchUserHeaderComponent';
 import SettingHeaderComponent from '@/components/SettingHeaderComponent';
 import ConvertHeader from '@/components/ConvertSilverHeader';
+import mobileAds from 'react-native-google-mobile-ads';
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -31,6 +32,14 @@ const RootLayout = () => {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .then((adapterStatuses) => {
+        console.log('initialization complete');
+      });
+  }, []);
 
   if (!fontsLoaded) return null;
 
