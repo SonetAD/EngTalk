@@ -44,6 +44,15 @@
     "plugins": [
       "expo-router",
       [
+        "react-native-edge-to-edge",
+        {
+          "android": {
+            "parentTheme": "Default",
+            "enforceNavigationBarContrast": false
+          }
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "android": {
