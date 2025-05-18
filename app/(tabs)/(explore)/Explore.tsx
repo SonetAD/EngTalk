@@ -84,7 +84,7 @@ const Explore = () => {
     const items: any[] = [];
     allBites.posts.forEach((post: any, index: number) => {
       items.push({ type: 'voiceBite', data: post });
-      if ((index + 1) % 5 === 0) {
+      if ((index + 1) % 4 === 0) {
         items.push({ type: 'ad', id: `ad-${index}` });
       }
     });
@@ -139,6 +139,14 @@ const Explore = () => {
             />
           ) : null
         }
+        
+        overrideItemLayout={(layout, item) => {
+    if (item.type === 'ad') {
+      layout.span = 2;
+    } else {
+      layout.span = 1;
+    }
+  }}
       />
     </FullScreenView>
   );

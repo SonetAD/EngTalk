@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
-
 import {
   NativeAdView,
   NativeAssetType,
@@ -11,6 +10,7 @@ import {
   TestIds,
   NativeMediaAspectRatio,
 } from 'react-native-google-mobile-ads';
+
 import { AdKeyword } from '@/config';
 import { Font, ImageBlurHash } from '@/constants/constants';
 
@@ -70,46 +70,52 @@ export default NativeAdComponent;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    marginHorizontal: 16,
-    marginVertical: 10,
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    marginHorizontal: 10,
+    marginVertical: 6,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 2,
     overflow: 'hidden',
+    borderWidth: 0.4,
+    borderColor: '#e5e5e5',
   },
   nativeAd: {
-    padding: 16,
+    padding: 10,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   adIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 12,
-    marginRight: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    marginRight: 8,
+    backgroundColor: '#f1f1f1',
   },
   adHeadLine: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: Font.pSemiBold,
-    color: '#1c1c1e',
+    color: '#111827',
   },
   sponsoredText: {
-    fontSize: 12,
-    color: '#8e8e93',
+    fontSize: 10,
+    color: '#6b7280',
     marginTop: 2,
+    fontFamily: Font.pRegular,
   },
   mediaView: {
     width: '100%',
     aspectRatio: 16 / 9,
-    borderRadius: 12,
+    borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#f9f9f9',
+    borderWidth: 0.4,
+    borderColor: '#d4d4d4',
   },
 });
