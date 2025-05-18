@@ -19,7 +19,7 @@ const NativeAdComponent = () => {
 
   const adUnitId = __DEV__
     ? TestIds.NATIVE
-    : 'ca-app-pub-6177013999348150~4597785166';
+    : 'ca-app-pub-6177013999348150/9547994985';
 
   useEffect(() => {
     NativeAd.createForAdRequest(adUnitId, {

@@ -31,7 +31,7 @@ const ConvertSilverCoinScreen = () => {
 
   const adUnitId = __DEV__
     ? TestIds.REWARDED
-    : 'ca-app-pub-6177013999348150~4597785166';
+    : 'ca-app-pub-6177013999348150/7050664474';
 
   const rewarded = RewardedAd.createForAdRequest(adUnitId, {
     keywords: AdKeyword,
