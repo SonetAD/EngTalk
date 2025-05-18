@@ -19,6 +19,7 @@ import {
   TestIds,
 } from 'react-native-google-mobile-ads';
 import { AdKeyword } from '@/config';
+import { router } from 'expo-router';
 
 const ConvertSilverCoinScreen = () => {
   const { token, totalSilverCoin } = useCentralStore(
@@ -33,8 +34,7 @@ const ConvertSilverCoinScreen = () => {
     : 'ca-app-pub-6177013999348150~4597785166';
 
   const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-    keywords: AdKeyword
-
+    keywords: AdKeyword,
   });
 
   const [converting, setConverting] = useState(true);
@@ -68,9 +68,14 @@ const ConvertSilverCoinScreen = () => {
   useEffect(() => {
     (async () => {
       if (earnedReward) {
-        setConverting(true);
-        await convertSilverCoin({ token });
-        setConverting(false);
+        try {
+          setConverting(true);
+          await convertSilverCoin({ token });
+          setConverting(false);
+        } catch (err) {
+        } finally {
+          router.replace('/Home');
+        }
       }
     })();
   }, [earnedReward]);

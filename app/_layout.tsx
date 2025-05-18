@@ -34,11 +34,7 @@ const RootLayout = () => {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    mobileAds()
-      .initialize()
-      .then((adapterStatuses) => {
-        console.log('initialization complete');
-      });
+    mobileAds().initialize();
   }, []);
 
   if (!fontsLoaded) return null;
