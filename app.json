@@ -47,7 +47,7 @@
         "react-native-edge-to-edge",
         {
           "android": {
-            "parentTheme": "Default",
+            "parentTheme": "Light",
             "enforceNavigationBarContrast": false
           }
         }

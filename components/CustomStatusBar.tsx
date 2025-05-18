@@ -1,13 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { Color } from '@/constants/constants';
+import { SystemBars } from 'react-native-edge-to-edge';
 
 const CustomStatusBar = () => {
-  return (
-    <StatusBar
-      backgroundColor={Color.primary}
-      style='light'
-    />
-  );
+  return <SystemBars style='light' />;
 };
 
 export default CustomStatusBar;
