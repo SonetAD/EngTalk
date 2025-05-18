@@ -15,6 +15,7 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import fetchAllBites from '@/libs/api/fetchAllBite';
 import { Color } from '@/constants/constants';
+import NativeAdComponent from '@/components/NativeAdComponent';
 
 const Explore = () => {
   const { allBites, isLoading, isError } = useCentralStore(
@@ -79,26 +80,45 @@ const Explore = () => {
     }
   };
 
+  const modifiedData = useMemo(() => {
+    const items: any[] = [];
+    allBites.posts.forEach((post: any, index: number) => {
+      items.push({ type: 'voiceBite', data: post });
+      if ((index + 1) % 5 === 0) {
+        items.push({ type: 'ad', id: `ad-${index}` });
+      }
+    });
+    return items;
+  }, [allBites.posts]);
+
   // Memoized render item function
-  const renderItem = useCallback(
-    ({ item }: any) => (
+  const renderItem = useCallback(({ item }: any) => {
+    if (item.type === 'ad') {
+      return (
+        <View style={{ width: '100%', marginVertical: 10 }}>
+        <NativeAdComponent />
+        </View>
+      );
+    }
+
+    const voiceBite = item.data;
+    return (
       <VoiceBiteCard
-        ownerId={item?.user?._id}
-        voiceBiteId={item?._id}
-        name={item?.user?.name}
-        avatar={item?.user?.avatar}
-        file={item?.file}
-        isBlueTicked={item?.user?.isBlueTicked}
+        ownerId={voiceBite?.user?._id}
+        voiceBiteId={voiceBite?._id}
+        name={voiceBite?.user?.name}
+        avatar={voiceBite?.user?.avatar}
+        file={voiceBite?.file}
+        isBlueTicked={voiceBite?.user?.isBlueTicked}
       />
-    ),
-    []
-  );
+    );
+  }, []);
 
   return (
     <FullScreenView>
       <FlashList
         contentContainerStyle={styles.listContent}
-        data={allBites.posts}
+        data={modifiedData}
         numColumns={2}
         renderItem={renderItem}
         estimatedItemSize={300}

@@ -18,6 +18,7 @@ import {
   RewardedAdEventType,
   TestIds,
 } from 'react-native-google-mobile-ads';
+import { AdKeyword } from '@/config';
 
 const ConvertSilverCoinScreen = () => {
   const { token, totalSilverCoin } = useCentralStore(
@@ -32,21 +33,8 @@ const ConvertSilverCoinScreen = () => {
     : 'ca-app-pub-6177013999348150~4597785166';
 
   const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-    keywords: [
-      'learn English',
-      'spoken English',
-      'language learning',
-      'education',
-      'make friends',
-      'chat',
-      'social',
-      'IELTS',
-      'TOEFL',
-      'SAT',
-      'exam preparation',
-      'English test',
-      'study abroad',
-    ],
+    keywords: AdKeyword
+
   });
 
   const [converting, setConverting] = useState(true);
