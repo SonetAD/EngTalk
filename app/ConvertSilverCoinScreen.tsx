@@ -18,13 +18,14 @@ import {
   RewardedAdEventType,
   TestIds,
 } from 'react-native-google-mobile-ads';
-import { AdKeyword } from '@/config';
 import { router } from 'expo-router';
+import getAdKeyword from '@/libs/getAdKeyword';
 
 const ConvertSilverCoinScreen = () => {
-  const { token, totalSilverCoin } = useCentralStore(
+  const { token, gender, totalSilverCoin } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
+      gender: state.user.userInfo.gender,
       totalSilverCoin: state.userStat.totalSilverCoin,
     }))
   );
@@ -34,14 +35,14 @@ const ConvertSilverCoinScreen = () => {
     : 'ca-app-pub-6177013999348150/7050664474';
 
   const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-    keywords: AdKeyword,
+    keywords: getAdKeyword(gender),
   });
 
-  const [converting, setConverting] = useState(true);
+  const isConvertable = totalSilverCoin >= 5;
+  const [converting, setConverting] = useState(isConvertable);
   const [earnedReward, setEarnedReward] = useState(false);
 
   const goldCoin = Math.floor(totalSilverCoin / 5);
-  const isConvertable = totalSilverCoin >= 5;
 
   useEffect(() => {
     const unsubscribeLoaded = rewarded.addAdEventListener(
@@ -69,7 +70,6 @@ const ConvertSilverCoinScreen = () => {
     (async () => {
       if (earnedReward) {
         try {
-          setConverting(true);
           await convertSilverCoin({ token });
           setConverting(false);
         } catch (err) {
@@ -81,6 +81,7 @@ const ConvertSilverCoinScreen = () => {
   }, [earnedReward]);
   const convertCoin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setConverting(true);
     rewarded.show();
   };
 
@@ -129,7 +130,7 @@ const ConvertSilverCoinScreen = () => {
         >
           {converting ? (
             <ActivityIndicator
-              color={Color.secondary.default}
+              color={Color.primary}
               size='small'
             />
           ) : (

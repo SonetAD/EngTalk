@@ -1,67 +1,105 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
 import { Image } from 'expo-image';
 import {
   NativeAdView,
   NativeAssetType,
   NativeAd,
   NativeAsset,
+  NativeMediaView,
   TestIds,
+  NativeMediaAspectRatio,
 } from 'react-native-google-mobile-ads';
 
-import { AdKeyword } from '@/config';
 import { Font, ImageBlurHash } from '@/constants/constants';
+import trimLongString from '@/libs/trimLongString';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import getAdKeyword from '@/libs/getAdKeyword';
+
+const { width: DEVICE_WIDTH } = Dimensions.get('window');
 
 const CallScreenAd = () => {
+  const { gender } = useCentralStore(
+    useShallow((state) => ({
+      gender: state.user.userInfo.gender,
+    }))
+  );
+
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
+  const nativeAdRef = useRef<NativeAd | null>(null);
 
   const adUnitId = __DEV__
     ? TestIds.NATIVE
     : 'ca-app-pub-6177013999348150/9547994985';
 
-  useEffect(() => {
+  const loadAd = () => {
     NativeAd.createForAdRequest(adUnitId, {
-      keywords: AdKeyword,
+      keywords: getAdKeyword(gender),
+      aspectRatio: NativeMediaAspectRatio.LANDSCAPE,
     })
-      .then(setNativeAd)
+      .then((ad) => {
+        nativeAdRef.current?.destroy();
+        nativeAdRef.current = ad;
+        setNativeAd(ad);
+      })
       .catch(console.error);
+  };
+
+  useEffect(() => {
+    loadAd();
+
+    const interval = setInterval(() => {
+      loadAd();
+    }, 300000);
 
     return () => {
-      nativeAd?.destroy();
+      clearInterval(interval);
+      nativeAdRef.current?.destroy();
     };
   }, []);
 
   if (!nativeAd) return null;
 
   return (
-    <View style={styles.cardContainer}>
-      <NativeAdView
-        nativeAd={nativeAd}
-        style={styles.nativeAd}
-      >
-        <View style={styles.row}>
-          {nativeAd.icon && (
-            <NativeAsset assetType={NativeAssetType.ICON}>
-              <Image
-                source={nativeAd.icon.url}
-                placeholder={ImageBlurHash}
-                style={styles.adIcon}
-              />
-            </NativeAsset>
-          )}
-          <View style={{ flex: 1 }}>
-            <NativeAsset assetType={NativeAssetType.HEADLINE}>
-              <Text
-                style={styles.headline}
-                numberOfLines={1}
-              >
-                {nativeAd.headline}
-              </Text>
-            </NativeAsset>
-            <Text style={styles.sponsoredText}>Sponsored</Text>
+    <View style={styles.container}>
+      <View style={styles.cardContainer}>
+        <NativeAdView
+          nativeAd={nativeAd}
+          style={styles.nativeAd}
+        >
+          <View style={styles.adRow}>
+            {/* Media on left */}
+            <NativeMediaView style={styles.mediaView} />
+
+            {/* Text content on right */}
+            <View style={styles.textContent}>
+              <View style={styles.header}>
+                {nativeAd.icon && (
+                  <NativeAsset assetType={NativeAssetType.ICON}>
+                    <Image
+                      source={nativeAd.icon.url}
+                      placeholder={ImageBlurHash}
+                      style={styles.adIcon}
+                    />
+                  </NativeAsset>
+                )}
+                <View style={{ flex: 1 }}>
+                  <NativeAsset assetType={NativeAssetType.HEADLINE}>
+                    <Text
+                      style={styles.adHeadLine}
+                      numberOfLines={1}
+                    >
+                      {trimLongString({ text: nativeAd.headline })}
+                    </Text>
+                  </NativeAsset>
+                  <Text style={styles.sponsoredText}>Sponsored</Text>
+                </View>
+              </View>
+            </View>
           </View>
-        </View>
-      </NativeAdView>
+        </NativeAdView>
+      </View>
     </View>
   );
 };
@@ -69,45 +107,76 @@ const CallScreenAd = () => {
 export default CallScreenAd;
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    marginVertical: 12,
+  },
   cardContainer: {
-    marginTop: 10,
-    alignSelf: 'center',
+    width: DEVICE_WIDTH * 0.6, // keep original 60% width
+    height: 90, // keep original height
     backgroundColor: '#fff',
     borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
-    elevation: 1,
-    borderWidth: 0.4,
-    borderColor: '#e2e2e2',
-    minWidth: 240,
-    maxWidth: 300,
+    elevation: 2,
+    overflow: 'hidden',
+    borderWidth: 0.3,
+    borderColor: '#e5e5e5',
   },
   nativeAd: {
-    width: '100%',
+    flex: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
-  row: {
+
+  adRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  mediaView: {
+    width: 80, // smaller media width to keep it compact
+    height: 78, // slightly less than card height for nice padding
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#f9f9f9',
+    borderWidth: 0.3,
+    borderColor: '#d4d4d4',
+  },
+
+  textContent: {
+    flex: 1,
+    paddingLeft: 10,
+    justifyContent: 'center',
+  },
+
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   adIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    marginRight: 10,
-    backgroundColor: '#f2f2f2',
+    width: 22,
+    height: 22,
+    borderRadius: 5,
+    marginRight: 6,
+    backgroundColor: '#f1f1f1',
   },
-  headline: {
+
+  adHeadLine: {
     fontSize: 13,
-    fontFamily: Font.pMedium,
-    color: '#111',
+    fontFamily: Font.pSemiBold,
+    color: '#111827',
   },
+
   sponsoredText: {
-    fontSize: 10,
+    fontSize: 9,
+    color: '#6b7280',
+    marginTop: 2,
     fontFamily: Font.pRegular,
-    color: '#9ca3af',
   },
 });

@@ -11,10 +11,17 @@ import {
   NativeMediaAspectRatio,
 } from 'react-native-google-mobile-ads';
 
-import { AdKeyword } from '@/config';
 import { Font, ImageBlurHash } from '@/constants/constants';
+import useCentralStore from '@/store/store/Store';
+import { useShallow } from 'zustand/react/shallow';
+import getAdKeyword from '@/libs/getAdKeyword';
 
 const NativeAdComponent = () => {
+  const {  gender  } = useCentralStore(
+    useShallow((state) => ({
+      gender: state.user.userInfo.gender,
+    }))
+  );
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
 
   const adUnitId = __DEV__
@@ -23,7 +30,7 @@ const NativeAdComponent = () => {
 
   useEffect(() => {
     NativeAd.createForAdRequest(adUnitId, {
-      keywords: AdKeyword,
+      keywords: getAdKeyword(gender),
       aspectRatio: NativeMediaAspectRatio.LANDSCAPE,
     })
       .then(setNativeAd)

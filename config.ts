@@ -81,20 +81,3 @@ export const Backend = {
     return `${this.baseURL}/message/conversation`;
   },
 };
-
- export const AdKeyword= [
-    'learn English',
-    'spoken English',
-    'language learning',
-    'education',
-    'make friends',
-    'chat',
-    'social',
-    'IELTS',
-    'TOEFL',
-    'SAT',
-    'exam preparation',
-    'English test',
-    'study abroad',
-  ]
-
