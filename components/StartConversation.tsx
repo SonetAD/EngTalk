@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import NameComponent from './NameComponent';
+import CallScreenAd from './CallScreenAd';
 
 interface Props {
   userId: string;
@@ -125,6 +126,7 @@ const StartConversation = ({
         streamURL={remoteStream.toURL()}
         style={styles.remoteStream}
       />
+      <CallScreenAd />
     </View>
   );
 };
