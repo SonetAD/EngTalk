@@ -30,41 +30,45 @@ const ConvertSilverCoinScreen = () => {
     }))
   );
 
-  const adUnitId = __DEV__
-    ? TestIds.REWARDED
-    : 'ca-app-pub-6177013999348150/7050664474';
-
-  const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-    keywords: getAdKeyword(gender),
-  });
-
   const isConvertable = totalSilverCoin >= 5;
   const [converting, setConverting] = useState(isConvertable);
   const [earnedReward, setEarnedReward] = useState(false);
+  const [rewarded, setRewarded] = useState<RewardedAd | null>(null);
 
   const goldCoin = Math.floor(totalSilverCoin / 5);
 
   useEffect(() => {
-    const unsubscribeLoaded = rewarded.addAdEventListener(
-      RewardedAdEventType.LOADED,
-      () => {
-        setConverting(false);
-      }
-    );
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      (reward) => {
-        setEarnedReward(true);
-      }
-    );
+    const adUnitId = __DEV__
+      ? TestIds.REWARDED
+      : 'ca-app-pub-6177013999348150/7050664474';
 
-    rewarded.load();
-
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-    };
+    const ad = RewardedAd.createForAdRequest(adUnitId, {
+      keywords: getAdKeyword(gender),
+    });
+    setRewarded(ad);
   }, []);
+  useEffect(() => {
+    if (rewarded) {
+      const unsubscribeLoaded = rewarded.addAdEventListener(
+        RewardedAdEventType.LOADED,
+        () => {
+          setConverting(false);
+        }
+      );
+      const unsubscribeEarned = rewarded.addAdEventListener(
+        RewardedAdEventType.EARNED_REWARD,
+        (reward) => {
+          setEarnedReward(true);
+        }
+      );
+
+      rewarded.load();
+      return () => {
+        unsubscribeLoaded();
+        unsubscribeEarned();
+      };
+    }
+  }, [rewarded]);
 
   useEffect(() => {
     (async () => {
@@ -82,7 +86,7 @@ const ConvertSilverCoinScreen = () => {
   const convertCoin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setConverting(true);
-    rewarded.show();
+    rewarded?.show();
   };
 
   return (
