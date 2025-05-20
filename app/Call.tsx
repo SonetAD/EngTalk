@@ -12,7 +12,7 @@ import SearchingPartner from '@/components/SearchingPartner';
 import FoundPartner from '@/components/FoundPartner';
 import getUserInfo from '@/libs/api/userInfo';
 import StartConversation from '@/components/StartConversation';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import ErrorAlert from '@/components/ErrorAlert';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
@@ -32,6 +32,8 @@ const Call = () => {
       }))
     );
 
+  const navigation = useNavigation();
+  const activateNativationRef=useRef<any>()
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [matchedUserData, setMatchedUserData] = useState<any>(null);
@@ -150,7 +152,7 @@ const Call = () => {
   };
 
   const stopSearching = () => {
-    cancelCall()
+    cancelCall();
     router.replace('/Home');
   };
 
@@ -169,6 +171,7 @@ const Call = () => {
     }
 
     router.replace('/Home');
+    navigation.dispatch(activateNativationRef?.current.data.action)
   };
 
   const toggleMuteState = () => {
@@ -318,6 +321,7 @@ const Call = () => {
       )}
       {matchedUserData && remoteStream && callAccepted && (
         <StartConversation
+        activateNavigationRef={activateNativationRef}
           name={matchedUserData.user.name}
           isBlueTicked={matchedUserData.user.isBlueTicked}
           level={matchedUserData.user.level}

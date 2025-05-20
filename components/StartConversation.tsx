@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
 import { RTCView, MediaStream } from 'react-native-webrtc';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,13 +8,15 @@ import * as Haptics from 'expo-haptics';
 import CustomButton from '@/components/CustomButton';
 import LiveTimer from './liveTimer';
 import CustomAvatar from './CustomAvatar';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import NameComponent from './NameComponent';
 import CallScreenAd from './CallScreenAd';
+import CustomModal from '@/components/CustomModal';
 
 interface Props {
+  activateNavigationRef: any;
   userId: string;
   name: string;
   isBlueTicked: boolean;
@@ -29,6 +31,7 @@ interface Props {
 }
 
 const StartConversation = ({
+  activateNavigationRef,
   userId,
   name,
   isBlueTicked,
@@ -46,8 +49,20 @@ const StartConversation = ({
       setOtherUser: state.setOtherUser,
     }))
   );
+  const navigation = useNavigation();
   const [isMuted, setIsMuted] = useState(false);
   const [isLoudSpeakerOn, setIsLoudSpeakerOn] = useState(false);
+  const [showCallWillEndAlert, setShowCallWillEndAlert] = useState(false);
+
+  useEffect(() => {
+    const unSubscribe = navigation.addListener('beforeRemove', (e) => {
+      activateNavigationRef.current = e;
+      e.preventDefault();
+      setShowCallWillEndAlert(true);
+    });
+
+    return unSubscribe;
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -127,6 +142,23 @@ const StartConversation = ({
         style={styles.remoteStream}
       />
       <CallScreenAd />
+      <CustomModal
+        isVisible={showCallWillEndAlert}
+        setVisibility={setShowCallWillEndAlert}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>End Call?</Text>
+          <Text style={styles.modalText}>
+            You're about to leave the call. Are you sure?
+          </Text>
+          <Pressable
+            onPress={onEnd}
+            style={styles.modalBtn}
+          >
+            <Text style={styles.modalBtnText}>End Call</Text>
+          </Pressable>
+        </View>
+      </CustomModal>
     </View>
   );
 };
@@ -182,5 +214,33 @@ const styles = StyleSheet.create({
   remoteStream: {
     width: 0,
     height: 0,
+  },
+  modalContent: {
+    backgroundColor: Color.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    color: Color.red,
+    fontFamily: Font.pSemiBold,
+  },
+  modalBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 7,
+    backgroundColor: Color.red,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Color.red,
+  },
+  modalBtnText: {
+    color: Color.white,
+    fontFamily: Font.pRegular,
+  },
+  modalText: {
+    fontFamily: Font.pRegular,
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
