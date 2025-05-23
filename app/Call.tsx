@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Platform, StatusBar } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
 import {
   RTCPeerConnection,
@@ -18,6 +19,12 @@ import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import getIcServer from '@/libs/api/getIceServer';
 import { useKeepAwake } from 'expo-keep-awake';
+import {
+  InterstitialAd,
+  TestIds,
+  AdEventType,
+} from 'react-native-google-mobile-ads';
+import getAdKeywords from '@/libs/getAdKeyword';
 
 const Call = () => {
   useKeepAwake();
@@ -32,8 +39,10 @@ const Call = () => {
       }))
     );
 
+  const [callEndAd, setCallEndAd] = useState<InterstitialAd | null>(null);
+
   const navigation = useNavigation();
-  const activateNativationRef=useRef<any>()
+  const activateNativationRef = useRef<any>();
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [matchedUserData, setMatchedUserData] = useState<any>(null);
@@ -157,6 +166,10 @@ const Call = () => {
   };
 
   const endCall = () => {
+    if (timerRef.current >= 60) {
+      callEndAd?.show();
+    }
+
     setUserStat(timerRef.current);
     Socket.emit('callEnd', { targetSocketId: matchedUserData?.targetSocketId });
 
@@ -171,7 +184,7 @@ const Call = () => {
     }
 
     router.replace('/Home');
-    navigation.dispatch(activateNativationRef?.current.data.action)
+    navigation.dispatch(activateNativationRef?.current.data.action);
   };
 
   const toggleMuteState = () => {
@@ -187,6 +200,49 @@ const Call = () => {
       (audioTrack as any)._setVolume(isLoudSpeaker ? 10.0 : 1.0);
     }
   };
+
+  useEffect(() => {
+    const adUnitId = __DEV__
+      ? TestIds.INTERSTITIAL
+      : 'ca-app-pub-6177013999348150/9139046857';
+
+    const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+      keywords: getAdKeywords(),
+    });
+
+    const unsubscribeLoaded = interstitial.addAdEventListener(
+      AdEventType.LOADED,
+      () => {
+        setCallEndAd(interstitial);
+      }
+    );
+
+    const unsubscribeOpened = interstitial.addAdEventListener(
+      AdEventType.OPENED,
+      () => {
+        if (Platform.OS === 'ios') {
+          StatusBar.setHidden(true);
+        }
+      }
+    );
+
+    const unsubscribeClosed = interstitial.addAdEventListener(
+      AdEventType.CLOSED,
+      () => {
+        if (Platform.OS === 'ios') {
+          StatusBar.setHidden(false);
+        }
+      }
+    );
+
+    interstitial.load();
+
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeOpened();
+      unsubscribeClosed();
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -321,7 +377,7 @@ const Call = () => {
       )}
       {matchedUserData && remoteStream && callAccepted && (
         <StartConversation
-        activateNavigationRef={activateNativationRef}
+          activateNavigationRef={activateNativationRef}
           name={matchedUserData.user.name}
           isBlueTicked={matchedUserData.user.isBlueTicked}
           level={matchedUserData.user.level}

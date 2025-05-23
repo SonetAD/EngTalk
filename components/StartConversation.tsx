@@ -12,7 +12,6 @@ import { router, useNavigation } from 'expo-router';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 import NameComponent from './NameComponent';
-import CallScreenAd from './CallScreenAd';
 import CustomModal from '@/components/CustomModal';
 
 interface Props {
@@ -141,7 +140,6 @@ const StartConversation = ({
         streamURL={remoteStream.toURL()}
         style={styles.remoteStream}
       />
-      <CallScreenAd />
       <CustomModal
         isVisible={showCallWillEndAlert}
         setVisibility={setShowCallWillEndAlert}
