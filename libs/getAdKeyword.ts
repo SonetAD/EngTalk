@@ -1,31 +1,26 @@
-const getAdKeyword = (gender: string) => {
-  if (gender === 'male') {
-    return [
-      'talk to real girls nearby',
-      'make $500 a day from your phone',
-      'secret dating app everyone’s using',
-      'build muscle fast with this trick',
-      'earn money while you sleep',
-      'alpha male mindset secrets',
-      'top 10 richest people secrets',
-      'watch banned viral videos',
-      'flirt with singles in your area',
-      'unlock millionaire habits',
-    ];
-  } else {
-    return [
-      'exclusive designer deals just for you',
-      'luxury handbags everyone is talking about',
-      'get flawless skin with this secret serum',
-      'shop the latest fashion trends now',
-      'join the hottest girls’ luxury chat group',
-      'must-have beauty products under $50',
-      'unlock VIP access to premium shopping',
-      'how to style like a fashion influencer',
-      'glam up with these top makeup hacks',
-      'find your new besties in your city',
-    ];
-  }
+const getAdKeywords = () => {
+  return [
+    'learn English with real conversations',
+    'improve your English speaking skills',
+    'daily English practice for fluency',
+    'study English for career growth',
+    'prepare for the IELTS exam with tips',
+    'easy grammar lessons for beginners',
+    'English for travel and daily use',
+    'boost your vocabulary with examples',
+    'speak English confidently in any situation',
+    'English phrases for job interviews',
+    'master listening and speaking skills',
+    'fun ways to learn English fast',
+    'English for study, work, and life',
+    'build English fluency with short lessons',
+    'understand native speakers with ease',
+    'English made simple for everyone',
+    'practice English in 5 minutes a day',
+    'communicate better with clear English',
+    'get better at English one day at a time',
+    'learn English anytime, anywhere',
+  ];
 };
 
-export default getAdKeyword;
+export default getAdKeywords;

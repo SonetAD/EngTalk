@@ -13,19 +13,11 @@ import {
 
 import { Font, ImageBlurHash } from '@/constants/constants';
 import trimLongString from '@/libs/trimLongString';
-import useCentralStore from '@/store/store/Store';
-import { useShallow } from 'zustand/react/shallow';
 import getAdKeyword from '@/libs/getAdKeyword';
 
 const { width: DEVICE_WIDTH } = Dimensions.get('window');
 
 const CallScreenAd = () => {
-  const { gender } = useCentralStore(
-    useShallow((state) => ({
-      gender: state.user.userInfo.gender,
-    }))
-  );
-
   const [nativeAd, setNativeAd] = useState<NativeAd | null>(null);
   const nativeAdRef = useRef<NativeAd | null>(null);
 
@@ -35,7 +27,7 @@ const CallScreenAd = () => {
 
   const loadAd = () => {
     NativeAd.createForAdRequest(adUnitId, {
-      keywords: getAdKeyword(gender),
+      keywords: getAdKeyword(),
       aspectRatio: NativeMediaAspectRatio.LANDSCAPE,
     })
       .then((ad) => {
