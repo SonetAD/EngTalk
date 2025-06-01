@@ -19,6 +19,7 @@ import { NotificationSocket } from '@/libs/Socket';
 import IsItALink from '@/libs/isItALink';
 import openLink from '@/libs/openLink';
 import * as Clipboard from 'expo-clipboard';
+import * as Haptics from 'expo-haptics';
 
 interface Message {
   _id: string;
@@ -61,7 +62,7 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
     router.push('/OtherProfile');
   };
 
-  const deletePopUp = () => {
+  const openPopUp = () => {
     bottomSheetModalRef.current?.present();
   };
 
@@ -74,7 +75,8 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
 
   const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
     if (isMe && success) {
-      runOnJS(deletePopUp)();
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      runOnJS(openPopUp)();
     }
   });
   const handleDelete = async () => {
