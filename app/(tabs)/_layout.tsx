@@ -12,6 +12,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import LeaderBoardHeaderComponent from '@/components/LeaderBoardHeaderComponent';
 import { NotificationSocket } from '@/libs/Socket';
 import FollowHeaderComponent from '@/components/FollowHeaderComponent';
+import useInAppUpdates from '@/hooks/useInAppUpdates';
 
 type AllowedIcons = 'home' | 'person-circle' | 'trophy' | 'earth';
 
@@ -68,6 +69,7 @@ const TabLayout = () => {
     }))
   );
 
+  useInAppUpdates();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const recordPopUp = useCallback(async () => {
