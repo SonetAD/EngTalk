@@ -63,6 +63,7 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
   };
 
   const openPopUp = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     bottomSheetModalRef.current?.present();
   };
 
@@ -75,7 +76,6 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
 
   const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
     if (isMe && success) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       runOnJS(openPopUp)();
     }
   });
