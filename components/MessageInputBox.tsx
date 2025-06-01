@@ -3,6 +3,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Platform,
   Keyboard,
   Pressable,
   StyleSheet,
@@ -19,6 +20,7 @@ const MessageInputBox = () => {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [newMessage, setNewMessage] = useState(null);
+  const [inputHeight, setInputHeight] = useState(40);
 
   const { token, otherChatParticipant } = useCentralStore(
     useShallow((state) => ({
@@ -46,11 +48,13 @@ const MessageInputBox = () => {
           message,
           messageType: 'text',
         });
-        setIsSending(false);
         setNewMessage(newMessage);
         setMessage('');
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsSending(false);
+        setInputHeight(40);
       }
     }
   };
@@ -60,14 +64,24 @@ const MessageInputBox = () => {
       onPress={Keyboard.dismiss}
       style={styles.container}
     >
-      <View style={styles.inputContainer}>
+      <View style={styles.inputWrapper}>
         <TextInput
-          style={styles.input}
-          placeholder='Message...'
-          placeholderTextColor={Color.gray.oneHundred}
           value={message}
           onChangeText={setMessage}
+          placeholder='Message...'
+          placeholderTextColor={Color.gray.oneHundred}
+          multiline
+          maxLength={1000}
+          style={[
+            styles.input,
+            { height: Math.min(120, Math.max(40, inputHeight)) },
+          ]}
+          onContentSizeChange={(e) =>
+            setInputHeight(e.nativeEvent.contentSize.height)
+          }
+          textAlignVertical='center'
         />
+
         <TouchableOpacity
           onPress={sendMessageFunction}
           style={styles.sendButton}
@@ -96,23 +110,25 @@ export default MessageInputBox;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    paddingHorizontal: 10,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 10,
   },
-  inputContainer: {
+  inputWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     backgroundColor: Color.black.twoHundred,
     borderRadius: 25,
     paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 10,
+    paddingVertical: 8,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: Color.white,
     fontFamily: Font.pRegular,
+    color: Color.white,
+    paddingRight: 10,
   },
   sendButton: {
-    marginLeft: 10,
+    padding: 5,
   },
 });
