@@ -24,6 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LocalStore from '@/libs/localStore';
 import Checkbox from 'expo-checkbox';
 import CustomModal from '@/components/CustomModal';
+import PasswordValidationRules from '@/components/PasswordValidationRules';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -100,7 +101,7 @@ const Signup = () => {
               />
 
               <Text style={styles.heading}>
-              Your voice matters. Let’s start your English journey!
+                Your voice matters. Let’s start your English journey!
               </Text>
 
               <FormField
@@ -132,6 +133,8 @@ const Signup = () => {
                 containerStyle={{ marginTop: 15 }}
               />
 
+              <PasswordValidationRules password={formData.passWord} />
+
               <View style={styles.checkboxContainer}>
                 <Checkbox
                   value={formData.tos}
@@ -145,7 +148,7 @@ const Signup = () => {
                   <Text style={styles.checkboxLabel}>I agree to the </Text>
                   <Pressable
                     onPress={() =>
-                      Linking.openURL('https://engtalk-tos.sonetstudio.org/')
+                      Linking.openURL('https://engtalk.sonetstudio.org/tos')
                     }
                   >
                     <Text style={styles.link}>Terms of Service</Text>
@@ -165,7 +168,7 @@ const Signup = () => {
                   href='/Signin'
                   style={styles.link}
                 >
-                Log In
+                  Log In
                 </Link>
               </View>
             </View>

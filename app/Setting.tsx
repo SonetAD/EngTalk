@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Linking from 'expo-linking';
 import FullScreenView from '@/components/FullScreenView';
 import { Color, Font } from '@/constants/constants';
 import LocalStore from '@/libs/localStore';
@@ -66,6 +68,21 @@ const Setting = () => {
     logoutHandler();
   };
 
+  const openInstagram = async () => {
+    const instagramAppUrl = 'instagram://user?username=engtalkapp';
+    const instagramWebUrl = 'https://www.instagram.com/engtalkapp/';
+    try {
+      const supported = await Linking.canOpenURL(instagramAppUrl);
+      if (supported) {
+        await Linking.openURL(instagramAppUrl);
+      } else {
+        await Linking.openURL(instagramWebUrl);
+      }
+    } catch (e) {
+      await Linking.openURL(instagramWebUrl);
+    }
+  };
+
   return (
     <FullScreenView>
       <View style={styles.container}>
@@ -80,6 +97,26 @@ const Setting = () => {
               color={Color.white}
             />
             <Text style={styles.text}>About Us</Text>
+          </Pressable>
+
+          {/* Follow Us Instagram Button */}
+          <Pressable
+            style={styles.card}
+            onPress={openInstagram}
+          >
+            <LinearGradient
+              colors={['#f58529', '#dd2a7b', '#8134af', '#515bd4']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.instagramIconWrapper}
+            >
+              <Ionicons
+                name='logo-instagram'
+                size={22}
+                color='#fff'
+              />
+            </LinearGradient>
+            <Text style={styles.text}>Follow Us</Text>
           </Pressable>
 
           <Pressable
@@ -106,7 +143,9 @@ const Setting = () => {
             <Text style={styles.text}>Feedback</Text>
           </Pressable>
           <Pressable
-            onPress={() => openLink('https://engtalk-privacy.sonetstudio.org/')}
+            onPress={() =>
+              openLink('https://engtalk.sonetstudio.org/privacy-policy')
+            }
             style={styles.card}
           >
             <Ionicons
@@ -279,5 +318,13 @@ const styles = StyleSheet.create({
   },
   passwordInput: {
     width: '100%',
+  },
+  instagramIconWrapper: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
   },
 });

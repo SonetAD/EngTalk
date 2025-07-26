@@ -27,7 +27,7 @@ const CustomButton = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        if (!feedBackOff) {          
+        if (!feedBackOff) {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }
         handlePress();
@@ -68,5 +68,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Color.primary,
     textAlign: 'center',
-  }
+  },
 });
