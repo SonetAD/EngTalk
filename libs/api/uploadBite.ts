@@ -7,7 +7,7 @@ import { Audio } from 'react-native-compressor';
 interface Props {
   userId: string;
   token: string;
-  file: string;
+  file?: string | null;
 }
 
 const uploadBite = async (data: Props) => {
