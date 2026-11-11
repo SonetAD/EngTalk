@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Image } from 'expo-image';
 import {
@@ -95,17 +95,12 @@ const NativeAdComponent = () => {
         <NativeMediaView style={styles.mediaView} />
 
         {nativeAd.callToAction && (
+          // The SDK registers this view and handles clicks natively; it must be
+          // a direct child of NativeAsset (no Pressable or wrapper view).
           <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-            <Pressable
-              style={styles.ctaButton}
-              // NOTE: NativeAd in the installed react-native-google-mobile-ads does not
-              // declare performClick; the call is kept as-is to preserve behaviour.
-              onPress={() =>
-                (nativeAd as unknown as { performClick: () => void }).performClick()
-              }
-            >
-              <Text style={styles.ctaText}>{nativeAd.callToAction}</Text>
-            </Pressable>
+            <Text style={[styles.ctaButton, styles.ctaText]}>
+              {nativeAd.callToAction}
+            </Text>
           </NativeAsset>
         )}
       </NativeAdView>
@@ -192,12 +187,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    alignItems: 'center',
     alignSelf: 'flex-start',
+    overflow: 'hidden',
   },
   ctaText: {
     color: '#fff',
     fontSize: 12,
     fontFamily: Font.pSemiBold,
+    textAlign: 'center',
   },
 });

@@ -417,6 +417,10 @@ const Call = () => {
           toggleMute={toggleMuteState}
           toggleSpeaker={toggleLoudSpeaker}
           timerRef={timerRef}
+          onGoldCoinError={(message) => {
+            setErrorMessage(message);
+            setShowErrorAlert(true);
+          }}
         />
       )}
       <ErrorAlert
