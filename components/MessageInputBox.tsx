@@ -51,7 +51,7 @@ const MessageInputBox = () => {
         setNewMessage(newMessage);
         setMessage('');
       } catch (err) {
-        console.log(err);
+        if (__DEV__) console.log(err);
       } finally {
         setIsSending(false);
         setInputHeight(40);

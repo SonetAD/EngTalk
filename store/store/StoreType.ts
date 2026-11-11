@@ -7,8 +7,6 @@ import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { SearchUserSliceType } from '@/store/features/SearchUser/SearchUserSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
-``
-
 export type StoreType =
 AuthSliceType &
   UserStatSliceType &

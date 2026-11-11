@@ -1,3 +1,4 @@
+import type { StyleProp, TextStyle } from 'react-native';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Color, DeviceWidth, Font } from '@/constants/constants';
@@ -32,7 +33,7 @@ const FormField = ({
   const handlePassword = () => {
     setShowPassword((prev) => !prev);
   };
-  const inputStyle: any = [styles.input];
+  const inputStyle: StyleProp<TextStyle>[] = [styles.input];
 
   if (value) {
     inputStyle.push({ opacity: 1 });

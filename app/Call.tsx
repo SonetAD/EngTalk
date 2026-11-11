@@ -1,3 +1,5 @@
+import type { MatchedUserData } from '@/libs/api/types';
+import type { BeforeRemoveEvent } from '@/types/navigation';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import FullScreenView from '@/components/FullScreenView';
@@ -26,6 +28,10 @@ import {
 } from 'react-native-google-mobile-ads';
 import getAdKeywords from '@/libs/getAdKeyword';
 
+type SessionDescriptionInit = ConstructorParameters<
+  typeof RTCSessionDescription
+>[0];
+
 const Call = () => {
   useKeepAwake();
   const { token, userId, gender, filteredGender, setUserStat } =
@@ -42,10 +48,10 @@ const Call = () => {
   const [callEndAd, setCallEndAd] = useState<InterstitialAd | null>(null);
 
   const navigation = useNavigation();
-  const activateNativationRef = useRef<any>();
+  const activateNativationRef = useRef<BeforeRemoveEvent>();
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callAccepted, setCallAccepted] = useState(false);
-  const [matchedUserData, setMatchedUserData] = useState<any>(null);
+  const [matchedUserData, setMatchedUserData] = useState<MatchedUserData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -127,7 +133,13 @@ const Call = () => {
       Socket.emit('findMatch', { userId, preferredGender: filteredGender });
     }, 500);
 
-    const matchHandler = async ({ matcheduserId, matchedSocketId }: any) => {
+    const matchHandler = async ({
+      matcheduserId,
+      matchedSocketId,
+    }: {
+      matcheduserId: string;
+      matchedSocketId: string;
+    }) => {
       if (findMatchIntervalRef.current) {
         clearInterval(findMatchIntervalRef.current);
         findMatchIntervalRef.current = null;
@@ -184,7 +196,7 @@ const Call = () => {
     }
 
     router.replace('/Home');
-    navigation.dispatch(activateNativationRef?.current.data.action);
+    navigation.dispatch(activateNativationRef.current!.data.action);
   };
 
   const toggleMuteState = () => {
@@ -196,8 +208,12 @@ const Call = () => {
 
   const toggleLoudSpeaker = (isLoudSpeaker: boolean) => {
     const audioTrack = remoteStream?.getAudioTracks()[0];
-    if (audioTrack && typeof (audioTrack as any)._setVolume === 'function') {
-      (audioTrack as any)._setVolume(isLoudSpeaker ? 10.0 : 1.0);
+    // _setVolume is a react-native-webrtc extension not present in its typings.
+    const track = audioTrack as unknown as
+      | { _setVolume?: (volume: number) => void }
+      | undefined;
+    if (track && typeof track._setVolume === 'function') {
+      track._setVolume(isLoudSpeaker ? 10.0 : 1.0);
     }
   };
 
@@ -267,7 +283,7 @@ const Call = () => {
   useEffect(() => {
     Socket.emit('join', { userId, gender });
 
-    const handleIceCandidate = async ({ candidate }: any) => {
+    const handleIceCandidate = async ({ candidate }: { candidate?: RTCIceCandidateInit }) => {
       if (candidate) {
         try {
           const iceCandidate = new RTCIceCandidate(candidate);
@@ -282,7 +298,13 @@ const Call = () => {
       }
     };
 
-    const handleOffer = async ({ offer, from }: any) => {
+    const handleOffer = async ({
+      offer,
+      from,
+    }: {
+      offer: SessionDescriptionInit;
+      from: string;
+    }) => {
       if (!peerConnectionRef.current) {
         peerConnectionRef.current = await createPeerConnection();
       }
@@ -304,7 +326,7 @@ const Call = () => {
       Socket.emit('answer', { targetSocketId: from, answer });
     };
 
-    const handleAnswer = async ({ answer }: any) => {
+    const handleAnswer = async ({ answer }: { answer: SessionDescriptionInit }) => {
       if (peerConnectionRef.current) {
         await peerConnectionRef.current.setRemoteDescription(
           new RTCSessionDescription(answer)
@@ -328,7 +350,13 @@ const Call = () => {
       searchPartner();
     };
 
-    const handleCallAccepted = async ({ matchedSocketId, role }: any) => {
+    const handleCallAccepted = async ({
+      matchedSocketId,
+      role,
+    }: {
+      matchedSocketId: string;
+      role: string;
+    }) => {
       targetUserSocketIdRef.current = matchedSocketId;
       await startLocalStream();
       await initiateCall(matchedSocketId, role);
@@ -389,6 +417,10 @@ const Call = () => {
           toggleMute={toggleMuteState}
           toggleSpeaker={toggleLoudSpeaker}
           timerRef={timerRef}
+          onGoldCoinError={(message) => {
+            setErrorMessage(message);
+            setShowErrorAlert(true);
+          }}
         />
       )}
       <ErrorAlert

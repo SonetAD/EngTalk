@@ -1,3 +1,4 @@
+import type { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Color, DeviceHeight, Font } from '@/constants/constants';
 import RecordVoiceBites from './RecordVoiceBites';
@@ -5,7 +6,7 @@ import CustomBrightIcon from './CustomBrightIcon';
 
 interface Props {
   recordPopUp: () => void;
-  reference: any;
+  reference: React.Ref<BottomSheetModal>;
 }
 const ExploreHeaderComponent = ({ reference, recordPopUp }: Props) => {
   return (

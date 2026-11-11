@@ -85,7 +85,7 @@ const OtherProfileInfo = () => {
         setFollowingInProgress(false);
       }
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 

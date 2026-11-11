@@ -27,7 +27,7 @@ const updateTalkTime = async ({ talkTime, token }: Props) => {
       });
     }
     return stat.data;
-  } catch (err) {
+  } catch {
     throw 'Something went wrong';
   }
 };

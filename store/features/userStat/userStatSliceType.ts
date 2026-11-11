@@ -17,10 +17,6 @@ type UserStatState = {
   userStatStatus: UserStatStatus;
 };
 
-type SetProps = {
-  talkTime: number;
-  token: string;
-};
 type UserStatAction = {
   getUserStat: () => Promise<void>;
   setUserStat: (talkTime: number) => Promise<void>;

@@ -1,5 +1,7 @@
+import type { VoiceBitePost } from '@/libs/api/types';
+
 type VoiceBite = {
-  posts: [];
+  posts: VoiceBitePost[];
   totalPages: number;
   totalPosts: number;
 };

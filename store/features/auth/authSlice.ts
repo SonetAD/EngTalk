@@ -53,7 +53,7 @@ const createAuthSlice: StateCreator<
     try {
       let res = await userLogin({ userName, password });
       const location = await getUserLocation();
-      if (location && location != res.user.location) {
+      if (location && location !== res.user.location) {
         await updateProfile({
           token: res.token,
           userId: res.user.id,
@@ -79,8 +79,8 @@ const createAuthSlice: StateCreator<
         state.authStatus.isError = false;
         state.authStatus.error = '';
       });
-    } catch (err: any) {
-      console.log(err);
+    } catch (err) {
+      if (__DEV__) console.log(err);
       set((state) => {
         state.user.token = '';
         state.user.userInfo = {
@@ -100,7 +100,7 @@ const createAuthSlice: StateCreator<
         };
         state.authStatus.isLoading = false;
         state.authStatus.isError = true;
-        state.authStatus.error = err?.message || 'Something went wrong!';
+        state.authStatus.error = (err as Error)?.message || 'Something went wrong!';
       });
     }
   },

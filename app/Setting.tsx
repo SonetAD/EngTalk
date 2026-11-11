@@ -48,12 +48,12 @@ const Setting = () => {
 
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
-          console.log('Shared with activity type:', result.activityType);
+          if (__DEV__) console.log('Shared with activity type:', result.activityType);
         } else {
-          console.log('Shared');
+          if (__DEV__) console.log('Shared');
         }
       } else if (result.action === Share.dismissedAction) {
-        console.log('Share dismissed');
+        if (__DEV__) console.log('Share dismissed');
       }
     } catch (error) {
       console.error('Error sharing:', error);

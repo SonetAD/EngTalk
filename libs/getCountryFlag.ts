@@ -1,5 +1,5 @@
-const getCountryFlag=(isoCode:any)=>{
-    const countryFlags:any = {
+const getCountryFlag=(isoCode: string | null)=>{
+    const countryFlags: Record<string, string> = {
         'AF': '🇦🇫',
         'AL': '🇦🇱',
         'DZ': '🇩🇿',
@@ -230,7 +230,7 @@ const getCountryFlag=(isoCode:any)=>{
         'ZW': '🇿🇼',
       };
 
-      return countryFlags[isoCode];
+      return countryFlags[isoCode as string];
 }
 
 export default getCountryFlag

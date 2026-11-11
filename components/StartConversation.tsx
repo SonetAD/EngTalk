@@ -1,3 +1,4 @@
+import type { BeforeRemoveEvent } from '@/types/navigation';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
@@ -15,7 +16,7 @@ import NameComponent from './NameComponent';
 import CustomModal from '@/components/CustomModal';
 
 interface Props {
-  activateNavigationRef: any;
+  activateNavigationRef: React.MutableRefObject<BeforeRemoveEvent | undefined>;
   userId: string;
   name: string;
   isBlueTicked: boolean;
@@ -27,6 +28,7 @@ interface Props {
   toggleMute: () => void;
   toggleSpeaker: (val: boolean) => void;
   timerRef: React.MutableRefObject<number>;
+  onGoldCoinError?: (message: string) => void;
 }
 
 const StartConversation = ({
@@ -42,6 +44,7 @@ const StartConversation = ({
   toggleMute,
   toggleSpeaker,
   timerRef,
+  onGoldCoinError,
 }: Props) => {
   const { setOtherUser } = useCentralStore(
     useShallow((state) => ({
@@ -65,7 +68,10 @@ const StartConversation = ({
 
   return (
     <View style={styles.container}>
-      <LiveTimer timerRef={timerRef} />
+      <LiveTimer
+        timerRef={timerRef}
+        onGoldCoinError={onGoldCoinError}
+      />
       <CustomAvatar
         avatar={avatar}
         avatarStyle={styles.avatar}

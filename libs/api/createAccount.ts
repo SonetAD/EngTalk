@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import axios from 'axios';
 import { Backend } from '@/config';
 
@@ -11,10 +13,11 @@ const createAccount = async (userData: Props) => {
   try {
     const res = await axios.post(Backend.signupURL, userData);
     return res.data;
-  } catch (err: any) {
-    console.log(err?.response?.data);
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    if (__DEV__) console.log(error?.response?.data);
     const errorMessage =
-      err?.response?.data?.errors?.validation?.msg || 'Something went wrong!';
+      error?.response?.data?.errors?.validation?.msg || 'Something went wrong!';
     throw new Error(errorMessage);
   }
 };

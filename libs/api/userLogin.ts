@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import axios from 'axios';
 import { Backend } from '@/config';
 import LocalStore from '../localStore';
@@ -10,12 +12,13 @@ const userLogin = async (userData: Props) => {
   try {
     const res = await axios.post(Backend.signinURL, userData);
     return res.data;
-  } catch (err: any) {
-    if (err?.response?.data?.errors?.validation) {
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    if (error?.response?.data?.errors?.validation) {
       LocalStore.clearAll();
     }
     const errorMessage =
-      err?.response?.data?.errors?.validation?.msg || err?.message || 'Something went wrong!';
+      error?.response?.data?.errors?.validation?.msg || error?.message || 'Something went wrong!';
     throw new Error(errorMessage);
   }
 };

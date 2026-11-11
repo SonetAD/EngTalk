@@ -18,7 +18,7 @@ const deleteVoiceBite = async ({ token, voiceBiteId }: Props) => {
     
     return true;
   } catch (err) {
-    console.log(err);
+    if (__DEV__) console.log(err);
   }
 };
 

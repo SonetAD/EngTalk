@@ -48,8 +48,8 @@ const Signin = () => {
       LocalStore.set('passWord', formData.passWord);
 
       router.replace('/');
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err as Error).message);
       setShowErrorAlert(true);
     } finally {
       setIsLoading(false);

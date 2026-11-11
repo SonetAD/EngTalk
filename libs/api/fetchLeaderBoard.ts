@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import axios from 'axios';
 import { Backend } from '@/config';
 
@@ -13,8 +15,9 @@ const fetchLeaderBoard = async ({token}:Props) => {
       },
     });
     return res.data;
-  } catch (err: any) {
-    throw new Error(err?.message);
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    throw new Error(error?.message);
   }
 };
 

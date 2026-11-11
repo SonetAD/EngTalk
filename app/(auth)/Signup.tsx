@@ -68,9 +68,9 @@ const Signup = () => {
       LocalStore.set('passWord', formData.passWord);
 
       router.replace('/');
-    } catch (err: any) {
-      console.log(err);
-      setErrorMessage(err.message);
+    } catch (err) {
+      if (__DEV__) console.log(err);
+      setErrorMessage((err as Error).message);
       setShowErrorAlert(true);
     } finally {
       setIsLoading(false);

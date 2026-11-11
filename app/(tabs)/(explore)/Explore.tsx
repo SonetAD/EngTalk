@@ -1,3 +1,5 @@
+import type { VoiceBitePost } from '@/libs/api/types';
+
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import React, {
   useEffect,
@@ -16,6 +18,10 @@ import { useShallow } from 'zustand/react/shallow';
 import fetchAllBites from '@/libs/api/fetchAllBite';
 import { Color } from '@/constants/constants';
 import NativeAdComponent from '@/components/NativeAdComponent';
+
+type ExploreItem =
+  | { type: 'voiceBite'; data: VoiceBitePost }
+  | { type: 'ad'; id: string };
 
 const Explore = () => {
   const { allBites, isLoading, isError } = useCentralStore(
@@ -76,13 +82,13 @@ const Explore = () => {
       }
       setRefreshing(false);
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 
   const modifiedData = useMemo(() => {
-    const items: any[] = [];
-    allBites.posts.forEach((post: any, index: number) => {
+    const items: ExploreItem[] = [];
+    allBites.posts.forEach((post, index: number) => {
       items.push({ type: 'voiceBite', data: post });
       if ((index + 1) % 4 === 0) {
         items.push({ type: 'ad', id: `ad-${index}` });
@@ -92,7 +98,7 @@ const Explore = () => {
   }, [allBites.posts]);
 
   // Memoized render item function
-  const renderItem = useCallback(({ item }: any) => {
+  const renderItem = useCallback(({ item }: { item: ExploreItem }) => {
     if (item.type === 'ad') {
       return (
         <View style={{ width: '100%', marginVertical: 10 }}>

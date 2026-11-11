@@ -77,8 +77,8 @@ const EditProfileHeaderComponent = () => {
       setLoading(false);
 
       router.navigate('/Profile');
-    } catch (err: any) {
-      setErrorMessage(err.message);
+    } catch (err) {
+      setErrorMessage((err as Error).message);
       setShowErrorAlert(true);
       setLoading(false);
     }

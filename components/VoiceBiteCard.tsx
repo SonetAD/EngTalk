@@ -30,7 +30,7 @@ interface Props {
   isBlueTicked: boolean;
 }
 
-const gradients = [
+const gradients: [string, string][] = [
   [Color.primary, Color.secondary.default],
   [Color.primary, Color.secondary.oneHundred],
   [Color.primary, Color.secondary.twoHundred],
@@ -94,7 +94,7 @@ const VoiceBitesCard = ({
       }
       setIsPlaying(!isPlaying);
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
       setIsBuffering(false);
     }
   };
@@ -112,7 +112,7 @@ const VoiceBitesCard = ({
     }).start();
   };
 
-  const randomGradient: any =
+  const randomGradient: [string, string] =
     gradients[Math.floor(Math.random() * gradients.length)];
 
   const handleDelete = async () => {
@@ -122,7 +122,7 @@ const VoiceBitesCard = ({
       await deleteVoiceBite({ token, voiceBiteId });
       NotificationSocket.emit('deletePost');
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     } finally {
       setIsDeleting(false);
     }

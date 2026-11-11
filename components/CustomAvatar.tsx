@@ -1,3 +1,4 @@
+import type { ImageStyle, StyleProp } from 'react-native';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { Image } from 'expo-image';
@@ -7,10 +8,10 @@ import { isLoading } from 'expo-font';
 
 interface Props {
   avatar: {
-    src: any;
-    stockAvatar: any;
+    src: string;
+    stockAvatar: string;
   };
-  avatarStyle?: {};
+  avatarStyle?: StyleProp<ImageStyle>;
   customSrc?: boolean;
 }
 

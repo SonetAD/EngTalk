@@ -7,27 +7,10 @@ import CustomAvatar from './CustomAvatar';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import trimLongString from '@/libs/trimLongString';
+import type { SingleConversation } from '@/store/features/inbox/InboxSliceType';
 
-type User = {
-  _id: string;
-  name: string;
-  avatar: {
-    default: boolean;
-    src: string;
-  };
-  isBlueTicked: boolean;
-};
-type Conversation = {
-  participants: User[];
-  lastMessage: {
-    message: string;
-    sender: User;
-    timestamp: string;
-  };
-  readStatus: boolean;
-};
 interface Props {
-  conversation: Conversation;
+  conversation: SingleConversation;
 }
 
 const ConversationCard = ({ conversation }: Props) => {
@@ -38,9 +21,10 @@ const ConversationCard = ({ conversation }: Props) => {
     }))
   );
 
-  const otherUser: any = conversation.participants.find(
+  // The API always includes the other participant, as before.
+  const otherUser = conversation.participants.find(
     (user) => user._id !== userId
-  );
+  ) as SingleConversation['participants'][number];
 
   const isMessageFromUser = conversation.lastMessage.sender._id === userId;
   const formattedMessage = isMessageFromUser
@@ -56,7 +40,7 @@ const ConversationCard = ({ conversation }: Props) => {
         error: '',
       },
     }));
-    getConversation(otherUser._id);
+    getConversation(otherUser._id as string);
     router.push('/Chat');
   };
 

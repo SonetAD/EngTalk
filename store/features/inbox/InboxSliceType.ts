@@ -1,4 +1,6 @@
 type User = {
+  _id?: string;
+  isBlueTicked?: boolean;
   userName: string;
   name: string;
   avatar: {
@@ -6,7 +8,7 @@ type User = {
     stockAvatar: string;
   };
 };
-type SingleConversation = {
+export type SingleConversation = {
   _id: string;
   participants: User[];
   lastMessage: {

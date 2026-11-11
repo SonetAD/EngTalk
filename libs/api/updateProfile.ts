@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import axios from 'axios';
 import { Backend } from '@/config';
 import { Image } from 'react-native-compressor';
@@ -8,7 +10,7 @@ interface Props {
   userName?: string;
   name?: string;
   email?: string;
-  location?: any;
+  location?: string;
   password?: string;
   avatar?: {
     src: string;
@@ -32,11 +34,12 @@ const updateProfile = async (data: Props) => {
       const fileName = `${data.userId}_profile_picture`;
 
       if (extension) {
+        // React Native's FormData accepts a { uri, name, type } file descriptor.
         form.append('avatar', {
           name: `${fileName}.${extension}`,
           type: `image/${extension}`,
           uri: compressedAvatar,
-        });
+        } as unknown as Blob);
       }
     }
 
@@ -52,8 +55,9 @@ const updateProfile = async (data: Props) => {
       return res.data;
     }
     return {};
-  } catch (err: any) {
-    const errorMessage=err?.response?.data?.errors?.validation?.msg
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    const errorMessage=error?.response?.data?.errors?.validation?.msg
     throw new Error(errorMessage);
   }
 };

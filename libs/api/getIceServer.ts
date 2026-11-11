@@ -10,7 +10,7 @@ const getIcServer = async (authToken: string) => {
     });
     return res.data;
   } catch (err) {
-    console.log(err);
+    if (__DEV__) console.log(err);
   }
 };
 
