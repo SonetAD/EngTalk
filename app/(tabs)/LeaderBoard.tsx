@@ -1,3 +1,4 @@
+import type { LeaderBoardUser } from '@/libs/api/types';
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import fetchLeaderBoard from '@/libs/api/fetchLeaderBoard';
@@ -46,7 +47,7 @@ const LeaderBoard = () => {
         setIsLoading(false);
       }
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 
@@ -81,7 +82,7 @@ const LeaderBoard = () => {
           </View>
         )}
         data={leaderBoard.topUsers}
-        renderItem={({ item, index }: { item: any; index: number }) => (
+        renderItem={({ item, index }: { item: LeaderBoardUser; index: number }) => (
           <LeaderboardCard
             avatar={item?.avatar}
             rank={index + 1}

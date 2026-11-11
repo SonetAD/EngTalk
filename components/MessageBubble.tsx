@@ -1,3 +1,4 @@
+import type { BottomSheetBackdropProps } from '@gorhom/bottom-sheet';
 import React, { useCallback, useRef } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,7 +22,7 @@ import openLink from '@/libs/openLink';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 
-interface Message {
+export interface Message {
   _id: string;
   message: string;
   messageType: string;
@@ -94,7 +95,7 @@ const MessageBubble = ({ message, handleDeleteMessage }: Props) => {
   };
 
   const renderBackdrop = useCallback(
-    (props: any) => (
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
         opacity={0.1}

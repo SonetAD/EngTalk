@@ -1,3 +1,4 @@
+import type { VoiceBitePost } from '@/libs/api/types';
 import FullScreenView from '@/components/FullScreenView';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlashList } from '@shopify/flash-list';
@@ -74,13 +75,13 @@ const Profile = () => {
       }
       setRefreshing(false);
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 
   // Memoized render item function
   const renderItem = useCallback(
-    ({ item }: any) => (
+    ({ item }: { item: VoiceBitePost }) => (
       <VoiceBiteCard
         ownerId={item?.user?._id}
         voiceBiteId={item?._id}

@@ -1,3 +1,4 @@
+import type { BeforeRemoveEvent } from '@/types/navigation';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Color, DeviceHeight, DeviceWidth, Font } from '@/constants/constants';
@@ -15,7 +16,7 @@ import NameComponent from './NameComponent';
 import CustomModal from '@/components/CustomModal';
 
 interface Props {
-  activateNavigationRef: any;
+  activateNavigationRef: React.MutableRefObject<BeforeRemoveEvent | undefined>;
   userId: string;
   name: string;
   isBlueTicked: boolean;

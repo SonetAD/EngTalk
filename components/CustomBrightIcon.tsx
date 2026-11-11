@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Color } from '@/constants/constants';
 
 interface Props {
-  name: any;
+  name: React.ComponentProps<typeof Ionicons>['name'];
 }
 
 const CustomBrightIcon = ({ name }: Props) => {

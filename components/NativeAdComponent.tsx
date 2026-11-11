@@ -98,7 +98,11 @@ const NativeAdComponent = () => {
           <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
             <Pressable
               style={styles.ctaButton}
-              onPress={() => nativeAd.performClick()}
+              // NOTE: NativeAd in the installed react-native-google-mobile-ads does not
+              // declare performClick; the call is kept as-is to preserve behaviour.
+              onPress={() =>
+                (nativeAd as unknown as { performClick: () => void }).performClick()
+              }
             >
               <Text style={styles.ctaText}>{nativeAd.callToAction}</Text>
             </Pressable>

@@ -1,3 +1,4 @@
+import type { UserSummary } from '@/libs/api/types';
 import { StyleSheet, View, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import getUserInfo from '@/libs/api/userInfo';
@@ -20,7 +21,7 @@ const FollowUserCard = ({ userId }: Props) => {
     }))
   );
 
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<Pick<UserSummary, "name" | "avatar" | "isBlueTicked"> | null>(null);
 
   useEffect(() => {
     (async () => {

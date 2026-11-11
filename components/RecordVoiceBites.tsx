@@ -14,7 +14,7 @@ import uploadBite from '@/libs/api/uploadBite';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
 
-const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
+const RecordVoiceBites = forwardRef<BottomSheetModal>((props, ref) => {
   const { token, userId, getVoiceBite } = useCentralStore(
     useShallow((state) => ({
       token: state.user.token,
@@ -24,7 +24,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
   );
 
   const snapPoints = ['30%'];
-  const [audioFile, setAudioFile] = useState<any>(null);
+  const [audioFile, setAudioFile] = useState<string | null | undefined>(null);
   const [postingStatus, setPostingStatus] = useState('');
   const [permissionResponse, requestPermission] = Audio.usePermissions();
   const recordingRef = useRef<Audio.Recording | null>(null);
@@ -52,7 +52,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
       );
       recordingRef.current = recording;
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 
@@ -67,7 +67,7 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
       recordingRef.current = null;
       setAudioFile(uri);
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 
@@ -81,9 +81,9 @@ const RecordVoiceBites = forwardRef<BottomSheetModal, {}>((props, ref) => {
       await uploadBite({ userId, token, file: audioFile });
       setPostingStatus('');
       getVoiceBite();
-      ref?.current?.dismiss();
+      if (ref && typeof ref !== 'function') ref.current?.dismiss();
     } catch (err) {
-      console.log(err);
+      if (__DEV__) console.log(err);
     }
   };
 

@@ -93,7 +93,6 @@ const ProfileInfo = () => {
       },
     });
   };
-  console.log(isBlueTicked);
   return (
     <View>
       <View style={styles.info}>

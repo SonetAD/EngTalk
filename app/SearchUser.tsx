@@ -1,3 +1,4 @@
+import type { UserSummary } from '@/libs/api/types';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FullScreenView from '@/components/FullScreenView';
@@ -17,8 +18,8 @@ const SearchUser = () => {
       setSearchUser: state.setSearchUser,
     }))
   );
-  const timerRef = useRef<any>(null);
-  const [searchResult, setSearchResult] = useState([]);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchResult, setSearchResult] = useState<UserSummary[]>([]);
   const [noResultFound, setNoResultFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,11 +35,11 @@ const SearchUser = () => {
           } else {
             setNoResultFound(true);
           }
-          clearTimeout(timerRef.current);
+          clearTimeout(timerRef.current as ReturnType<typeof setTimeout>);
           timerRef.current = null;
           setIsLoading(false);
         } catch (err) {
-          console.log(err);
+          if (__DEV__) console.log(err);
         }
       }, 1000);
     }
@@ -64,7 +65,7 @@ const SearchUser = () => {
         ) : (
           <FlashList
             data={searchResult}
-            renderItem={({ item }: { item: any }) => (
+            renderItem={({ item }: { item: UserSummary }) => (
               <SearchUserResultCard
                 otherUserId={item?._id}
                 name={item?.name}

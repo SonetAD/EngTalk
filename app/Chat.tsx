@@ -1,3 +1,4 @@
+import type { Message } from '@/components/MessageBubble';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -114,9 +115,9 @@ const Chat = () => {
             ) : (
               <FlashList
                 data={messages}
-                renderItem={({ item }: { item: any }) => (
+                renderItem={({ item }) => (
                   <MessageBubble
-                    message={item}
+                    message={item as unknown as Message}
                     handleDeleteMessage={handleDeleteMessage}
                   />
                 )}

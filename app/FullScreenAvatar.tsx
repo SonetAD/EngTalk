@@ -7,8 +7,9 @@ import FullScreenView from '@/components/FullScreenView';
 const FullScreenAvatar = () => {
   const { src, stockAvatar } = useLocalSearchParams();
   const avatar = {
-    src: src || '',
-    stockAvatar: stockAvatar || '',
+    // Route params may be string[]; cast keeps the previous runtime behaviour.
+    src: (src || '') as string,
+    stockAvatar: (stockAvatar || '') as string,
   };
   return (
     <FullScreenView>
