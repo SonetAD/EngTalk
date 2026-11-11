@@ -2,6 +2,8 @@
 
 # EngTalk
 
+[![CI](https://github.com/SonetAD/EngTalk/actions/workflows/ci.yml/badge.svg)](https://github.com/SonetAD/EngTalk/actions/workflows/ci.yml)
+
 A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I built the app and the Node.js backend behind it.
 
 **Live on Google Play with 500+ downloads:** [Get it on Google Play](https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk)
@@ -101,6 +103,7 @@ The backend is private because it serves the live app. I can walk through the ma
 
 ```bash
 npm install
+npm test              # unit tests
 npx expo run:android   # WebRTC needs a development build, not Expo Go
 ```
 
