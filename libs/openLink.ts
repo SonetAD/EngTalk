@@ -17,9 +17,9 @@ const openLink = (rawLink: string) => {
     link = `https://${link}`;
   }
 
-  Linking.openURL(link.toLowerCase()).catch(() =>
-    console.log('Unable to open link')
-  );
+  Linking.openURL(link.toLowerCase()).catch(() => {
+    if (__DEV__) console.log('Unable to open link');
+  });
 };
 
 export default openLink;

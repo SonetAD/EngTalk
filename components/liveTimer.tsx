@@ -5,7 +5,7 @@ import Color from '@/constants/color';
 import Font from '@/constants/font';
 import useCentralStore from '@/store/store/Store';
 import { useShallow } from 'zustand/react/shallow';
-import useGoldCoin from '@/libs/api/useGoldCoin';
+import spendGoldCoin from '@/libs/api/spendGoldCoin';
 
 interface Props {
   timerRef: React.MutableRefObject<number>;
@@ -29,7 +29,7 @@ const LiveTimer = ({ timerRef }: Props) => {
       if (filteredGender === 'male' || filteredGender === 'female') {
         if (timerRef.current >= 60 && !spendGoldCoinRef.current) {
           spendGoldCoinRef.current = true;
-           useGoldCoin({ token });
+           spendGoldCoin({ token });
         }
       }
     }, 1000);

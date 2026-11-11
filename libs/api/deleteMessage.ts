@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import { Backend } from "@/config";
 import axios from "axios";
 
@@ -16,8 +18,9 @@ const deleteMessage = async ({ token, messageId }: Props) => {
             },
         })
     }
-    catch(err:any){
-        console.log(err?.response?.data);
+    catch (err) {
+      const error = err as AxiosError<ApiErrorBody>;
+        if (__DEV__) console.log(error?.response?.data);
     }
 };
 

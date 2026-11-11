@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import { Backend } from '@/config';
 import axios from 'axios';
 
@@ -9,9 +11,10 @@ const getUserInfo = async (userId: string) => {
       },
     });
     return user.data;
-  } catch (err: any) {
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
     throw new Error(
-      err?.response?.data?.errors?.common?.msg || 'Something went wrong!'
+      error?.response?.data?.errors?.common?.msg || 'Something went wrong!'
     );
   }
 };

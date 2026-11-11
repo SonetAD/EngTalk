@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import { Backend } from '@/config';
 import axios from 'axios';
 
@@ -28,9 +30,10 @@ const sendMessage = async ({
       }
     );
     return res.data;
-  } catch (err: any) {
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
     const errorMessage =
-      err?.response?.data?.errors?.validation?.msg || 'Something went wrong!';
+      error?.response?.data?.errors?.validation?.msg || 'Something went wrong!';
     throw new Error(errorMessage);
   }
 };

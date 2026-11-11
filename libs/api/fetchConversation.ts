@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import axios from 'axios';
 import { Backend } from '@/config';
 
@@ -22,9 +24,10 @@ const fetchConversation = async (data: Props) => {
       },
     });
     return res.data.conversation;
-  } catch (err: any) {
-    console.log(err.response?.data);
-    throw new Error(err?.message);
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    if (__DEV__) console.log(error.response?.data);
+    throw new Error(error?.message);
   }
 };
 

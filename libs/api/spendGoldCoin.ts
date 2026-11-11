@@ -1,10 +1,12 @@
+import type { AxiosError } from 'axios';
+import type { ApiErrorBody } from './types';
 import { Backend } from '@/config';
 import axios from 'axios';
 
 interface Props {
   token: string;
 }
-const useGoldCoin = async ({ token }: Props) => {
+const spendGoldCoin = async ({ token }: Props) => {
   try {
     axios.put(
       Backend.premiumCallURL,
@@ -15,9 +17,10 @@ const useGoldCoin = async ({ token }: Props) => {
         },
       }
     );
-  } catch (err: any) {
-    console.log(err.response?.data);
+  } catch (err) {
+    const error = err as AxiosError<ApiErrorBody>;
+    if (__DEV__) console.log(error.response?.data);
     throw new Error('Something went wrong');
   }
 };
-export default useGoldCoin;
+export default spendGoldCoin;
