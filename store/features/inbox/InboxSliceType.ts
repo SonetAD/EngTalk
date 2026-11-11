@@ -1,10 +1,9 @@
 type User = {
   userName: string;
   name: string;
-  avatar:{
-    src:string;
-    stockAvatar:string;
-  }
+  avatar: {
+    src: string;
+    stockAvatar: string;
   };
 };
 type SingleConversation = {
