@@ -1,10 +1,15 @@
+<img src="docs/screenshots/icon.png" width="72" alt="EngTalk icon" />
+
 # EngTalk
 
 A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I designed and hand-coded the whole app, plus the Node.js backend behind it.
 
 **Live on Google Play, 500+ downloads:** https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk
 
-<!-- Screenshots: add 3 to 4 phone screenshots here (matching, a live call, chat, leaderboard) -->
+| | | |
+|:---:|:---:|:---:|
+| <img src="docs/screenshots/home.jpg" width="230" alt="Home screen with online count and Find Partner button" /><br/>Find a partner | <img src="docs/screenshots/call.jpg" width="230" alt="Live voice call screen" /><br/>Live voice call | <img src="docs/screenshots/explore.jpg" width="230" alt="Voice Bites explore feed" /><br/>Voice Bites |
+| <img src="docs/screenshots/inbox.jpg" width="230" alt="Chat inbox" /><br/>Chat inbox | <img src="docs/screenshots/leaderboard.jpg" width="230" alt="Leaderboard with top three speakers" /><br/>Leaderboard | <img src="docs/screenshots/profile.jpg" width="230" alt="User profile with stats and Voice Bites" /><br/>Profile and stats |
 
 ## What it does
 
