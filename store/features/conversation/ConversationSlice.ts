@@ -64,7 +64,7 @@ const createConversationSlice: StateCreator<
       let otherChatParticipant = defaultUser;
       if (res.participants) {
         otherChatParticipant = res.participants.find(
-          (user: any) => user.userName !== get().user.userInfo.userName
+          (user: { userName: string }) => user.userName !== get().user.userInfo.userName
         );
       } else {
         const getOtherChatParticipantInfo = await getUserInfo(otherUserId);
@@ -82,8 +82,8 @@ const createConversationSlice: StateCreator<
         state.conversationStatus.isError = false;
         state.conversationStatus.error = '';
       });
-    } catch (err: any) {
-      console.log(err);
+    } catch (err) {
+      if (__DEV__) console.log(err);
       set((state) => {
         state.otherChatParticipant = defaultUser;
         state.messages = [defaultMessage];
@@ -92,7 +92,7 @@ const createConversationSlice: StateCreator<
         state.conversationStatus.isLoading = false;
         state.conversationStatus.isError = true;
         state.conversationStatus.error =
-          err?.message || 'Something went wrong!';
+          (err as Error)?.message || 'Something went wrong!';
       });
     }
   },

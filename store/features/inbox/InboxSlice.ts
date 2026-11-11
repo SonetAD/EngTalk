@@ -4,7 +4,7 @@ import { UserStatSliceType } from '@/store/features/userStat/userStatSliceType';
 import { VoiceBiteSliceType } from '@/store/features/voiceBite/voiceBiteSliceType';
 import { OtherUserInfoSliceType } from '@/store/features/otherUserInfo/OtherUserInfoSliceType';
 import { ConversationSliceType } from '@/store/features/conversation/ConversationSliceType';
-import { InboxSliceType } from '@/store/features/inbox/InboxSliceType';
+import { InboxSliceType, SingleConversation } from '@/store/features/inbox/InboxSliceType';
 import fetchInbox from '@/libs/api/fetchInbox';
 import { UpdateProfileSliceType } from '@/store/features/updateProfile/updateProfileSliceType';
 import { CallSliceType } from '@/store/features/call/callSliceType';
@@ -62,7 +62,7 @@ const createInboxSlice: StateCreator<
         limit: 10,
       });
       const hasUnradMessage = res.conversations.some(
-        (conversation: any) => !conversation.readStatus
+        (conversation: { readStatus: boolean }) => !conversation.readStatus
       );
 
       set((state) => {
@@ -73,25 +73,25 @@ const createInboxSlice: StateCreator<
         state.inboxStatus.isError = false;
         state.inboxStatus.error = '';
       });
-    } catch (err: any) {
-      console.log(err);
+    } catch (err) {
+      if (__DEV__) console.log(err);
       set((state) => {
         state.inbox = [];
         state.inboxTotalPages = 0;
         state.inboxStatus.isLoading = false;
         state.inboxStatus.isError = true;
-        state.inboxStatus.error = err?.message || 'Something went wrong!';
+        state.inboxStatus.error = (err as Error)?.message || 'Something went wrong!';
       });
     }
   },
   setReadStatus: async (conversationId: string) => {
     set((state) => {
       const findConversation = state.inbox.findIndex(
-        (conversation) => conversation._id === conversationId
+        (conversation: SingleConversation) => conversation._id === conversationId
       );
       state.inbox[findConversation].readStatus = true;
       const hasUnradMessage = state.inbox.some(
-        (conversation: any) => !conversation.readStatus
+        (conversation: SingleConversation) => !conversation.readStatus
       );
       state.hasUnreadMessage = hasUnradMessage;
     });

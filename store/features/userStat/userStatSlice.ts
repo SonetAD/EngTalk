@@ -53,7 +53,7 @@ const createUserStatSlice: StateCreator<
         state.userStatStatus.isError = false;
         state.userStatStatus.error = '';
       });
-    } catch (err: any) {
+    } catch (err) {
       set((state) => {
         state.userStat.totalGoldCoin = 0;
         state.userStat.totalSilverCoin = 0;
@@ -62,7 +62,7 @@ const createUserStatSlice: StateCreator<
         state.userStat.talkTime = 0;
         state.userStatStatus.isLoading = false;
         state.userStatStatus.isError = true;
-        state.userStatStatus.error = err?.message || 'Something went wrong!';
+        state.userStatStatus.error = (err as Error)?.message || 'Something went wrong!';
       });
     }
   },
@@ -80,7 +80,7 @@ const createUserStatSlice: StateCreator<
         state.userStatStatus.isError = false;
         state.userStatStatus.error = '';
       });
-    } catch (err: any) {
+    } catch (err) {
       set((state) => {
         state.userStat.totalGoldCoin = 0;
         state.userStat.totalSilverCoin = 0;
@@ -89,7 +89,7 @@ const createUserStatSlice: StateCreator<
         state.userStat.talkTime = 0;
         state.userStatStatus.isLoading = false;
         state.userStatStatus.isError = true;
-        state.userStatStatus.error = err?.message || 'Something went wrong!';
+        state.userStatStatus.error = (err as Error)?.message || 'Something went wrong!';
       });
     }
   },

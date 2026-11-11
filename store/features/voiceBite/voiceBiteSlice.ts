@@ -58,13 +58,13 @@ const createVoiceBiteSlice: StateCreator<
         state.voiceBiteStatus.isError = false;
         state.voiceBiteStatus.error = '';
       });
-    } catch (err: any) {
+    } catch (err) {
       set((state) => {
         state.allBites = { posts: [], totalPages: 0, totalPosts: 0 };
         state.userBites = { posts: [], totalPages: 0, totalPosts: 0 };
         state.voiceBiteStatus.isLoading = false;
         state.voiceBiteStatus.isError = true;
-        state.voiceBiteStatus.error = err?.message || 'Something went wrong!';
+        state.voiceBiteStatus.error = (err as Error)?.message || 'Something went wrong!';
       });
     }
   },

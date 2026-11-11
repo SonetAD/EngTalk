@@ -1,3 +1,5 @@
+import type { Href } from 'expo-router';
+
 type VoiceBite = {
   posts: [];
   totalPages: number;
@@ -31,13 +33,13 @@ type OtherUserInfoStatus = {
 
 type OtherUserInfoState = {
   otherUser: User;
-  otherUserGoBackRoute: any;
+  otherUserGoBackRoute: Href;
   otherUserInfoStatus: OtherUserInfoStatus;
 };
 
 type Props = {
   userId: string;
-  goBackRoute: any;
+  goBackRoute: Href;
 };
 type OtherUserInfoAction = {
   setOtherUser: ({ userId, goBackRoute }: Props) => void;

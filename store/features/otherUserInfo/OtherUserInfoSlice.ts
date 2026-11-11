@@ -69,13 +69,13 @@ const createOtherUserInfoSlice: StateCreator<
         state.otherUserInfoStatus.error = '';
         state.otherUser.otherUserBites = otherUserVoiceBites;
       });
-    } catch (error: any) {
-      console.log(error);
+    } catch (error) {
+      if (__DEV__) console.log(error);
       set((state) => {
         state.otherUserInfoStatus.isLoading = false;
         state.otherUserInfoStatus.isError = true;
         state.otherUserInfoStatus.error =
-          error?.message || 'Something went wrong!';
+          (error as Error)?.message || 'Something went wrong!';
       });
     }
   },
