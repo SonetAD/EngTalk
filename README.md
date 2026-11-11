@@ -2,6 +2,8 @@
 
 A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I designed and hand-coded the whole app, plus the Node.js backend behind it.
 
+**Live on Google Play, 500+ downloads:** https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk
+
 <!-- Screenshots: add 3 to 4 phone screenshots here (matching, a live call, chat, leaderboard) -->
 
 ## What it does
