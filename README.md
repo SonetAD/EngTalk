@@ -44,11 +44,51 @@ hooks/            Shared hooks
 config.ts         Backend endpoints
 ```
 
-## How a call works
+## Architecture
 
-1. The app asks the backend for a partner over Socket.IO.
-2. When a match is found, both phones exchange WebRTC offers, answers and ICE candidates through the socket.
-3. Audio flows directly between the two phones. If a direct connection fails, it is relayed through the TURN server.
+The backend lives in a separate private repository because it runs the live app. It is a Node.js and Express server with MongoDB, two Socket.IO namespaces, a TURN server and Cloudflare R2 for media.
+
+```mermaid
+flowchart LR
+  App["EngTalk app<br/>React Native + Expo"]
+  API["REST API<br/>Express + JWT"]
+  Call["Socket.IO /instaCall<br/>matching + WebRTC signaling"]
+  Notify["Socket.IO /notification<br/>online count, messages, follows"]
+  DB[("MongoDB<br/>users, chats, posts")]
+  R2[("Cloudflare R2<br/>avatars, voice bites, attachments")]
+  TURN["TURN server<br/>relay for strict networks"]
+  Peer["Partner's phone"]
+
+  App -->|HTTPS| API
+  App <-->|WebSocket| Call
+  App <-->|WebSocket| Notify
+  API --> DB
+  API -->|signed URLs| R2
+  App <-.->|peer-to-peer audio| Peer
+  App <-.->|relay when needed| TURN
+  TURN <-.-> Peer
+```
+
+**REST API** (Express, Mongoose, express-validator)
+- `/user`: sign up, sign in, profile updates, follow, search, leaderboard
+- `/message`: inbox, conversations, attachments
+- `/post`: Voice Bites feed and uploads
+- `/stat`: speaking stats and gold and silver coins
+- `/iceserver`: short-lived TURN credentials for the signed-in user
+
+**How a call works**
+1. The app joins the `/instaCall` namespace and asks for a match, with an optional gender preference.
+2. The server pairs two waiting users and sends `matchFound` to both.
+3. Both phones exchange WebRTC offers, answers and ICE candidates through the socket.
+4. Audio flows directly between the two phones. If a direct path fails, it relays through the TURN server.
+
+**Decisions worth noting**
+- **TURN credentials are never stored in the app.** The backend signs a username with an HMAC secret and hands out credentials that expire in 24 hours, the standard TURN REST API pattern.
+- **Media files are private.** Uploads go to Cloudflare R2 and are served through signed URLs that expire, so no bucket is public. I chose R2 because it has no egress fees, which matters for an app full of audio.
+- **Uploads are checked before they reach storage.** Multer keeps files in memory with size limits and a type filter, then the server writes them to R2.
+- **Every protected route goes through one JWT auth guard,** and sign-up, sign-in, profile, message and post input is validated with express-validator before it reaches a handler.
+
+Backend code is available on request.
 
 ## Run it locally
 
