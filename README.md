@@ -4,7 +4,7 @@
 
 A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I designed and hand-coded the whole app, plus the Node.js backend behind it.
 
-**Live on Google Play, 500+ downloads:** https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk
+**Live on Google Play with 500+ downloads:** [Get it on Google Play](https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk)
 
 | | | |
 |:---:|:---:|:---:|
@@ -75,6 +75,7 @@ flowchart LR
 ```
 
 **REST API** (Express, Mongoose, express-validator)
+
 - `/user`: sign up, sign in, profile updates, follow, search, leaderboard
 - `/message`: inbox, conversations, attachments
 - `/post`: Voice Bites feed and uploads
@@ -82,12 +83,14 @@ flowchart LR
 - `/iceserver`: short-lived TURN credentials for the signed-in user
 
 **How a call works**
+
 1. The app joins the `/instaCall` namespace and asks for a match, with an optional gender preference.
 2. The server pairs two waiting users and sends `matchFound` to both.
 3. Both phones exchange WebRTC offers, answers and ICE candidates through the socket.
 4. Audio flows directly between the two phones. If a direct path fails, it relays through the TURN server.
 
 **Decisions worth noting**
+
 - **TURN credentials are never stored in the app.** The backend signs a username with an HMAC secret and hands out credentials that expire in 24 hours, the standard TURN REST API pattern.
 - **Media files are private.** Uploads go to Cloudflare R2 and are served through signed URLs that expire, so no bucket is public. I chose R2 because it has no egress fees, which matters for an app full of audio.
 - **Uploads are checked before they reach storage.** Multer keeps files in memory with size limits and a type filter, then the server writes them to R2.
@@ -108,4 +111,4 @@ The app points to the hosted backend in `config.ts`. The backend itself is a sep
 
 I'm Sonet, a senior React Native developer. I build iOS and Android apps with Next.js dashboards and AI features, and I take over stuck apps and get them shipped.
 
-LinkedIn: https://www.linkedin.com/in/sonetad
+[LinkedIn](https://www.linkedin.com/in/sonetad)
