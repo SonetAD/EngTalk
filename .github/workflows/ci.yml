@@ -23,3 +23,6 @@ jobs:
 
       - name: Lint
         run: npx expo lint
+
+      - name: Unit tests
+        run: npm test -- --ci
