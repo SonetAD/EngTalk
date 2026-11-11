@@ -1,50 +1,64 @@
-# Welcome to your Expo app 👋
+# EngTalk
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I designed and hand-coded the whole app, plus the Node.js backend behind it.
 
-## Get started
+<!-- Screenshots: add 3 to 4 phone screenshots here (matching, a live call, chat, leaderboard) -->
 
-1. Install dependencies
+## What it does
 
-   ```bash
-   npm install
-   ```
+- **Find a speaking partner:** one-tap matching with another learner who is online, with an optional gender filter
+- **Live voice calls:** peer-to-peer audio over WebRTC, with a TURN server for users behind strict networks
+- **Chat and inbox:** real-time messages through Socket.IO, with conversation history
+- **Voice Bites:** record and share short voice clips on your profile
+- **Social layer:** follow other learners, see who is online, view profiles and stats
+- **Leaderboard and coins:** a ranking of top speakers plus gold and silver coins, with silver coins convertible in the app
 
-2. Start the app
+## Tech stack
 
-   ```bash
-    npx expo start
-   ```
+| Area | What I used |
+|---|---|
+| App | React Native, Expo (SDK with dev client), TypeScript |
+| Navigation | Expo Router (file-based), bottom tabs and top tabs |
+| Real-time | react-native-webrtc for calls, Socket.IO for signaling and chat |
+| State and storage | Zustand with the slices pattern and Immer, MMKV for fast local storage |
+| UI and performance | FlashList for long lists, Reanimated, Gesture Handler, Bottom Sheet |
+| Media | expo-av for recording and playback, image picker with compression |
+| Release | EAS Build, EAS Submit, OTA updates with expo-updates, in-app update prompts |
+| Revenue | Google AdMob native ads |
+| Backend (private repo) | Node.js, Express, a REST API plus WebSocket server, Cloudflare R2 for media |
 
-In the output, you'll find options to open the app in a
+## How the code is organized
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+app/              Screens, using Expo Router file-based routes
+  (auth)/         Sign in and sign up
+  (tabs)/         Home, explore, follow, profile and leaderboard tabs
+  Call.tsx        The live voice call screen
+  Chat.tsx        One-to-one chat
+components/       57 reusable UI components
+store/features/   Zustand slices, one per feature (auth, call, inbox, voice bites...)
+libs/api/         Typed API calls to the backend
+hooks/            Shared hooks
+config.ts         Backend endpoints
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## How a call works
 
-## Learn more
+1. The app asks the backend for a partner over Socket.IO.
+2. When a match is found, both phones exchange WebRTC offers, answers and ICE candidates through the socket.
+3. Audio flows directly between the two phones. If a direct connection fails, it is relayed through the TURN server.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Run it locally
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+npx expo run:android   # WebRTC needs a development build, not Expo Go
+```
 
-## Join the community
+The app points to the hosted backend in `config.ts`. The backend itself is a separate private repository.
 
-Join our community of developers creating universal apps.
+## About me
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+I'm Sonet, a senior React Native developer. I build iOS and Android apps with Next.js dashboards and AI features, and I take over stuck apps and get them shipped.
+
+LinkedIn: https://www.linkedin.com/in/sonetad
