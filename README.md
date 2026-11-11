@@ -2,7 +2,7 @@
 
 # EngTalk
 
-A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I designed and hand-coded the whole app, plus the Node.js backend behind it.
+A React Native app for practicing spoken English with real people. Tap once, get matched with another learner, and talk over a live voice call. I built the app and the Node.js backend behind it.
 
 **Live on Google Play with 500+ downloads:** [Get it on Google Play](https://play.google.com/store/apps/details?id=com.sonetadhikary.engtalk)
 
@@ -18,7 +18,7 @@ A React Native app for practicing spoken English with real people. Tap once, get
 - **Chat and inbox:** real-time messages through Socket.IO, with conversation history
 - **Voice Bites:** record and share short voice clips on your profile
 - **Social layer:** follow other learners, see who is online, view profiles and stats
-- **Leaderboard and coins:** a ranking of top speakers plus gold and silver coins, with silver coins convertible in the app
+- **Leaderboard and coins:** a ranking of top speakers, plus gold and silver coins earned in the app
 
 ## Tech stack
 
@@ -93,10 +93,9 @@ flowchart LR
 
 - **TURN credentials are never stored in the app.** The backend signs a username with an HMAC secret and hands out credentials that expire in 24 hours, the standard TURN REST API pattern.
 - **Media files are private.** Uploads go to Cloudflare R2 and are served through signed URLs that expire, so no bucket is public. I chose R2 because it has no egress fees, which matters for an app full of audio.
-- **Uploads are checked before they reach storage.** Multer keeps files in memory with size limits and a type filter, then the server writes them to R2.
 - **Every protected route goes through one JWT auth guard,** and sign-up, sign-in, profile, message and post input is validated with express-validator before it reaches a handler.
 
-Backend code is available on request.
+The backend is private because it serves the live app. I can walk through the matching and signaling code on a call.
 
 ## Run it locally
 
@@ -109,6 +108,6 @@ The app points to the hosted backend in `config.ts`. The backend itself is a sep
 
 ## About me
 
-I'm Sonet, a senior React Native developer. I build iOS and Android apps with Next.js dashboards and AI features, and I take over stuck apps and get them shipped.
+I'm Sonet, a React Native developer who built and shipped this live WebRTC app. I build iOS and Android apps with Next.js dashboards and AI features, and I take over stuck apps and get them shipped.
 
 [LinkedIn](https://www.linkedin.com/in/sonetad)
