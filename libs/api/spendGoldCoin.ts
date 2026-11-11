@@ -8,7 +8,7 @@ interface Props {
 }
 const spendGoldCoin = async ({ token }: Props) => {
   try {
-    axios.put(
+    await axios.put(
       Backend.premiumCallURL,
       {},
       {

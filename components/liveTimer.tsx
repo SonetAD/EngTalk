@@ -9,8 +9,9 @@ import spendGoldCoin from '@/libs/api/spendGoldCoin';
 
 interface Props {
   timerRef: React.MutableRefObject<number>;
+  onGoldCoinError?: (message: string) => void;
 }
-const LiveTimer = ({ timerRef }: Props) => {
+const LiveTimer = ({ timerRef, onGoldCoinError }: Props) => {
   const { filteredGender, token } = useCentralStore(
     useShallow((state) => ({
       filteredGender: state.call.filteredGender,
@@ -29,7 +30,9 @@ const LiveTimer = ({ timerRef }: Props) => {
       if (filteredGender === 'male' || filteredGender === 'female') {
         if (timerRef.current >= 60 && !spendGoldCoinRef.current) {
           spendGoldCoinRef.current = true;
-           spendGoldCoin({ token });
+          spendGoldCoin({ token }).catch((err: Error) => {
+            onGoldCoinError?.(err.message);
+          });
         }
       }
     }, 1000);

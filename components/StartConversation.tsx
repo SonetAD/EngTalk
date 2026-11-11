@@ -28,6 +28,7 @@ interface Props {
   toggleMute: () => void;
   toggleSpeaker: (val: boolean) => void;
   timerRef: React.MutableRefObject<number>;
+  onGoldCoinError?: (message: string) => void;
 }
 
 const StartConversation = ({
@@ -43,6 +44,7 @@ const StartConversation = ({
   toggleMute,
   toggleSpeaker,
   timerRef,
+  onGoldCoinError,
 }: Props) => {
   const { setOtherUser } = useCentralStore(
     useShallow((state) => ({
@@ -66,7 +68,10 @@ const StartConversation = ({
 
   return (
     <View style={styles.container}>
-      <LiveTimer timerRef={timerRef} />
+      <LiveTimer
+        timerRef={timerRef}
+        onGoldCoinError={onGoldCoinError}
+      />
       <CustomAvatar
         avatar={avatar}
         avatarStyle={styles.avatar}
